@@ -17,6 +17,10 @@ variables:
 steps:
 - script: dotnet build $(dotnetSolutionPath) --configuration $(dotnetBuildConfiguration)
   displayName: 'dotnet build $(dotnetBuildConfiguration)'
+
+- script: dotnet publish $(dotnetSolutionPath)
+  displayName: 'dotnet publish'
+  
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'PublishProfile'
