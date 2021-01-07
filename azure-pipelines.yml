@@ -33,10 +33,10 @@ steps:
   displayName: 'npm ci'
   inputs:
     command: 'ci'
-    workingDir: '/client'
+    workingDir: './client'
 - task: Npm@1
   displayName: 'npm run build'
   inputs:
     command: 'custom'
-    workingDir: '/client'
+    workingDir: './client'
     customCommand: 'run build'
