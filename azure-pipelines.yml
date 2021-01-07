@@ -12,7 +12,6 @@ pool:
 variables:
   dotnetBuildConfiguration: 'Release'
   dotnetSolutionPath: './api/MarbleCollectorApi.sln'
-  dotnetAzureAppPassword: 'e44o9Tcgpd5R72HEm1xHXndp2iXT6oJkcPeGl3FiJ23sa9TAswRTgjp3rpHC'
 
 steps:
 - script: dotnet build $(dotnetSolutionPath) --configuration $(dotnetBuildConfiguration)
@@ -40,3 +39,4 @@ steps:
     command: 'custom'
     workingDir: './client'
     customCommand: 'run build'
+
