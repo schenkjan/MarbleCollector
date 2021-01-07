@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 variables:
   dotnetBuildConfiguration: 'Release'
@@ -17,7 +17,12 @@ variables:
 steps:
 - script: dotnet build $(dotnetSolutionPath) --configuration $(dotnetBuildConfiguration)
   displayName: 'dotnet build $(dotnetBuildConfiguration)'
+
+- script: dotnet publish $(dotnetSolutionPath) /nologo /p:PublishProfile=$(dotnetBuildConfiguration) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:DeployIisAppPath="marblecollector-api"
+  displayName: 'dotnet publish as zip'
+  
 - task: AzureRmWebAppDeployment@4
+  displayName: 'dotnet deploy to Azure'
   inputs:
     ConnectionType: 'PublishProfile'
     PublishProfilePath: '$(System.DefaultWorkingDirectory)/api/**/*.pubxml'
