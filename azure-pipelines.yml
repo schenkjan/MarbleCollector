@@ -18,8 +18,8 @@ steps:
 - script: dotnet build $(dotnetSolutionPath) --configuration $(dotnetBuildConfiguration)
   displayName: 'dotnet build $(dotnetBuildConfiguration)'
 
-- script: dotnet publish $(dotnetSolutionPath) /p:PackageAsSingleFile=true
-  displayName: 'dotnet publish (zip)'
+- script: dotnet publish $(dotnetSolutionPath) /nologo /p:PublishProfile=$(dotnetBuildConfiguration) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true
+  displayName: 'dotnet publish as zip'
   
 - task: AzureRmWebAppDeployment@4
   displayName: 'dotnet deploy to Azure'
