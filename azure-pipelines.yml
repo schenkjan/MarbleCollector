@@ -28,3 +28,15 @@ steps:
     PublishProfilePath: '$(System.DefaultWorkingDirectory)/api/**/*.pubxml'
     PublishProfilePassword: '$(dotnetAzureAppPassword)'
     packageForLinux: '$(System.DefaultWorkingDirectory)/api/**/*.zip'
+
+- task: Npm@1
+  displayName: 'npm ci'
+  inputs:
+    command: 'ci'
+    workingDir: '/client'
+- task: Npm@1
+  displayName: 'npm run build'
+  inputs:
+    command: 'custom'
+    workingDir: '/client'
+    customCommand: 'run build'
