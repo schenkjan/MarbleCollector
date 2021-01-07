@@ -17,13 +17,12 @@ variables:
 steps:
 - script: dotnet build $(dotnetSolutionPath) --configuration $(dotnetBuildConfiguration)
   displayName: 'dotnet build $(dotnetBuildConfiguration)'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    arguments: '$(dotnetSolutionPath)'
-    publishWebProjects: true
+
+- script: dotnet publish $(dotnetSolutionPath) /p:PackageAsSingleFile=true
+  displayName: 'dotnet publish (zip)'
   
 - task: AzureRmWebAppDeployment@4
+  displayName: 'dotnet deploy to Azure'
   inputs:
     ConnectionType: 'PublishProfile'
     PublishProfilePath: '$(System.DefaultWorkingDirectory)/api/**/*.pubxml'
