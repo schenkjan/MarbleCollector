@@ -28,6 +28,13 @@ steps:
     PublishProfilePassword: '$(dotnetAzureAppPassword)'
     packageForLinux: '$(System.DefaultWorkingDirectory)/api/**/*.zip'
 
+- task: AzureAppServiceManage@0
+  displayName: 'restart azure app service'
+  inputs:
+    azureSubscription: 'Azure for Students(a2bcdf72-b2d2-4aff-a317-85e0bb318f1a)'
+    Action: 'Restart Azure App Service'
+    WebAppName: 'marblecollector-api'
+
 - task: Npm@1
   displayName: 'npm ci'
   inputs:
@@ -40,3 +47,11 @@ steps:
     workingDir: './client'
     customCommand: 'run build'
 
+- task: AzureFileCopy@4
+  displayName: 'deploy frontend to azure'
+  inputs:
+    SourcePath: './client/build'
+    azureSubscription: 'Azure for Students(a2bcdf72-b2d2-4aff-a317-85e0bb318f1a)'
+    Destination: 'AzureBlob'
+    storage: 'marblecollector'
+    ContainerName: '$web'
