@@ -47,6 +47,10 @@ steps:
     workingDir: './client'
     customCommand: 'run build'
 
+- script: 'dir .\client\build'
+  displayName: 'display files...'
+    
+
 - task: AzureFileCopy@4
   displayName: 'deploy frontend to azure'
   inputs:
