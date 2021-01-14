@@ -32,7 +32,16 @@ According to the documentation https://docs.microsoft.com/en-us/azure/devops/pip
 3. Navigate to pipeline and create new
 4. Setup pipeline for .NET
 5. Setup pipeline for React
+
+- https://brettmckenzie.net/2020/03/23/azure-pipelines-copy-files-task-authentication-failed/
+
 6. Add Azure Pipeline batch to readme
+
+### Allow contributions/contributors
+
+1. Grant permissions in [Github Repo](https://github.com/TashunkoWitko/MarbleCollector)
+2. Grant permissions in [Azure Portal](https://portal.azure.com/#@bfh.ch/resource/subscriptions/a2bcdf72-b2d2-4aff-a317-85e0bb318f1a/users)
+3. Grant permissions in [Azure DevOps](https://dev.azure.com/aescd5/MarbleCollector/_settings/projectOverview)
 
 ## Run
 
