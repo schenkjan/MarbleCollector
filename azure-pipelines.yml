@@ -50,7 +50,7 @@ steps:
 - task: AzureFileCopy@4
   displayName: 'deploy frontend to azure'
   inputs:
-    SourcePath: './client/build/'
+    SourcePath: './client/build/*'
     azureSubscription: 'Azure for Students(a2bcdf72-b2d2-4aff-a317-85e0bb318f1a)'
     Destination: 'AzureBlob'
     storage: 'marblecollector'
