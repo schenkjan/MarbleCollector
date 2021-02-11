@@ -58,7 +58,7 @@ Open visual studio solution and hit F5
 We want to use Azure to host the MarbleCollector web app.
 The aim is to have a continuous integration/deployment proccess in place (Azure DevOps).
 
-| Component | Url                                                          |
-| --------- | ------------------------------------------------------------ |
-| Frontend  | https://marblecollector.z1.web.core.windows.net/             |
-| Backend   | http://marblecollector-api.azurewebsites.net/weatherforecast |
+| Component | Url                                             |
+| --------- | ----------------------------------------------- |
+| Frontend  | https://marblecollector.z1.web.core.windows.net |
+| Backend   | https://marblecollector-api.azurewebsites.net   |

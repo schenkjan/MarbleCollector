@@ -1,9 +1,12 @@
+using MarbleCollectorApi.Data;
 using MarbleCollectorApi.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace MarbleCollectorApi
 {
@@ -26,7 +29,6 @@ namespace MarbleCollectorApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddCors(options =>
             {
                 options.AddPolicy(MarbleCollectorCorsPolicy,
@@ -35,6 +37,9 @@ namespace MarbleCollectorApi
                                         .AllowCredentials() // added for signalr connection
                 );
             });
+
+            services.AddDbContext<MarbleCollectorDbContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("MarbleCollectorSQLite")));
 
             services.AddControllers();
             services.AddSignalR();
@@ -68,6 +73,19 @@ namespace MarbleCollectorApi
                 endpoints.MapControllers();
                 endpoints.MapHub<ParentNotificationHub>("/hubs/parent");
             });
+
+            UpdateDatabase(app);
+        }
+
+        private void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<MarbleCollectorDbContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }
