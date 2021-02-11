@@ -1,3 +1,4 @@
+using MarbleCollectorApi.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,10 +31,13 @@ namespace MarbleCollectorApi
             {
                 options.AddPolicy(MarbleCollectorCorsPolicy,
                     builder => builder.WithOrigins(MarbleCollectorCorsOrigins)
+                                        .AllowAnyHeader()
+                                        .AllowCredentials() // added for signalr connection
                 );
             });
 
             services.AddControllers();
+            services.AddSignalR();
             services.AddSwaggerGen();
         }
 
@@ -62,6 +66,7 @@ namespace MarbleCollectorApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ParentNotificationHub>("/hubs/parent");
             });
         }
     }
