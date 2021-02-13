@@ -45,14 +45,13 @@ export function HomeScreen() {
           alert(err);
         }
 
-        // there is a problem here with the hooks...
         hubConnect.on("ReceiveMessage", (...args: any[]) => {
           const message: Message = {
             author: args[0],
             message: args[1],
           };
           console.log("SignalR >>> Receiving message", message);
-          setMessages([...messages, message]);
+          setMessages((messages) => [...messages, message]);
         });
 
         setHubConnection(hubConnect);
