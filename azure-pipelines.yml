@@ -17,16 +17,13 @@ steps:
 - script: dotnet build $(dotnetSolutionPath) --configuration $(dotnetBuildConfiguration)
   displayName: 'dotnet build $(dotnetBuildConfiguration)'
 
-- script: dotnet publish $(dotnetSolutionPath) /nologo /p:PublishProfile=$(dotnetBuildConfiguration) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:DeployIisAppPath="marblecollector-api"
-  displayName: 'dotnet publish as zip'
-  
 - task: AzureRmWebAppDeployment@4
-  displayName: 'dotnet deploy to Azure'
   inputs:
-    ConnectionType: 'PublishProfile'
-    PublishProfilePath: '$(System.DefaultWorkingDirectory)/api/**/*.pubxml'
-    PublishProfilePassword: '$(dotnetAzureAppPassword)'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/api/**/*.zip'
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure for Students(a2bcdf72-b2d2-4aff-a317-85e0bb318f1a)'
+    appType: 'webApp'
+    WebAppName: 'marblecollector-api'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
 
 - task: AzureAppServiceManage@0
   displayName: 'restart azure app service'
