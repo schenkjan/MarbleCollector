@@ -46,3 +46,4 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 - `npm install react-router-dom`
 - `npm i --save-dev @types/react-router-dom`
 - `npm install @microsoft/signalr`
+- `npm install recoil`
