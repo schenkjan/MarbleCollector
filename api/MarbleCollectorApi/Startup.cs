@@ -1,12 +1,14 @@
 using MarbleCollectorApi.Data;
+using MarbleCollectorApi.Data.Repository;
 using MarbleCollectorApi.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using System;
 
 namespace MarbleCollectorApi
 {
@@ -38,6 +40,9 @@ namespace MarbleCollectorApi
                 );
             });
 
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IChoreRepository, ChoreRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddDbContext<MarbleCollectorDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("MarbleCollectorSQLite")));
 
@@ -84,6 +89,7 @@ namespace MarbleCollectorApi
                 using (var context = serviceScope.ServiceProvider.GetService<MarbleCollectorDbContext>())
                 {
                     context.Database.Migrate();
+                    context.EnsureSeedData();
                 }
             }
         }
