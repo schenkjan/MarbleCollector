@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { DashboardLayout } from "../shell/DashboardLayout";
+import { ChoreTable } from "./ChoreTable";
 
 export function ParentScreen() {
   const [title, ] = useState("Ämtli Pinwand"); // TODO js (25.02.2021): Set title depending on state of the app.
@@ -8,7 +9,7 @@ export function ParentScreen() {
 
   return (
     <DashboardLayout avatarAlt={avatarAlt} avatarSrc={avatarSrc} title={title}>
-      <p>Parent Screen</p>
+      <ChoreTable/>
     </DashboardLayout>
   );
 }

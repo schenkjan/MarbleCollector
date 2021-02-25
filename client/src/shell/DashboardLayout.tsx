@@ -6,7 +6,7 @@ import { TitleBar } from "./TitleBar";
 const useStyles = makeStyles({
     boxRoot: {
         height: "100vh",
-    }
+    },
 });
 
 type Props = {
