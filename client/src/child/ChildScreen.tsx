@@ -1,3 +1,9 @@
+import { DashboardLayout } from "../shell/DashboardLayout";
+
 export function ChildScreen() {
-  return <p>ChildScreen</p>;
+  return (
+    <DashboardLayout>
+      <p>Child Screen</p>
+    </DashboardLayout>
+  );
 }
