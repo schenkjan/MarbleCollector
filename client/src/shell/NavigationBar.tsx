@@ -29,8 +29,8 @@ export function NavigationBar() {
     return (
         <BottomNavigation className={classes.navigation} value={value} onChange={handleOnChange} showLabels>
             <BottomNavigationAction className={classes.action} label="Ämtli" icon={<AssignmentIcon className={classes.icon} />} />
-            <BottomNavigationAction className={classes.action} label="Belohnungen" icon={<RedeemIcon className={classes.icon} />} />
-            <BottomNavigationAction className={classes.action} label="Profil" icon={<AssignmentIndIcon className={classes.icon} />} />
+            <BottomNavigationAction className={classes.action} label="Belohnungen" icon={<RedeemIcon className={classes.icon} />} disabled />
+            <BottomNavigationAction className={classes.action} label="Profil" icon={<AssignmentIndIcon className={classes.icon} />} disabled />
         </BottomNavigation>
     );
 }
