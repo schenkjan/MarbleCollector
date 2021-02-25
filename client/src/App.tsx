@@ -9,17 +9,17 @@ import { RecoilRoot } from "recoil";
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles({
-  linkList: {
+  linkList: { // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
     listStyle: "none",
     margin: 0,
     padding: 0,
     overflow: "hidden",
     backgroundColor: "#333333",
   },
-  linkListItem: {
+  linkListItem: { // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
     float: "left",
   },
-  link: {
+  link: { // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
     display: "block",
     color: "#fff",
     textAlign: "center",
