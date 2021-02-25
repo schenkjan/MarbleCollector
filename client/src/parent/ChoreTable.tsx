@@ -1,7 +1,9 @@
-import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, makeStyles } from "@material-ui/core";
+import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, makeStyles, createStyles, Theme } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { Chore } from "../model/Chore";
 import { ChoreTableRow } from "./ChoreTableRow";
+import { Fab } from "@material-ui/core";
+import AddIcon from '@material-ui/icons/Add';
 
 // TODO js (25.02.2021): Remove dummy data as soon as data is consumed from backend.
 const lars = {
@@ -20,11 +22,18 @@ const lars = {
     avatarSrc: ""
  };
 
- const useStyles = makeStyles({
+ const useStyles = makeStyles((theme: Theme) => 
+    createStyles({
      container: {
          flex: "1 1 auto",
-     }
- });
+     },
+     fab: {
+        position: 'absolute',
+        bottom: theme.spacing(6),
+        right: theme.spacing(2),
+      },
+    }),
+ );
 
 export function ChoreTable() {
     const [chores, setChores] = useState<Chore[]>([]);
@@ -143,7 +152,7 @@ export function ChoreTable() {
                         <TableCell>Ämtli</TableCell>
                         <TableCell></TableCell>
                         <TableCell align="center">Done</TableCell>
-                        <TableCell></TableCell>
+                        <TableCell align="center">Bestätigen</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -152,6 +161,9 @@ export function ChoreTable() {
                     ))}
                 </TableBody>
             </Table>
+            <Fab className={classes.fab} size="small" color="primary" aria-label="add">
+                <AddIcon />
+            </Fab>
         </TableContainer>
     );
 }
