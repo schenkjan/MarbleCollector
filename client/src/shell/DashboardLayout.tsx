@@ -10,7 +10,10 @@ const useStyles = makeStyles({
 });
 
 type Props = {
-    children: ReactNode
+    children: ReactNode;
+    title: string;
+    avatarAlt: string;
+    avatarSrc: string;
 }
 
 export function DashboardLayout(props: Props) {
@@ -18,7 +21,7 @@ export function DashboardLayout(props: Props) {
 
     return (
         <Box className={classes.boxRoot} display="flex" flexDirection="column" justifyContent="space-between">
-            <TitleBar />
+            <TitleBar avatarAlt={props.avatarAlt} avatarSrc={props.avatarSrc} title={props.title} />
             {props.children}
             <NavigationBar />
         </Box>

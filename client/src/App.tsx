@@ -28,6 +28,7 @@ const useStyles = makeStyles({
   }
 });
 
+// TODO js (25.02.2021): Nav element is only temporary remove it when ready.
 function App() {
   const classes = useStyles();
 
