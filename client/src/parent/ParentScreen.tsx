@@ -20,7 +20,7 @@ export function ParentScreen() {
           <p>Profil...</p>
         </DashboardLayout>
       </Route>
-      <Route path={path}>
+      <Route path={[`${path}/chores`, path]} exact>
         <DashboardLayout avatarAlt={avatarAlt} avatarSrc={avatarSrc} title="Ämtli Pinwand">
           <ChoreTable/>
         </DashboardLayout>
