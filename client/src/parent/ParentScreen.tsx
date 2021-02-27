@@ -11,7 +11,7 @@ export function ParentScreen() {
   return (
     <Switch>
       <Route path={`${path}/rewards`}>
-        <DashboardLayout avatarAlt={avatarAlt} avatarSrc={avatarSrc} title="Belohungs-Pinwand">
+        <DashboardLayout avatarAlt={avatarAlt} avatarSrc={avatarSrc} title="Belohnungs-Pinwand">
           <p>Belohnungen...</p>
         </DashboardLayout>
       </Route>
