@@ -5,6 +5,7 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import RedeemIcon from '@material-ui/icons/Redeem';
 import { useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
+import { useDashboardBasePath } from "./DashboardBasePathHook";
 
 const useStyles = makeStyles({
     navigation: {
@@ -19,12 +20,11 @@ const useStyles = makeStyles({
     }
 });
 
-const pages = ["chores", "rewards", "profile"];
-
 export function NavigationBar() {
     const classes = useStyles();
     const [value, setValue] = useState<number>();
     const {path, } = useRouteMatch();
+    const dashboardBasePath = useDashboardBasePath();
 
     useEffect(() => {
         if (path.match(/\/rewards/)) {
@@ -42,12 +42,6 @@ export function NavigationBar() {
         setValue(newValue);
     }
 
-    function getPath(): string {
-        const pathParts = path.split("/");
-
-        return pathParts.filter(part => !pages.includes(part)).join("/");
-    }
-
     return (
         <BottomNavigation 
             className={classes.navigation}
@@ -59,21 +53,21 @@ export function NavigationBar() {
                 label="Ämtli" 
                 icon={<AssignmentIcon className={classes.icon}/>}
                 component={Link}
-                to={`${getPath()}/chores`}
+                to={`${dashboardBasePath}/chores`}
             />
             <BottomNavigationAction 
                 className={classes.action} 
                 label="Belohnungen" 
                 icon={<RedeemIcon className={classes.icon} />}
                 component={Link}
-                to={`${getPath()}/rewards`}
+                to={`${dashboardBasePath}/rewards`}
             />
             <BottomNavigationAction 
                 className={classes.action} 
                 label="Profil" 
                 icon={<AssignmentIndIcon className={classes.icon} />}
                 component={Link}
-                to={`${getPath()}/profile`}
+                to={`${dashboardBasePath}/profile`}
             />
         </BottomNavigation>
     );

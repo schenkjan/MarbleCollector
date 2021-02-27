@@ -1,5 +1,6 @@
 import { Avatar, IconButton, makeStyles, Toolbar, Typography } from "@material-ui/core";
 import { Link, useRouteMatch } from "react-router-dom";
+import { useDashboardBasePath } from "./DashboardBasePathHook";
 
 const useStyles = makeStyles({
     toolbar: {
@@ -18,8 +19,6 @@ const useStyles = makeStyles({
     }
 });
 
-const pages = ["chores", "rewards", "profile"];
-
 type Prop = {
     avatarSrc: string;
     avatarAlt: string;
@@ -28,13 +27,7 @@ type Prop = {
 
 export function TitleBar(props: Prop) {
     const classes = useStyles();
-    const {path, } = useRouteMatch();
-
-    function getPath(): string {
-        const pathParts = path.split("/");
-
-        return pathParts.filter(part => !pages.includes(part)).join("/");
-    }
+    const dashboardBasePath = useDashboardBasePath();
 
     function getAvatar() {
         var matches = props.avatarAlt.match(/\b(\w)/g);
@@ -42,7 +35,7 @@ export function TitleBar(props: Prop) {
         
         if (props.avatarSrc) {
             return (
-                <Link className={classes.link} to={`${getPath()}/profile`}>
+                <Link className={classes.link} to={`${dashboardBasePath}/profile`}>
                     <Avatar 
                         className={classes.avatar} 
                         alt={acronym} 
@@ -55,7 +48,7 @@ export function TitleBar(props: Prop) {
         }
 
         return (
-            <Link className={classes.link} to={`${getPath()}/profile`}>
+            <Link className={classes.link} to={`${dashboardBasePath}/profile`}>
                 <Avatar className={classes.avatar}>
                     {acronym.toUpperCase()}
                 </Avatar>
