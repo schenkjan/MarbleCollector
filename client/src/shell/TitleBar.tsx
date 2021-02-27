@@ -24,12 +24,14 @@ export function TitleBar(props: Prop) {
     const classes = useStyles();
 
     function getAvatar() {
-        if (props.avatarSrc) {
-            return <Avatar className={classes.avatar} alt={props.avatarAlt} src={props.avatarSrc} />
-        }
-
         var matches = props.avatarAlt.match(/\b(\w)/g);
         var acronym = matches?.join('') ?? "?";
+        
+        if (props.avatarSrc) {
+            return <Avatar className={classes.avatar} alt={acronym} src={props.avatarSrc}>
+                {acronym.toUpperCase()}
+            </Avatar>
+        }
 
         return (
             <Avatar className={classes.avatar}>
