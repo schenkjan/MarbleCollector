@@ -1,4 +1,5 @@
 import { Avatar, IconButton, makeStyles, Toolbar, Typography } from "@material-ui/core";
+import { Link, useRouteMatch } from "react-router-dom";
 
 const useStyles = makeStyles({
     toolbar: {
@@ -9,10 +10,15 @@ const useStyles = makeStyles({
         backgroundColor: "#fff", // TODO js (25.02.2021): Move color selection to theme?
         color: "#000", // TODO js (25.02.2021): Move color selection to theme?
     },
+    link: {
+        textDecoration: "none",
+    },
     title: {
         padding: "0px 16px 0px 16px",
     }
 });
+
+const pages = ["chores", "rewards", "profile"];
 
 type Prop = {
     avatarSrc: string;
@@ -22,21 +28,38 @@ type Prop = {
 
 export function TitleBar(props: Prop) {
     const classes = useStyles();
+    const {path, } = useRouteMatch();
+
+    function getPath(): string {
+        const pathParts = path.split("/");
+
+        return pathParts.filter(part => !pages.includes(part)).join("/");
+    }
 
     function getAvatar() {
         var matches = props.avatarAlt.match(/\b(\w)/g);
         var acronym = matches?.join('') ?? "?";
         
         if (props.avatarSrc) {
-            return <Avatar className={classes.avatar} alt={acronym} src={props.avatarSrc}>
-                {acronym.toUpperCase()}
-            </Avatar>
+            return (
+                <Link className={classes.link} to={`${getPath()}/profile`}>
+                    <Avatar 
+                        className={classes.avatar} 
+                        alt={acronym} 
+                        src={props.avatarSrc}
+                    >
+                        {acronym.toUpperCase()}
+                    </Avatar>
+                </Link>
+            );
         }
 
         return (
-            <Avatar className={classes.avatar}>
-                {acronym.toUpperCase()}
-            </Avatar>
+            <Link className={classes.link} to={`${getPath()}/profile`}>
+                <Avatar className={classes.avatar}>
+                    {acronym.toUpperCase()}
+                </Avatar>
+            </Link>
         );
     }
 
