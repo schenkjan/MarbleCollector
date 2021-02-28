@@ -14,7 +14,7 @@ export function FiguresOverview(){
     const [hubConnection, setHubConnection] = useState<HubConnection>();
 
     const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
-    const hubTestUrl = `${apiBaseUrl}/hubs/parent`;
+    const hubTestUrl = `${apiBaseUrl}/hubs/children`;
 
     useEffect(() => {
         loadChores().then(
@@ -39,7 +39,7 @@ export function FiguresOverview(){
                 alert(err);
               }
       
-              hubConnect.on("ReceiveMessage", (...args: any[]) => {
+              hubConnect.on("UpdateFigures", (...args: any[]) => {
                 setMarbles(marbles => marbles + 1);
                 setChores(chores => chores + 1);
                 setRewards(rewards => rewards + 1)
