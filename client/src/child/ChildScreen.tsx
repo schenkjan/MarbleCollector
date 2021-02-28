@@ -9,7 +9,6 @@ export function ChildScreen() {
 
   return (
     <DashboardLayout avatarAlt={avatarAlt} avatarSrc={avatarSrc} title={title}>
-      <p>Child Screen</p>
       <FiguresOverview></FiguresOverview>
     </DashboardLayout>
   );
