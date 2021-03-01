@@ -6,39 +6,32 @@ import {MarbleBalance} from './MarbleBalance';
 import {loadChores} from '../api/BackendAccess';
 import {useState, useEffect} from 'react';
 import {HubConnection, HubConnectionBuilder} from "@microsoft/signalr";
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles({
   gridcontainer: {
     display: 'grid',
-    'grid-template-columns': 'auto auto auto auto auto auto',
-    'grid-gap': '10px',
-    'background-color': '#2196F3',
     padding: '10px',
-    //width:'70%'
+  },
+  root: {
+    flexGrow: 1,
   },
   
-  item2: {
-    'background-color': 'rgba(255, 255, 255, 0.8)',
-    'text-align': 'center',
+  marbles: {
     'padding': '20px 0',
-    'font-size': '30px',
-    'grid-column': '4 / 8',
-  },
-  item3: {
-    'background-color': 'rgba(255, 255, 255, 0.8)',
-    'text-align': 'center',
-    'padding': '20px 0',
-    'font-size': '30px',
-    'grid-column': '4 / 8',
-  },
-  item1: {
-    'background-color': 'rgba(255, 255, 255, 0.8)',
-    'text-align': 'center',
-    'padding': '20px 0',
-    'font-size': '30px',
     'grid-column': '1 / 4',
     'grid-row': '1 / 3',
-  }
+  },
+
+  chores: {
+    'padding': '20px 0',
+    'grid-column': '4 / 8',
+  },
+  rewards: {
+    'grid-column': '4 / 8',
+  },
+
 });
 
 export function FiguresOverview(){
@@ -90,23 +83,26 @@ export function FiguresOverview(){
       }, []);
 
     return(
-      
         <Container maxWidth="md">
-            <div  className={classes.gridcontainer}>
-              <div className={classes.item1}>
-                1
-              </div>
-              <div className={classes.item2}>
-                2
-              </div>
-              <div className={classes.item3}>
-                3
-              </div>
-                {/* <MarbleBalance marbles={marbles}></MarbleBalance>
-                <ChoresFigures chores={chores}></ChoresFigures>
-                <RewardsFigures rewards={rewards}></RewardsFigures> */}
-            </div>
+          <div className={classes.root}>
+            <Grid container spacing={6}>
+              <Grid item xs={12} sm={4}>
+                <Paper elevation={3}>
+                  <MarbleBalance marbles={marbles}></MarbleBalance>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Paper elevation={3}>
+                  <ChoresFigures chores={chores}></ChoresFigures>
+                </Paper>  
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Paper elevation={3}>
+                  <RewardsFigures rewards={rewards}></RewardsFigures>
+                </Paper>
+              </Grid>
+            </Grid>
+          </div>
         </Container>
-
     )
 }

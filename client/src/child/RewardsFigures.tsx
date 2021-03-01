@@ -5,20 +5,28 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Rewards from '../images/Rewards.png';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: 'flex'
-      },
-      details: {
-        display: 'flex',
-        flexDirection: 'row',
-      },
-      content: {
-        flex: '1 0 auto'
-      },
-    media: {
-        height: 140
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+    image: {
+      width: 50,
+      height: 50,
+      'padding-left': '20px'
+    },
+    img: {
+      margin: 'auto',
+      // display: 'block',
+      maxWidth: '100%',
+      maxHeight: '100%',
     },
   }));
 
@@ -29,24 +37,29 @@ type Prop = {
 export function RewardsFigures(props: Prop){
     const classes = useStyles();
     return(
-        <Card variant="outlined" className={classes.root}>
-            <div className={classes.details}>
-                <CardActionArea className={classes.content}>
-                    <CardMedia
-                        className={classes.media}
-                        image={Rewards}
-                        title="Rewards"
-                    />
-                </CardActionArea>
-                <CardContent className={classes.content}>
-                        <Typography color="textPrimary" variant="h2">
-                            {props.rewards}
-                        </Typography>
-                        <Typography color="textSecondary" gutterBottom>
-                          Belohnungen verdient
-                    </Typography>         
-                </CardContent>
-        </div>
-      </Card> 
+        <div className={classes.root}>
+        <Grid container
+            direction="row"
+            justify="center"
+            alignItems="center">
+          <Grid item >
+            <Paper className={classes.paper}>
+              <div className={classes.image}>
+                <img  className={classes.img} alt="complex" src={Rewards} /> 
+              </div>             
+            </Paper>
+          </Grid>
+          <Grid item >
+            <Paper className={classes.paper}>
+              <Typography>
+                {props.rewards}
+              </Typography>
+              <Typography>
+                Belohnungen verdient
+              </Typography>
+            </Paper>
+          </Grid>
+        </Grid>
+      </div>
     )
 }
