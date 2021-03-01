@@ -1,13 +1,14 @@
 import Container from '@material-ui/core/Container';
 import { makeStyles} from '@material-ui/core/styles';
-import {ChoresFigures} from './ChoresFigures';
-import {RewardsFigures} from './RewardsFigures';
-import {MarbleBalance} from './MarbleBalance';
 import {loadChores} from '../api/BackendAccess';
 import {useState, useEffect} from 'react';
 import {HubConnection, HubConnectionBuilder} from "@microsoft/signalr";
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import { FigureItem } from './FigureItem';
+import ImgMarbles from '../images/Marble.png';
+import ImgChores from '../images/Chores.png';
+import ImgRewards from '../images/Rewards.png';
 
 const useStyles = makeStyles({
   gridcontainer: {
@@ -36,8 +37,7 @@ const useStyles = makeStyles({
 
 export function FiguresOverview(){
   const classes = useStyles();
-
-    const [marbles, setMarbles] = useState(0);
+  const [marbles, setMarbles] = useState(0);
     const [chores, setChores] = useState(0);
     const [rewards, setRewards] = useState(0);
     const [hubConnection, setHubConnection] = useState<HubConnection>();
@@ -88,17 +88,17 @@ export function FiguresOverview(){
             <Grid container spacing={6}>
               <Grid item xs={12} sm={4}>
                 <Paper elevation={3}>
-                  <MarbleBalance marbles={marbles}></MarbleBalance>
+                  <FigureItem ammount={marbles} picture={ImgMarbles} imgDescription='marble' text='Kontostand Murmeln'></FigureItem>
                 </Paper>
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Paper elevation={3}>
-                  <ChoresFigures chores={chores}></ChoresFigures>
+                  <FigureItem ammount={chores} picture={ImgChores} imgDescription='chores' text='Erledigte Ämtli'></FigureItem>
                 </Paper>  
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Paper elevation={3}>
-                  <RewardsFigures rewards={rewards}></RewardsFigures>
+                  <FigureItem ammount={rewards} picture={ImgRewards} imgDescription='rewards' text='Verdiente Belohnungen'></FigureItem>
                 </Paper>
               </Grid>
             </Grid>
