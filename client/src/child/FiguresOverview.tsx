@@ -1,4 +1,5 @@
 import Container from '@material-ui/core/Container';
+import { makeStyles} from '@material-ui/core/styles';
 import {ChoresFigures} from './ChoresFigures';
 import {RewardsFigures} from './RewardsFigures';
 import {MarbleBalance} from './MarbleBalance';
@@ -6,7 +7,42 @@ import {loadChores} from '../api/BackendAccess';
 import {useState, useEffect} from 'react';
 import {HubConnection, HubConnectionBuilder} from "@microsoft/signalr";
 
+const useStyles = makeStyles({
+  gridcontainer: {
+    display: 'grid',
+    'grid-template-columns': 'auto auto auto auto auto auto',
+    'grid-gap': '10px',
+    'background-color': '#2196F3',
+    padding: '10px',
+    //width:'70%'
+  },
+  
+  item2: {
+    'background-color': 'rgba(255, 255, 255, 0.8)',
+    'text-align': 'center',
+    'padding': '20px 0',
+    'font-size': '30px',
+    'grid-column': '4 / 8',
+  },
+  item3: {
+    'background-color': 'rgba(255, 255, 255, 0.8)',
+    'text-align': 'center',
+    'padding': '20px 0',
+    'font-size': '30px',
+    'grid-column': '4 / 8',
+  },
+  item1: {
+    'background-color': 'rgba(255, 255, 255, 0.8)',
+    'text-align': 'center',
+    'padding': '20px 0',
+    'font-size': '30px',
+    'grid-column': '1 / 4',
+    'grid-row': '1 / 3',
+  }
+});
+
 export function FiguresOverview(){
+  const classes = useStyles();
 
     const [marbles, setMarbles] = useState(0);
     const [chores, setChores] = useState(0);
@@ -54,10 +90,22 @@ export function FiguresOverview(){
       }, []);
 
     return(
+      
         <Container maxWidth="md">
-            <MarbleBalance marbles={marbles}></MarbleBalance>
-            <ChoresFigures chores={chores}></ChoresFigures>
-            <RewardsFigures rewards={rewards}></RewardsFigures>
+            <div  className={classes.gridcontainer}>
+              <div className={classes.item1}>
+                1
+              </div>
+              <div className={classes.item2}>
+                2
+              </div>
+              <div className={classes.item3}>
+                3
+              </div>
+                {/* <MarbleBalance marbles={marbles}></MarbleBalance>
+                <ChoresFigures chores={chores}></ChoresFigures>
+                <RewardsFigures rewards={rewards}></RewardsFigures> */}
+            </div>
         </Container>
 
     )
