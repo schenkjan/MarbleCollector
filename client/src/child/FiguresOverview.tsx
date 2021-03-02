@@ -80,7 +80,7 @@ export function FiguresOverview(){
             }
           };
         createHubConnection();
-      }, []);
+      }, [hubConnection, hubTestUrl]);
 
     return(
         <Container maxWidth="md">
