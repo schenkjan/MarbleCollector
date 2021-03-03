@@ -6,25 +6,49 @@ import { ChildScreen } from "./child/ChildScreen";
 import { ParentScreen } from "./parent/ParentScreen";
 import { HomeScreen } from "./home/HomeScreen";
 import { RecoilRoot } from "recoil";
+import { makeStyles } from "@material-ui/core";
 
+const useStyles = makeStyles({
+  linkList: { // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
+    listStyle: "none",
+    margin: 0,
+    padding: 0,
+    overflow: "hidden",
+    backgroundColor: "#333333",
+  },
+  linkListItem: { // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
+    float: "left",
+  },
+  link: { // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
+    display: "block",
+    color: "#fff",
+    textAlign: "center",
+    padding: "0px 16px 0px 16px",
+    textDecoration: "none",
+  }
+});
+
+// TODO js (25.02.2021): Nav element is only temporary remove it when ready.
 function App() {
+  const classes = useStyles();
+
   return (
     <RecoilRoot>
       <Router>
         <div className="App">
           <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
+            <ul className={classes.linkList}>
+              <li className={classes.linkListItem}>
+                <Link className={classes.link} to="/">Home</Link>
               </li>
-              <li>
-                <Link to="/login">Login</Link>
+              <li className={classes.linkListItem}>
+                <Link className={classes.link} to="/login">Login</Link>
               </li>
-              <li>
-                <Link to="/child">Child</Link>
+              <li className={classes.linkListItem}>
+                <Link className={classes.link} to="/child">Child</Link>
               </li>
-              <li>
-                <Link to="/parent">Parent</Link>
+              <li className={classes.linkListItem}>
+                <Link className={classes.link} to="/parent">Parent</Link>
               </li>
             </ul>
           </nav>

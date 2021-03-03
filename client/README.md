@@ -47,3 +47,4 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 - `npm i --save-dev @types/react-router-dom`
 - `npm install @microsoft/signalr`
 - `npm install recoil`
+- `npm install @material-ui/icons`
