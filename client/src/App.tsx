@@ -15,17 +15,17 @@ const useStyles = makeStyles({
     padding: 0,
     overflow: "hidden",
     backgroundColor: "#333333",
+    "& > *": { // list items
+      float: "left",
+      "& > *": { // link
+        display: "block",
+        color: "#fff",
+        textAlign: "center",
+        padding: "0px 16px 0px 16px",
+        textDecoration: "none",
+      }
+    }
   },
-  linkListItem: { // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
-    float: "left",
-  },
-  link: { // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
-    display: "block",
-    color: "#fff",
-    textAlign: "center",
-    padding: "0px 16px 0px 16px",
-    textDecoration: "none",
-  }
 });
 
 // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
@@ -38,17 +38,17 @@ function App() {
         <div className="App">
           <nav>
             <ul className={classes.linkList}>
-              <li className={classes.linkListItem}>
-                <Link className={classes.link} to="/">Home</Link>
+              <li>
+                <Link to="/">Home</Link>
               </li>
-              <li className={classes.linkListItem}>
-                <Link className={classes.link} to="/login">Login</Link>
+              <li>
+                <Link to="/login">Login</Link>
               </li>
-              <li className={classes.linkListItem}>
-                <Link className={classes.link} to="/child">Child</Link>
+              <li>
+                <Link to="/child">Child</Link>
               </li>
-              <li className={classes.linkListItem}>
-                <Link className={classes.link} to="/parent">Parent</Link>
+              <li>
+                <Link to="/parent">Parent</Link>
               </li>
             </ul>
           </nav>
