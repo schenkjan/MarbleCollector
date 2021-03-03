@@ -1,15 +1,15 @@
-import { Avatar, IconButton, makeStyles, Toolbar, Typography } from "@material-ui/core";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Avatar, createStyles, IconButton, makeStyles, Theme, Toolbar, Typography } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { useDashboardBasePath } from "./DashboardBasePathHook";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
     toolbar: {
-        backgroundColor: "#01579b", // TODO js (25.02.2021): Move color selection to theme?
-        color: "#fff", // TODO js (25.02.2021): Move color selection to theme?
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.background.default,
     },
     avatar: {
-        backgroundColor: "#fff", // TODO js (25.02.2021): Move color selection to theme?
-        color: "#000", // TODO js (25.02.2021): Move color selection to theme?
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
     },
     link: {
         textDecoration: "none",
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     title: {
         padding: "0px 16px 0px 16px",
     }
-});
+}));
 
 type Prop = {
     avatarSrc: string;
