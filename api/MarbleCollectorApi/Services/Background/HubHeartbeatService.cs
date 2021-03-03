@@ -12,11 +12,13 @@ namespace MarbleCollectorApi.Services.Background
     {
         private readonly ILogger<HubHeartbeatService> _logger;
         private readonly IHubContext<ParentNotificationHub> _parentNotificationHubContext;
+        private readonly IHubContext<ChildrenNotificationHub> _childrenNotificationHubContext;
 
-        public HubHeartbeatService(ILogger<HubHeartbeatService> logger, IHubContext<ParentNotificationHub> parentNotificationHubContext)
+        public HubHeartbeatService(ILogger<HubHeartbeatService> logger, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
         {
             _logger = logger;
             _parentNotificationHubContext = parentNotificationHubContext;
+            _childrenNotificationHubContext = childrenNotificationHubContext;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -30,6 +32,8 @@ namespace MarbleCollectorApi.Services.Background
             {
                 _logger.LogDebug($"HubHeartbeatService task doing background work.");
                 await _parentNotificationHubContext.Clients.All.SendAsync(ParentNotificationHub.ReceiveMessageMethod, nameof(HubHeartbeatService), $"Hearbeat :: {DateTime.Now}");
+                await _childrenNotificationHubContext.Clients.All.SendAsync(ChildrenNotificationHub.UpdateFiguresMethod, nameof(HubHeartbeatService), $"Hearbeat :: {DateTime.Now}");
+                
                 await Task.Delay(10000, stoppingToken);
             }
 

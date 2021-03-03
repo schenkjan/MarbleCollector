@@ -77,6 +77,7 @@ namespace MarbleCollectorApi
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<ParentNotificationHub>("/hubs/parent");
+                endpoints.MapHub<ChildrenNotificationHub>("/hubs/children");
             });
 
             UpdateDatabase(app);
