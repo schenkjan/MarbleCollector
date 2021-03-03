@@ -23,9 +23,26 @@ type Prop = {
 export function TitleBar(props: Prop) {
     const classes = useStyles();
 
+    function getAvatar() {
+        var matches = props.avatarAlt.match(/\b(\w)/g);
+        var acronym = matches?.join('') ?? "?";
+        
+        if (props.avatarSrc) {
+            return <Avatar className={classes.avatar} alt={acronym} src={props.avatarSrc}>
+                {acronym.toUpperCase()}
+            </Avatar>
+        }
+
+        return (
+            <Avatar className={classes.avatar}>
+                {acronym.toUpperCase()}
+            </Avatar>
+        );
+    }
+
     return (
         <Toolbar className={classes.toolbar}>
-            <Avatar className={classes.avatar} alt={props.avatarAlt} src={props.avatarSrc} />
+            {getAvatar()}
             <Typography className={classes.title} variant="h6">{props.title}</Typography>
             <IconButton />
         </Toolbar>
