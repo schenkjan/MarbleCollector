@@ -1,4 +1,5 @@
 import { atom, selector } from "recoil";
+import { persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 
@@ -10,6 +11,7 @@ export const currentScreen = atom({
 export const userInfoState = atom<AuthResponse | null>({
   key: "userInfoState",
   default: null,
+  effects_UNSTABLE: [persistUserInfoState],
 });
 
 export const userIsAuthenticated = selector<boolean>({

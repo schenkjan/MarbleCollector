@@ -75,7 +75,6 @@ export function LoginScreen() {
       setUserInfo(loginResponse.data);
       // redirect to dashboard
     } catch (error) {
-      debugger;
       setSnackbar({
         open: true,
         message: `${error.message}: ${JSON.stringify(error.response.data)}`,
