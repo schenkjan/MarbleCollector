@@ -4,6 +4,7 @@ import { Chore } from "../model/Chore";
 import { ChoreTableRow } from "./ChoreTableRow";
 import { Fab } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
+import { AddChoreDialog } from "./AddChoreDialog";
 
 // TODO js (25.02.2021): Remove dummy data as soon as data is consumed from backend.
 const lars = {
@@ -37,6 +38,7 @@ const lars = {
 
 export function ChoreTable() {
     const [chores, setChores] = useState<Chore[]>([]);
+    const [showDialog, setShowDialog] = useState(false);
     const classes = useStyles();
 
     useEffect(() => {
@@ -144,6 +146,22 @@ export function ChoreTable() {
         ]);   
     }, []);
 
+    function handleOnCancel() {
+        setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
+    }
+
+    function handleOnDelete() {
+        setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
+    }
+
+    function handleOnSave() {
+        setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct save logic.
+    }
+
+    function handleAddChore() {
+        setShowDialog(true);
+    }
+   
     return (
         <TableContainer className={classes.container} component={Paper}>
             <Table stickyHeader aria-label="sticky table" size="small">
@@ -161,9 +179,10 @@ export function ChoreTable() {
                     ))}
                 </TableBody>
             </Table>
-            <Fab className={classes.fab} size="small" color="primary" aria-label="add">
+            <Fab className={classes.fab} size="small" color="primary" aria-label="add" onClick={handleAddChore}>
                 <AddIcon />
             </Fab>
+            <AddChoreDialog open={showDialog} onCancel={handleOnCancel} onDelete={handleOnDelete} onSave={handleOnSave}/>
         </TableContainer>
     );
 }
