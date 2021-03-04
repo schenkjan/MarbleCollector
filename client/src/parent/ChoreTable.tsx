@@ -1,4 +1,6 @@
 import {
+  Box,
+  CircularProgress,
   Paper,
   TableContainer,
   Table,
@@ -13,6 +15,7 @@ import {
 import { ChoreTableRow } from "./ChoreTableRow";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
@@ -38,17 +41,31 @@ export function ChoreTable(): JSX.Element {
   const classes = useStyles();
 
   const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data } = useQuery("choreData", () =>
-    axios.get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
-    })
+  const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
+    axios
+      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+      .then((data) => data?.data)
   );
 
-  if (isLoading) return <p>Loading...</p>; // TODO js (04.03.2021): Implement more sophisticated loading screen.
+  if (isLoading)
+    return (
+      <Box>
+        <p>Loading...</p>
+        <CircularProgress />
+      </Box>
+    ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
 
-  if (error) return <p>{`An error has occurred: ${error}`}</p>; // TODO js (04.03.2021): Implement more sophisticated error screen.
+  if (error)
+    return (
+      <Box>
+        <ErrorIcon color="secondary" fontSize="large" />
+        <p>{`An error has occurred: ${error}`}</p>
+      </Box>
+    ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <TableContainer className={classes.container} component={Paper}>
@@ -62,7 +79,7 @@ export function ChoreTable(): JSX.Element {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.data.map((chore) => (
+          {chores?.map((chore) => (
             <ChoreTableRow key={chore.id} chore={chore} />
           ))}
         </TableBody>
