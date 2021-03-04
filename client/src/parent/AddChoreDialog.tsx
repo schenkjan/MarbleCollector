@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Dialog, DialogContent, DialogContentText } from "@material-ui/core";
+import { Grid, Button, FormControlLabel, Dialog, DialogContent, DialogContentText } from "@material-ui/core";
 import * as React from 'react';
 import {Formik, Form, Field} from 'formik';
 import MuiTextField from '@material-ui/core/TextField';
@@ -9,7 +9,6 @@ import DateFnsUtils from '@date-io/date-fns';
 import Box from '@material-ui/core/Box';
 
 import { ChoreValidation } from "../model/ChoreValidation";
-
 
 type Prop = {
     open: boolean;
@@ -44,8 +43,10 @@ export function AddChoreDialog(props: Prop) {
         <Dialog open={props.open}>
             <DialogContent>
                 <DialogContentText>
-                    <Formik
-                        // init for the complete Formik-Component --> (GET-method in edit szenario)
+                    <Grid container direction="column" justify="center" alignItems="center" spacing={1}>
+                        <Grid item>
+                            <Formik
+                                // init for the complete Formik-Component --> (GET-method in edit szenario)
 
 
 
@@ -53,146 +54,154 @@ export function AddChoreDialog(props: Prop) {
 
 
 
-                        initialValues={{
-                        choreName: 'Rakete bauen (60min)',
-                        choreValue: 10,
-                        childSelect: true,
-                        childSelect2: false,
-                        date: new Date(),
-                        rememberMe: true
-                        }}
+                                initialValues={{
+                                choreName: 'Rakete bauen (60min)',
+                                choreValue: 10,
+                                childSelect: true,
+                                childSelect2: false,
+                                date: new Date(),
+                                rememberMe: true
+                                }}
 
-                        // validating for the complete Formik-Component
-                        validate={(ChoreValidation) => {
+                                // validating for the complete Formik-Component
+                                validate={(ChoreValidation) => {
 
-                        let validDateMessage: string = '';
+                                let validDateMessage: string = '';
 
-                        const validDate = (formValue: Date, actuellValue: Date) => {
-                            if (formValue.getFullYear() == actuellValue.getFullYear()) {
-                            if (formValue.getMonth() == actuellValue.getMonth()) {
-                                if (formValue.getDate() >= actuellValue.getDate()) {
-                                return true;
-                                } else {
-                                validDateMessage = 'Ausgewählter Tag liegt in der Vergangenheit';
-                                return false;
+                                const validDate = (formValue: Date, actuellValue: Date) => {
+                                    if (formValue.getFullYear() == actuellValue.getFullYear()) {
+                                    if (formValue.getMonth() == actuellValue.getMonth()) {
+                                        if (formValue.getDate() >= actuellValue.getDate()) {
+                                        return true;
+                                        } else {
+                                        validDateMessage = 'Ausgewählter Tag liegt in der Vergangenheit';
+                                        return false;
+                                        }
+                                    } else if (formValue.getMonth() > actuellValue.getMonth()) {
+                                        return true;
+                                    } else {
+                                        validDateMessage = 'Ausgewählter Monat liegt in der Vergangenheit';
+                                        return false;
+                                    }
+                                    } else if (formValue.getFullYear() > actuellValue.getFullYear()) {
+                                    return true;
+                                    } else {
+                                    validDateMessage = 'Ausgewähltes Jahr liegt in der Vergangenheit';
+                                    return false;
+                                    }
                                 }
-                            } else if (formValue.getMonth() > actuellValue.getMonth()) {
-                                return true;
-                            } else {
-                                validDateMessage = 'Ausgewählter Monat liegt in der Vergangenheit';
-                                return false;
-                            }
-                            } else if (formValue.getFullYear() > actuellValue.getFullYear()) {
-                            return true;
-                            } else {
-                            validDateMessage = 'Ausgewähltes Jahr liegt in der Vergangenheit';
-                            return false;
-                            }
-                        }
 
-                        const errors: Partial<ChoreValidation> = {};
-                        if (!ChoreValidation.choreName) {
-                            errors.choreName = 'Bitte definieren';
-                        } else if (!ChoreValidation.choreValue) {
-                            errors.choreValue = 'Bitte definieren';
-                        } else if (ChoreValidation.choreValue < 1) {
-                            errors.choreValue = 'Ein wenig unfair, nicht?';
-                        } else if (!validDate(ChoreValidation.date, new Date())) {
-                            errors.date = validDateMessage;
-                        }
-                        return errors;
-                        }}
-
-                        // submit-function for the complete Formik-Component
-                        onSubmit={(ChoreValidation, {setSubmitting}) => {
-                        setSubmitting(false);
-                        console.log(JSON.stringify(ChoreValidation, null, 2));
-                        alert(JSON.stringify(ChoreValidation, null, 2));
-                        // programming below the POST-method for the backend
-                        // (in edit szenario --> PUT-method)
-
-
-
-
-
-                        //
-                        }}
-                    >
-                        {({submitForm, isSubmitting}) => (
-                        // Use any dateformat which is the best one for the backend!
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <Form>
-                            <Box margin={2}>
-                                <Field
-                                component={ChoreTextField}
-                                name="choreName"
-                                type="text"
-                                label="Ämtlibezeichnung"
-                                />
-                            </Box>
-                            <Box margin={2}>
-                                <Field
-                                component={ChoreTextField}
-                                name="choreValue"
-                                type="number"
-                                label="Wert in Murmeln"
-                                />
-                            </Box>
-                            <Box margin={3}>
-                                <FormControlLabel
-                                control={
-                                    <Field type="checkbox" name="childSelect" />
+                                const errors: Partial<ChoreValidation> = {};
+                                if (!ChoreValidation.choreName) {
+                                    errors.choreName = 'Bitte definieren';
+                                } else if (!ChoreValidation.choreValue) {
+                                    errors.choreValue = 'Bitte definieren';
+                                } else if (ChoreValidation.choreValue < 1) {
+                                    errors.choreValue = 'Ein wenig unfair, nicht?';
+                                } else if (!validDate(ChoreValidation.date, new Date())) {
+                                    errors.date = validDateMessage;
                                 }
-                                label="Peter"
-                                />
-                                <br/>
-                                <FormControlLabel
-                                control={
-                                    <Field type="checkbox" name="childSelect2" />
-                                }
-                                label="Margret"
-                                />
-                            </Box>
-                            <Box margin={2}>
-                                <Field component={DatePicker} name="date" label="Erledigt bis:" />
-                            </Box>
-                            <Box margin={2}>
-                                <FormControlLabel
-                                control={
-                                    <Field component={Switch} type="checkbox" color="primary" name="rememberMe" />
-                                }
-                                label="Erinnerung?"
-                                />
-                            </Box>
-                            <Box margin={2}>
-                                <Button
-                                variant="contained"
-                                color="primary"
-                                disabled={isSubmitting}
-                                onClick={submitForm}
-                                >
-                                Bestätigen
-                                </Button>
-                            </Box>
-                            <Box margin={2}>
-                                <Button
-                                variant="outlined"
-                                color="primary" 
-                                disabled={isSubmitting}
-                                onClick={cancelForm}
-                                >
-                                Abbrechen
-                                </Button>
-                            </Box>
-                            </Form>
-                        </MuiPickersUtilsProvider>
-                        )}
-                    </Formik>
+                                return errors;
+                                }}
+
+                                // submit-function for the complete Formik-Component
+                                onSubmit={(ChoreValidation, {setSubmitting}) => {
+                                setSubmitting(false);
+                                console.log(JSON.stringify(ChoreValidation, null, 2));
+                                alert(JSON.stringify(ChoreValidation, null, 2));
+                                // programming below the POST-method for the backend
+                                // (in edit szenario --> PUT-method)
+
+
+
+
+
+                                //
+                                }}
+                            >
+                                {({submitForm, isSubmitting}) => (
+                                // Use any dateformat which is the best one for the backend!
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Form>
+                                        <Box margin={2}>
+                                            <Field
+                                            component={ChoreTextField}
+                                            name="choreName"
+                                            type="text"
+                                            label="Ämtlibezeichnung"
+                                            />
+                                        </Box>
+                                        <Box margin={2}>
+                                            <Field
+                                            component={ChoreTextField}
+                                            name="choreValue"
+                                            type="number"
+                                            label="Wert in Murmeln"
+                                            />
+                                        </Box>
+                                        <Box margin={3}>
+                                            <FormControlLabel
+                                            control={
+                                                <Field type="checkbox" name="childSelect" />
+                                            }
+                                            label="Peter"
+                                            />
+                                            <br/>
+                                            <FormControlLabel
+                                            control={
+                                                <Field type="checkbox" name="childSelect2" />
+                                            }
+                                            label="Margret"
+                                            />
+                                        </Box>
+                                        <Box margin={2}>
+                                            <Field component={DatePicker} name="date" label="Erledigt bis:" />
+                                        </Box>
+                                        <Box margin={2}>
+                                            <FormControlLabel
+                                            control={
+                                                <Field component={Switch} type="checkbox" color="primary" name="rememberMe" />
+                                            }
+                                            label="Erinnerung?"
+                                            />
+                                        </Box>
+                                        {/* <Box margin={2}>
+                                            <Button
+                                            variant="contained"
+                                            color="primary"
+                                            disabled={isSubmitting}
+                                            onClick={submitForm}
+                                            >
+                                            Bestätigen
+                                            </Button>
+                                        </Box>
+                                        <Box margin={2}>
+                                            <Button
+                                            variant="outlined"
+                                            color="primary" 
+                                            disabled={isSubmitting}
+                                            onClick={cancelForm}
+                                            >
+                                            Abbrechen
+                                            </Button>
+                                        </Box> */}
+                                    </Form>
+                                </MuiPickersUtilsProvider>
+                                )}
+                            </Formik>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" color="primary" onClick={props.onSave}>Speichern</Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" color="secondary" onClick={props.onDelete}>Löschen</Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="outlined" color="primary" onClick={props.onCancel}>Abbrechen</Button>
+                        </Grid>
+                    </Grid>
                 </DialogContentText>
             </DialogContent>
-            <Button variant="contained" color="primary" onClick={props.onSave}>Speichern</Button>
-            <Button variant="contained" color="secondary" onClick={props.onDelete}>Löschen</Button>
-            <Button variant="outlined" color="primary" onClick={props.onCancel}>Abbrechen</Button>
         </Dialog>
     );
 } 
