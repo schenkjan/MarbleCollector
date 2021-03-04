@@ -5,6 +5,7 @@
     modified: Date;
     modifiedBy: string;
     userId: number;
+    userName: string;
     chore: Chore;
     state: AssignmentState;
 }

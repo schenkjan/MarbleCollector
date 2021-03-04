@@ -34,6 +34,9 @@
 	  <None Update="ViewModels\ts\Chore.ts">
 	    <CustomToolNamespace>ViewModels\Chore.cs</CustomToolNamespace>
 	  </None>
+	  <None Update="ViewModels\ts\ChoreWithAssignments.ts">
+	    <CustomToolNamespace>ViewModels\ChoreWithAssignments.cs</CustomToolNamespace>
+	  </None>
 	  <None Update="ViewModels\ts\Grant.ts">
 	    <CustomToolNamespace>ViewModels\Grant.cs</CustomToolNamespace>
 	  </None>
