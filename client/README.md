@@ -49,6 +49,10 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 - `npm install recoil`
 - `npm install @material-ui/icons`
 - `npm install @material-ui/lab` for snackbars
+- `npm install @material-ui/pickers`
+- `npm add formik formik-material-ui @material-ui/core`
+- `npm add formik-material-ui-lab @material-ui/lab`
+- `npm add formik-material-ui-pickers @date-io/date-fns@1.x date-fns`
 - `npm install react-query`
 
 ## Code formatting
