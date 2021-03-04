@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using MarbleCollectorApi.Data.Dtos;
+using MarbleCollectorApi.ViewModels;
 
 namespace MarbleCollectorApi.Controllers
 {

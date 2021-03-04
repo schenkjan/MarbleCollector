@@ -2,7 +2,7 @@
 using MarbleCollectorApi.Data.Models;
 using MarbleCollectorApi.Data.Models.Core;
 
-namespace MarbleCollectorApi.Data.Dtos
+namespace MarbleCollectorApi.ViewModels
 {
     /// <summary>
     /// Describes a reward grant, i.e. a reward, who it is granted to and the state of the grant.

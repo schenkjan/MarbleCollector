@@ -1,12 +1,12 @@
 ﻿using System;
 using MarbleCollectorApi.Data.Models;
 
-namespace MarbleCollectorApi.Data.Dtos
+namespace MarbleCollectorApi.ViewModels
 {
     /// <summary>
-    /// Describes a chore assignment, i.e. a chore, who it is assigned to and the state of the assignment.
+    /// Describes a reward grant, i.e. a reward, who it is granted to and the state of the grant.
     /// </summary>
-    public class Assignment
+    public class Grant
     {
         public int Id { get; set; }
         public DateTime Created { get; set; }
@@ -16,8 +16,8 @@ namespace MarbleCollectorApi.Data.Dtos
 
         public int UserId { get; set; }
 
-        public int Choreid { get; set; }
+        public int RewardId { get; set; }
 
-        public AssignmentState State { get; set; }
+        public GrantState State { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 using MarbleCollectorApi.Data.Models;
 using MarbleCollectorApi.Data.Models.Core;
 
-namespace MarbleCollectorApi.Data.Dtos
+namespace MarbleCollectorApi.ViewModels
 {
     /// <summary>
     /// Describes a chore assignment, i.e. a chore, who it is assigned to and the state of the assignment.
