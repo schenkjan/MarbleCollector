@@ -21,6 +21,7 @@ namespace MarbleCollectorApi.Controllers
             _choreRepository = choreRepository;
         }
 
+        // TODO js (04.03.2021): Can all users get all chores?
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Chore>> GetChores()
@@ -41,7 +42,6 @@ namespace MarbleCollectorApi.Controllers
 
             return Ok(chore);
         }
-
 
         [HttpPost()]
         [Authorize(Roles = Const.UserRoleParent)]
@@ -73,6 +73,7 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest();
             }
 
+            // TODO js (04.03.2021): Can a chore be updated if done/confirmed assignments exist?
             entityEntry = _choreRepository.Update(chore);
             _choreRepository.Commit();
 
@@ -90,7 +91,9 @@ namespace MarbleCollectorApi.Controllers
                 return NotFound();
             }
 
+            // TODO js (04.03.2021): Can a chore be deleted if done/confirmed assignments exist?
             _choreRepository.Delete(chore);
+            // TODO js (04.03.2021): Delete all assignments of the chore.
             _choreRepository.Commit();
 
             return Ok();
