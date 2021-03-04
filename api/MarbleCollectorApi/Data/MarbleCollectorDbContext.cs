@@ -72,9 +72,38 @@ namespace MarbleCollectorApi.Data
         public async void EnsureSeedData()
         {
             bool anyUsersSeeded = await Users.AnyAsync();
+            bool anyChoresSeeded = await Chores.AnyAsync();
+            bool anyRewardsSeeded = await Rewards.AnyAsync();
+            bool anyAssignmentSeeded = await Assignments.AnyAsync();
+            bool anyGrantsSeeded = await Grants.AnyAsync();
+
             if (!anyUsersSeeded)
             {
                 Users.AddRange(DefaultFamily.GetUsers());
+                SaveChanges();
+            }
+
+            if (!anyChoresSeeded)
+            {
+                Chores.AddRange(DefaultChores.GetChores());
+                SaveChanges();
+            }
+
+            if (!anyRewardsSeeded)
+            {
+                Rewards.AddRange(DefaultRewards.GetRewards());
+                SaveChanges();
+            }
+
+            if (!anyAssignmentSeeded)
+            {
+                Assignments.AddRange(DefaultAssignments.GetAssignments());
+                SaveChanges();
+            }
+
+            if (!anyGrantsSeeded)
+            {
+                Grants.AddRange(DefaultGrants.GetGrants());
                 SaveChanges();
             }
         }
