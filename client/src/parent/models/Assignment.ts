@@ -1,7 +1,13 @@
-import { Child } from "./Child";
+import { AssignmentState } from "./AssignmentState";
 
-export type Assignment = {
-  isDone: boolean;
-  isConfirmed: boolean;
-  assignee: Child;
-};
+export interface Assignment {
+  id: number;
+  created?: Date;
+  createdBy?: string;
+  modified?: Date;
+  modifiedBy?: string;
+  userId: number;
+  userName: string;
+  choreId: number;
+  state: AssignmentState;
+}
