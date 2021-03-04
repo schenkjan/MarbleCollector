@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { DashboardLayout } from "../shell/DashboardLayout";
 import { ChoreTable } from "./ChoreTable";
 import {
@@ -7,11 +6,11 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { userAvatarInfo } from "../AppState";
+import { AppState } from "../AppState";
 
 export function ParentScreen() {
   const { path } = useRouteMatch();
-  const userAvatar = useRecoilValue(userAvatarInfo);
+  const userAvatarInfo = useRecoilValue(AppState.userAvatarInfo);
 
   // how can we improve the layout, so that we don't have to repeat ourselves for every sub component and every screen?
   // maybe we have a global state for the title, then we need the Dashboardlayout exactly once
@@ -19,8 +18,8 @@ export function ParentScreen() {
     <Switch>
       <Route path={`${path}/rewards`}>
         <DashboardLayout
-          avatarAlt={userAvatar.imgAlt}
-          avatarSrc={userAvatar.imgSrc}
+          avatarAlt={userAvatarInfo.imgAlt}
+          avatarSrc={userAvatarInfo.imgSrc}
           title="Belohnungs-Pinwand"
         >
           <p>Belohnungen...</p>
@@ -28,8 +27,8 @@ export function ParentScreen() {
       </Route>
       <Route path={`${path}/profile`}>
         <DashboardLayout
-          avatarAlt={userAvatar.imgAlt}
-          avatarSrc={userAvatar.imgSrc}
+          avatarAlt={userAvatarInfo.imgAlt}
+          avatarSrc={userAvatarInfo.imgSrc}
           title="Profil"
         >
           <p>Profil...</p>
@@ -37,8 +36,8 @@ export function ParentScreen() {
       </Route>
       <Route path={[`${path}/chores`, path]} exact>
         <DashboardLayout
-          avatarAlt={userAvatar.imgAlt}
-          avatarSrc={userAvatar.imgSrc}
+          avatarAlt={userAvatarInfo.imgAlt}
+          avatarSrc={userAvatarInfo.imgSrc}
           title="Ämtli Pinwand"
         >
           <ChoreTable />
