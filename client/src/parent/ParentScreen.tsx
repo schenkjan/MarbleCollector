@@ -1,28 +1,46 @@
-import { useState } from "react";
 import { DashboardLayout } from "../shell/DashboardLayout";
 import { ChoreTable } from "./ChoreTable";
-import { BrowserRouter as  Switch, Route, useRouteMatch } from "react-router-dom";
+import {
+  BrowserRouter as Switch,
+  Route,
+  useRouteMatch,
+} from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { AppState } from "../AppState";
 
 export function ParentScreen() {
-  const {path, } = useRouteMatch();
-  const [avatarAlt, ] = useState("Mami"); // TODO js (25.02.2021): Set the avatar alt value depending on logged in user.
-  const [avatarSrc, ] = useState(""); // TODO js (25.02.2021): Set the avatar src depending on logged in user.
+  const { path } = useRouteMatch();
+  const userAvatarInfo = useRecoilValue(AppState.userAvatarInfo);
 
+  // how can we improve the layout, so that we don't have to repeat ourselves for every sub component and every screen?
+  // maybe we have a global state for the title, then we need the Dashboardlayout exactly once
   return (
     <Switch>
       <Route path={`${path}/rewards`}>
-        <DashboardLayout avatarAlt={avatarAlt} avatarSrc={avatarSrc} title="Belohnungs-Pinwand">
+        <DashboardLayout
+          avatarAlt={userAvatarInfo.imgAlt}
+          avatarSrc={userAvatarInfo.imgSrc}
+          title="Belohnungs-Pinwand"
+        >
           <p>Belohnungen...</p>
         </DashboardLayout>
       </Route>
       <Route path={`${path}/profile`}>
-        <DashboardLayout avatarAlt={avatarAlt} avatarSrc={avatarSrc} title="Profil">
+        <DashboardLayout
+          avatarAlt={userAvatarInfo.imgAlt}
+          avatarSrc={userAvatarInfo.imgSrc}
+          title="Profil"
+        >
           <p>Profil...</p>
         </DashboardLayout>
       </Route>
       <Route path={[`${path}/chores`, path]} exact>
-        <DashboardLayout avatarAlt={avatarAlt} avatarSrc={avatarSrc} title="Ämtli Pinwand">
-          <ChoreTable/>
+        <DashboardLayout
+          avatarAlt={userAvatarInfo.imgAlt}
+          avatarSrc={userAvatarInfo.imgSrc}
+          title="Ämtli Pinwand"
+        >
+          <ChoreTable />
         </DashboardLayout>
       </Route>
     </Switch>

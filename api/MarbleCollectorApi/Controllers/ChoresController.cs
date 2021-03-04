@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MarbleCollectorApi.Data.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MarbleCollectorApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class ChoresController : Controller
     {
         private readonly IChoreRepository _choreRepository;
@@ -41,8 +44,10 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpPost()]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<Chore> CreateChore(Chore chore)
         {
             if (string.IsNullOrEmpty(chore.Name) || string.IsNullOrEmpty(chore.Description))
