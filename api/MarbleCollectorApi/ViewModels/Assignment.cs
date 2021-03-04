@@ -14,6 +14,7 @@ namespace MarbleCollectorApi.ViewModels
         public string ModifiedBy { get; set; } = string.Empty;
 
         public int UserId { get; set; }
+        public string UserName { get; set; }
 
         public int ChoreId { get; set; }
 

@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
+using MarbleCollectorApi.Data.Mapping;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MarbleCollectorApi.Data.Repository;
@@ -15,10 +18,13 @@ namespace MarbleCollectorApi.Controllers
     public class ChoresController : Controller
     {
         private readonly IChoreRepository _choreRepository;
+        private readonly IAssignmentRepository _assignmentRepository;
 
-        public ChoresController(IChoreRepository choreRepository)
+        public ChoresController(IChoreRepository choreRepository, IAssignmentRepository assignmentRepository)
         {
-            _choreRepository = choreRepository;
+            _choreRepository = choreRepository ?? throw new ArgumentNullException(nameof(choreRepository));
+            _assignmentRepository =
+                assignmentRepository ?? throw new ArgumentNullException(nameof(assignmentRepository));
         }
 
         // TODO js (04.03.2021): Can all users get all chores?
@@ -26,9 +32,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Chore>> GetChores()
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
-
-            //return Ok(_choreRepository.GetAll());
+            return Ok(_choreRepository.GetAll().Select(chore => chore.Map()));
         }
 
         [HttpGet("{id}")]
@@ -36,15 +40,13 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Chore> GetChoreById(int id)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            var chore = _choreRepository.GetSingle(id);
+            if (chore == null)
+            {
+                return NotFound();
+            }
 
-            //var chore = _choreRepository.GetSingle(id);
-            //if (chore == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return Ok(chore);
+            return Ok(chore.Map());
         }
 
         [HttpPost()]
@@ -54,17 +56,15 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<Chore> CreateChore(Chore chore)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            if (string.IsNullOrEmpty(chore.Name) || string.IsNullOrEmpty(chore.Description))
+            {
+                return BadRequest();
+            }
 
-            //if (string.IsNullOrEmpty(chore.Name) || string.IsNullOrEmpty(chore.Description))
-            //{
-            //    return BadRequest();
-            //}
+            var entityEntry = _choreRepository.Add(chore.Map());
+            _choreRepository.Commit();
 
-            //var entityEntry = _choreRepository.Add(chore);
-            //_choreRepository.Commit();
-
-            //return Created("Get", entityEntry.Entity);
+            return Created("Get", entityEntry.Entity);
         }
 
         [HttpPut("{id}")]
@@ -73,19 +73,16 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Chore> UpdateChore(int id, Chore chore)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            if (id != chore.Id)
+            {
+                return BadRequest();
+            }
 
-            //EntityEntry entityEntry;
-            //if (id != chore.Id)
-            //{
-            //    return BadRequest();
-            //}
+            // TODO js (04.03.2021): Can a chore be updated if done/confirmed assignments exist?
+            EntityEntry entityEntry = _choreRepository.Update(chore.Map());
+            _choreRepository.Commit();
 
-            //// TODO js (04.03.2021): Can a chore be updated if done/confirmed assignments exist?
-            //entityEntry = _choreRepository.Update(chore);
-            //_choreRepository.Commit();
-
-            //return Ok(entityEntry.Entity);
+            return Ok(entityEntry.Entity);
         }
 
         [HttpDelete("{id}")]
@@ -107,12 +104,29 @@ namespace MarbleCollectorApi.Controllers
             return Ok();
         }
 
+        private readonly ChoreWithAssignments[] _chores =
+        {
+            new ChoreWithAssignments
+            {
+                Id = 1, Name = "", Description = "", DueDate = DateTime.Today.AddDays(1), Value = 10,
+                Assignments = new List<Assignment>
+                {
+                    new Assignment {Id = 1, UserId = 1, UserName = "Lara", ChoreId = 1, State = AssignmentState.Active},
+                    new Assignment {Id = 2, UserId = 2, UserName = "Lisa", ChoreId = 1, State = AssignmentState.RequestedToCheck},
+                    new Assignment {Id = 3, UserId = 3, UserName = "Lars", ChoreId = 1, State = AssignmentState.CheckConfirmed},
+                }
+            },
+
+        };
+
         // TODO js (04.03.2021): Can all users get all chores?
         [HttpGet("Assignments/")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<ChoreWithAssignments>> GetChoresAndAssignments()
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            return Ok(_chores);
+
+            //return NotFound(); // TODO js (04.03.2021): To be implemented!
         }
     }
 }
