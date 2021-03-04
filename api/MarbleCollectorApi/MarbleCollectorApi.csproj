@@ -22,11 +22,29 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Update="ViewModels\ts\Assignment.ts">
+	    <CustomToolNamespace>ViewModels\Assignment.cs</CustomToolNamespace>
+	  </None>
+	  <None Update="ViewModels\ts\AssignmentWithChore.ts">
+	    <CustomToolNamespace>ViewModels\AssignmentWithChore.cs</CustomToolNamespace>
+	  </None>
 	  <None Update="ViewModels\ts\AuthResponse.ts">
 	    <CustomToolNamespace>ViewModels\Auth\AuthResponse.cs</CustomToolNamespace>
 	  </None>
+	  <None Update="ViewModels\ts\Chore.ts">
+	    <CustomToolNamespace>ViewModels\Chore.cs</CustomToolNamespace>
+	  </None>
+	  <None Update="ViewModels\ts\Grant.ts">
+	    <CustomToolNamespace>ViewModels\Grant.cs</CustomToolNamespace>
+	  </None>
+	  <None Update="ViewModels\ts\GrantWithReward.ts">
+	    <CustomToolNamespace>ViewModels\GrantWithReward.cs</CustomToolNamespace>
+	  </None>
 	  <None Update="ViewModels\ts\LoginRequest.ts">
 	    <CustomToolNamespace>ViewModels\Auth\LoginRequest.cs</CustomToolNamespace>
+	  </None>
+	  <None Update="ViewModels\ts\Reward.ts">
+	    <CustomToolNamespace>ViewModels\Reward.cs</CustomToolNamespace>
 	  </None>
 	</ItemGroup>
 
