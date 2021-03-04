@@ -33,20 +33,14 @@ function ChoreTextField(props: TextFieldProps) {
   return <MuiTextField {...fieldToTextField(props)} onChange={onChange} />;
 }
 
-const cancelForm = () => {
-  alert("Erfassung abgebrochen -> put here the parent Dashboard link, for canceling chore creating");
-}
-
 
 export function AddChoreDialog(props: Prop) {
     return (
         <Dialog open={props.open}>
             <DialogContent>
                 <DialogContentText>
-                    <Grid container direction="column" justify="center" alignItems="center" spacing={1}>
-                        <Grid item>
-                            <Formik
-                                // init for the complete Formik-Component --> (GET-method in edit szenario)
+                    <Formik
+                        // init for the complete Formik-Component --> (GET-method in edit szenario)
 
 
 
@@ -54,75 +48,77 @@ export function AddChoreDialog(props: Prop) {
 
 
 
-                                initialValues={{
-                                choreName: 'Rakete bauen (60min)',
-                                choreValue: 10,
-                                childSelect: true,
-                                childSelect2: false,
-                                date: new Date(),
-                                rememberMe: true
-                                }}
+                        initialValues={{
+                        choreName: 'Rakete bauen (60min)',
+                        choreValue: 10,
+                        childSelect: true,
+                        childSelect2: false,
+                        date: new Date(),
+                        rememberMe: true
+                        }}
 
-                                // validating for the complete Formik-Component
-                                validate={(ChoreValidation) => {
+                        // validating for the complete Formik-Component
+                        validate={(ChoreValidation) => {
 
-                                let validDateMessage: string = '';
+                        let validDateMessage: string = '';
 
-                                const validDate = (formValue: Date, actuellValue: Date) => {
-                                    if (formValue.getFullYear() == actuellValue.getFullYear()) {
-                                    if (formValue.getMonth() == actuellValue.getMonth()) {
-                                        if (formValue.getDate() >= actuellValue.getDate()) {
-                                        return true;
-                                        } else {
-                                        validDateMessage = 'Ausgewählter Tag liegt in der Vergangenheit';
-                                        return false;
-                                        }
-                                    } else if (formValue.getMonth() > actuellValue.getMonth()) {
-                                        return true;
-                                    } else {
-                                        validDateMessage = 'Ausgewählter Monat liegt in der Vergangenheit';
-                                        return false;
-                                    }
-                                    } else if (formValue.getFullYear() > actuellValue.getFullYear()) {
-                                    return true;
-                                    } else {
-                                    validDateMessage = 'Ausgewähltes Jahr liegt in der Vergangenheit';
-                                    return false;
-                                    }
+                        const validDate = (formValue: Date, actuellValue: Date) => {
+                            if (formValue.getFullYear() == actuellValue.getFullYear()) {
+                            if (formValue.getMonth() == actuellValue.getMonth()) {
+                                if (formValue.getDate() >= actuellValue.getDate()) {
+                                return true;
+                                } else {
+                                validDateMessage = 'Ausgewählter Tag liegt in der Vergangenheit';
+                                return false;
                                 }
+                            } else if (formValue.getMonth() > actuellValue.getMonth()) {
+                                return true;
+                            } else {
+                                validDateMessage = 'Ausgewählter Monat liegt in der Vergangenheit';
+                                return false;
+                            }
+                            } else if (formValue.getFullYear() > actuellValue.getFullYear()) {
+                            return true;
+                            } else {
+                            validDateMessage = 'Ausgewähltes Jahr liegt in der Vergangenheit';
+                            return false;
+                            }
+                        }
 
-                                const errors: Partial<ChoreValidation> = {};
-                                if (!ChoreValidation.choreName) {
-                                    errors.choreName = 'Bitte definieren';
-                                } else if (!ChoreValidation.choreValue) {
-                                    errors.choreValue = 'Bitte definieren';
-                                } else if (ChoreValidation.choreValue < 1) {
-                                    errors.choreValue = 'Ein wenig unfair, nicht?';
-                                } else if (!validDate(ChoreValidation.date, new Date())) {
-                                    errors.date = validDateMessage;
-                                }
-                                return errors;
-                                }}
+                        const errors: Partial<ChoreValidation> = {};
+                        if (!ChoreValidation.choreName) {
+                            errors.choreName = 'Bitte definieren';
+                        } else if (!ChoreValidation.choreValue) {
+                            errors.choreValue = 'Bitte definieren';
+                        } else if (ChoreValidation.choreValue < 1) {
+                            errors.choreValue = 'Ein wenig unfair, nicht?';
+                        } else if (!validDate(ChoreValidation.date, new Date())) {
+                            errors.date = validDateMessage;
+                        }
+                        return errors;
+                        }}
 
-                                // submit-function for the complete Formik-Component
-                                onSubmit={(ChoreValidation, {setSubmitting}) => {
-                                setSubmitting(false);
-                                console.log(JSON.stringify(ChoreValidation, null, 2));
-                                alert(JSON.stringify(ChoreValidation, null, 2));
-                                // programming below the POST-method for the backend
-                                // (in edit szenario --> PUT-method)
-
-
+                        // submit-function for the complete Formik-Component
+                        onSubmit={(ChoreValidation) => {
+                            console.log(JSON.stringify(ChoreValidation, null, 2));
+                            alert(JSON.stringify(ChoreValidation, null, 2));
+                            props.onSave();
+                        // programming below the POST-method for the backend
+                        // (in edit szenario --> PUT-method)
 
 
 
-                                //
-                                }}
-                            >
-                                {({submitForm, isSubmitting}) => (
-                                // Use any dateformat which is the best one for the backend!
-                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <Form>
+
+
+                        //
+                        }}
+                    >
+                        {({submitForm}) => (
+                        // Use any dateformat which is the best one for the backend!
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <Form>
+                                <Grid container direction="column" justify="center" alignItems="center" spacing={1}>
+                                    <Grid item>
                                         <Box margin={2}>
                                             <Field
                                             component={ChoreTextField}
@@ -165,41 +161,21 @@ export function AddChoreDialog(props: Prop) {
                                             label="Erinnerung?"
                                             />
                                         </Box>
-                                        {/* <Box margin={2}>
-                                            <Button
-                                            variant="contained"
-                                            color="primary"
-                                            disabled={isSubmitting}
-                                            onClick={submitForm}
-                                            >
-                                            Bestätigen
-                                            </Button>
-                                        </Box>
-                                        <Box margin={2}>
-                                            <Button
-                                            variant="outlined"
-                                            color="primary" 
-                                            disabled={isSubmitting}
-                                            onClick={cancelForm}
-                                            >
-                                            Abbrechen
-                                            </Button>
-                                        </Box> */}
-                                    </Form>
-                                </MuiPickersUtilsProvider>
-                                )}
-                            </Formik>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained" color="primary" onClick={props.onSave}>Speichern</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained" color="secondary" onClick={props.onDelete}>Löschen</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" color="primary" onClick={props.onCancel}>Abbrechen</Button>
-                        </Grid>
-                    </Grid>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button variant="contained" color="primary" onClick={submitForm}>Speichern</Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button variant="contained" color="secondary" onClick={props.onDelete}>Löschen</Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button variant="outlined" color="primary" onClick={props.onCancel}>Abbrechen</Button>
+                                    </Grid>
+                                </Grid>
+                            </Form>
+                        </MuiPickersUtilsProvider>
+                        )}
+                    </Formik>
                 </DialogContentText>
             </DialogContent>
         </Dialog>
