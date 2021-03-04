@@ -19,6 +19,9 @@ namespace MarbleCollectorApi.Data
 
         public DbSet<Chore> Chores { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Assignment> Assignments{ get; set; }
+        public DbSet<Grant> Grants { get; set; }
+        public DbSet<Reward> Rewards { get; set; }
 
         public MarbleCollectorDbContext(DbContextOptions<MarbleCollectorDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
         {
@@ -33,6 +36,9 @@ namespace MarbleCollectorApi.Data
         {
             new ChoreEntityTypeConfiguration().Configure(modelBuilder.Entity<Chore>());
             new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
+            new AssignementEntityTypeConfiguration().Configure(modelBuilder.Entity<Assignment>());
+            new GrantEntityTypeConfiguration().Configure(modelBuilder.Entity<Grant>());
+            new RewardEntityTypeConfiguration().Configure(modelBuilder.Entity<Reward>());
         }
 
         /// <summary>
@@ -66,9 +72,38 @@ namespace MarbleCollectorApi.Data
         public async void EnsureSeedData()
         {
             bool anyUsersSeeded = await Users.AnyAsync();
+            bool anyChoresSeeded = await Chores.AnyAsync();
+            bool anyRewardsSeeded = await Rewards.AnyAsync();
+            bool anyAssignmentSeeded = await Assignments.AnyAsync();
+            bool anyGrantsSeeded = await Grants.AnyAsync();
+
             if (!anyUsersSeeded)
             {
                 Users.AddRange(DefaultFamily.GetUsers());
+                SaveChanges();
+            }
+
+            if (!anyChoresSeeded)
+            {
+                Chores.AddRange(DefaultChores.GetChores());
+                SaveChanges();
+            }
+
+            if (!anyRewardsSeeded)
+            {
+                Rewards.AddRange(DefaultRewards.GetRewards());
+                SaveChanges();
+            }
+
+            if (!anyAssignmentSeeded)
+            {
+                Assignments.AddRange(DefaultAssignments.GetAssignments());
+                SaveChanges();
+            }
+
+            if (!anyGrantsSeeded)
+            {
+                Grants.AddRange(DefaultGrants.GetGrants());
                 SaveChanges();
             }
         }
