@@ -42,14 +42,21 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 ## Additional installations
 
 - `npm install axios`
-- `npm install @material-ui/core` 
+- `npm install @material-ui/core`
 - `npm install react-router-dom`
 - `npm i --save-dev @types/react-router-dom`
 - `npm install @microsoft/signalr`
 - `npm install recoil`
 - `npm install @material-ui/icons`
+- `npm install @material-ui/lab` for snackbars
 - `npm install @material-ui/pickers`
 
 - `npm add formik formik-material-ui @material-ui/core`
 - `npm add formik-material-ui-lab @material-ui/lab`
 - `npm add formik-material-ui-pickers @date-io/date-fns@1.x date-fns`
+
+## Code formatting
+
+The project team uses [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) for visual studio code.
+The prettier settings were extraced from the Output console in visual studio and extracted to the `.prettierrc` file in the project root.
+The `.vscode/settings.json` enforces that the formatting using prettier is executed on save.
