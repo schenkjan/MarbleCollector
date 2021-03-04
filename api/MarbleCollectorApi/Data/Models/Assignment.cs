@@ -7,6 +7,10 @@ namespace MarbleCollectorApi.Data.Models
     /// </summary>
     public class Assignment : BaseEntity
     {
+        public int UserId { get; set; }
+
+        public int ChoreId { get; set; }
+
         public User User { get; set; }
 
         public Chore Chore { get; set; }

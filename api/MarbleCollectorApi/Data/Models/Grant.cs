@@ -7,6 +7,10 @@ namespace MarbleCollectorApi.Data.Models
     /// </summary>
     public class Grant : BaseEntity
     {
+        public int UserId { get; set; }
+
+        public int RewardId { get; set; }
+
         public User User { get; set; }
 
         public Reward Reward { get; set; }
