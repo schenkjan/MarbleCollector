@@ -21,5 +21,14 @@
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="ViewModels\ts\AuthResponse.ts">
+	    <CustomToolNamespace>ViewModels\Auth\AuthResponse.cs</CustomToolNamespace>
+	  </None>
+	  <None Update="ViewModels\ts\LoginRequest.ts">
+	    <CustomToolNamespace>ViewModels\Auth\LoginRequest.cs</CustomToolNamespace>
+	  </None>
+	</ItemGroup>
+
 
 </Project>
