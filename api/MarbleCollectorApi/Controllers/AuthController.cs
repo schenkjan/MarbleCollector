@@ -62,6 +62,7 @@ namespace MarbleCollectorApi.Controllers
             return Ok(_authService.GetAuthResponse(user));
         }
 
+        [Authorize]
         [HttpPost("logout")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<AuthResponse> Post()

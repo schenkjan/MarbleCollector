@@ -14,7 +14,8 @@ import { Backdrop, CircularProgress } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useRecoilState } from "recoil";
-import { AppState } from "../AppState";
+import { AppState } from "../../AppState";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function LoginScreen() {
   const classes = useStyles();
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
@@ -73,7 +75,7 @@ export function LoginScreen() {
         loginRequest
       );
       setUserInfo(loginResponse.data);
-      // redirect to dashboard
+      history.push("/");
     } catch (error) {
       setSnackbar({
         open: true,
