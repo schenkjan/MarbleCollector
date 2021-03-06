@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { LoginScreen } from "./login/LoginScreen";
 import { ChildScreen } from "./child/ChildScreen";
 import { ParentScreen } from "./parent/ParentScreen";
 import { HomeScreen } from "./home/HomeScreen";
@@ -12,6 +11,7 @@ import {
   makeStyles,
   ThemeProvider,
 } from "@material-ui/core";
+import { AuthController } from "./auth/AuthController";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();
@@ -51,9 +51,9 @@ function App() {
   });
 
   return (
-    <RecoilRoot>
+    <Router>
       <QueryClientProvider client={queryClient}>
-        <Router>
+        <RecoilRoot>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <div className="App">
@@ -63,7 +63,7 @@ function App() {
                     <Link to="/">Home</Link>
                   </li>
                   <li>
-                    <Link to="/login">Login</Link>
+                    <Link to="/auth">Auth</Link>
                   </li>
                   <li>
                     <Link to="/child">Child</Link>
@@ -75,8 +75,11 @@ function App() {
               </nav>
 
               <Switch>
-                <Route path="/login">
-                  <LoginScreen />
+                <Route path="/auth">
+                  <AuthController />
+                </Route>
+                <Route path="/app">
+                  <p>App</p>
                 </Route>
                 <Route path="/child">
                   <ChildScreen />
@@ -90,9 +93,9 @@ function App() {
               </Switch>
             </div>
           </ThemeProvider>
-        </Router>
+        </RecoilRoot>
       </QueryClientProvider>
-    </RecoilRoot>
+    </Router>
   );
 }
 
