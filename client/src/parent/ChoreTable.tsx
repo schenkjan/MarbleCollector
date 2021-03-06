@@ -4,9 +4,6 @@ import {
   Paper,
   TableContainer,
   Table,
-  TableHead,
-  TableRow,
-  TableCell,
   TableBody,
   makeStyles,
   createStyles,
@@ -89,14 +86,6 @@ export function ChoreTable(): JSX.Element {
   return (
     <TableContainer className={classes.container} component={Paper}>
       <Table stickyHeader aria-label="sticky table" size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Ämtli</TableCell>
-            <TableCell></TableCell>
-            <TableCell align="center">Done</TableCell>
-            <TableCell align="center">Bestätigen</TableCell>
-          </TableRow>
-        </TableHead>
         <TableBody>
           {chores?.map((chore) => (
             <ChoreTableRow key={chore.id} chore={chore} />

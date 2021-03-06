@@ -61,7 +61,7 @@ export function ChoreTableRow(props: Prop) {
                 ? classes.assignmentRow
                 : ""
             }
-            key={`${props.chore.id}${assignment.userId}`}
+            key={`${props.chore.id}-${assignment.userId}`}
           >
             <TableCell component="th" scope="row"></TableCell>
             <TableCell align="left">{assignment.userName}</TableCell>
