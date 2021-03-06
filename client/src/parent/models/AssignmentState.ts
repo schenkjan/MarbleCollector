@@ -6,3 +6,12 @@ export enum AssignmentState {
   CheckRefused,
   Archived,
 }
+
+export const AssignmentStateNames = [
+  "zugewiesen",
+  "aktiv",
+  "bestätigen",
+  "bestätigt",
+  "abgelehnt",
+  "erledigt",
+];

@@ -43,7 +43,7 @@ export function ChoreDetails(props: Prop) {
             <Chip
               label={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
                 weekday: "short",
-                year: "numeric",
+                year: "2-digit",
                 month: "short",
                 day: "numeric",
               })}

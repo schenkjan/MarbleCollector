@@ -1,11 +1,8 @@
-import { AssignmentState } from "./models/AssignmentState";
 import {
-  TableRow,
-  TableCell,
-  Checkbox,
-  makeStyles,
-  Chip,
-} from "@material-ui/core";
+  AssignmentState,
+  AssignmentStateNames,
+} from "./models/AssignmentState";
+import { TableRow, TableCell, makeStyles, Chip } from "@material-ui/core";
 import { Assignment } from "./models/Assignment";
 import { Key } from "react";
 
@@ -55,12 +52,8 @@ export function ChoreAssignment(props: Prop) {
     >
       <TableCell component="th" scope="row"></TableCell>
       <TableCell align="left">{props.assignment.userName}</TableCell>
-      <TableCell align="center">
-        <Checkbox
-          checked={isDone(props.assignment.state)}
-          disabled
-          size="small"
-        />
+      <TableCell align="left">
+        <Chip label={AssignmentStateNames[props.assignment.state]} />
       </TableCell>
       <TableCell align="right">
         {isDone(props.assignment.state) &&
