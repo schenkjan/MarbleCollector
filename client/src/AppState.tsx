@@ -1,43 +1,62 @@
 import { atom, selector } from "recoil";
+import { persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 
-export const currentScreen = atom({
-  key: "currentScreen",
-  default: "",
-});
+/**
+ * Class holding the global app state with static properties.
+ */
+export class AppState {
+  /**
+   * Demo state
+   */
+  static currentScreenTitle = atom({
+    key: "currentScreenTitle",
+    default: "",
+  });
 
-export const userInfoState = atom<AuthResponse | null>({
-  key: "userInfoState",
-  default: null,
-});
+  /**
+   * Holding the currently logged in users basic information.
+   */
+  static userInfoState = atom<AuthResponse | null>({
+    key: "userInfoState",
+    default: null,
+    effects_UNSTABLE: [persistUserInfoState],
+  });
 
-export const userIsAuthenticated = selector<boolean>({
-  key: "userIsAuthenticated",
-  get: ({ get }) => {
-    const userInfo = get(userInfoState);
-    return userInfo != null;
-  },
-});
+  /**
+   * Convenience selector to check if the current user is authenticated/logged in
+   */
+  static userIsAuthenticated = selector<boolean>({
+    key: "userIsAuthenticated",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfoState);
+      return userInfo != null;
+    },
+  });
 
-export const userAvatarInfo = selector<UserAvatarInfo>({
-  key: "userAvatarInfo",
-  get: ({ get }) => {
-    const userInfo = get(userInfoState);
-    return {
-      imgSrc:
-        userInfo == null
-          ? ""
-          : "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/4.png", // TODO
-      imgAlt: userInfo?.username ?? "",
-    };
-  },
-});
+  /**
+   * Convenience selector to retrieve the current users avatar
+   */
+  static userAvatarInfo = selector<UserAvatarInfo>({
+    key: "userAvatarInfo",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfoState);
+      return {
+        imgSrc: userInfo?.avatar ?? "",
+        imgAlt: userInfo?.username ?? "",
+      };
+    },
+  });
 
-export const userBearerToken = selector<string>({
-  key: "userBearerToken",
-  get: ({ get }) => {
-    const userInfo = get(userInfoState);
-    return userInfo?.token ?? "";
-  },
-});
+  /**
+   * Convenience selector to retrieve the current users access token for api access.
+   */
+  static userBearerToken = selector<string>({
+    key: "userBearerToken",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfoState);
+      return userInfo?.token ?? "";
+    },
+  });
+}

@@ -14,7 +14,7 @@ import { Backdrop, CircularProgress } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useRecoilState } from "recoil";
-import { userInfoState } from "../AppState";
+import { AppState } from "../AppState";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,7 +52,7 @@ export function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [userInfo, setUserInfo] = useRecoilState(AppState.userInfoState);
 
   // TODO handle rememberme
   async function login(
@@ -75,7 +75,6 @@ export function LoginScreen() {
       setUserInfo(loginResponse.data);
       // redirect to dashboard
     } catch (error) {
-      debugger;
       setSnackbar({
         open: true,
         message: `${error.message}: ${JSON.stringify(error.response.data)}`,
