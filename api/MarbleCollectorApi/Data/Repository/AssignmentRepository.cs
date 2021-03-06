@@ -1,72 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 using MarbleCollectorApi.Data.Models;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using MarbleCollectorApi.Data.Repository.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace MarbleCollectorApi.Data.Repository
 {
-    // TODO js (04.03.2021): Replace mock implementation with database access logic (also using BaseEntityRepository<Assignment>).
-    public class AssignmentRepository : IAssignmentRepository
+    public class AssignmentRepository : BaseEntityRepository<Assignment>, IAssignmentRepository
     {
-        public IEnumerable<Assignment> AllIncluding(params Expression<Func<Assignment, object>>[] includeProperties)
-        {
-            throw new NotImplementedException();
-        }
+        public AssignmentRepository(MarbleCollectorDbContext context) : base(context) { }
 
-        public IEnumerable<Assignment> GetAll()
+        public override IEnumerable<Assignment> GetAll()
         {
-            throw new NotImplementedException();
-        }
-
-        public int Count()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Assignment GetSingle(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Assignment GetSingle(Expression<Func<Assignment, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Assignment GetSingle(Expression<Func<Assignment, bool>> predicate, params Expression<Func<Assignment, object>>[] includeProperties)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Assignment> FindBy(Expression<Func<Assignment, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityEntry<Assignment> Add(Assignment entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityEntry<Assignment> Update(Assignment entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(Assignment entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteWhere(Expression<Func<Assignment, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Commit()
-        {
-            throw new NotImplementedException();
+            return Context.Assignments
+                .Include(assignment => assignment.Chore)
+                .Include(assignment => assignment.User);
         }
     }
 }

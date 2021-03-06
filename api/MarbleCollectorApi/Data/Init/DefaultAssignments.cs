@@ -17,6 +17,18 @@ namespace MarbleCollectorApi.Data.Init
                 new Assignment
                 {
                     UserId = 4,
+                    ChoreId = 1,
+                    State = AssignmentState.RequestedToCheck
+                },
+                new Assignment
+                {
+                    UserId = 5,
+                    ChoreId = 1,
+                    State = AssignmentState.Archived
+                },
+                new Assignment
+                {
+                    UserId = 4,
                     ChoreId = 2,
                     State = AssignmentState.RequestedToCheck
                 },
