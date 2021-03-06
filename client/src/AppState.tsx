@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil";
 import { persistUserInfoState } from "./AppStatePersistence";
-import { AuthResponse } from "./login/models/AuthResponse";
+import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 
 /**

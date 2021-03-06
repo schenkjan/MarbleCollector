@@ -1,30 +1,38 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { LoginScreen } from "./login/LoginScreen";
 import { ChildScreen } from "./child/ChildScreen";
 import { ParentScreen } from "./parent/ParentScreen";
 import { HomeScreen } from "./home/HomeScreen";
 import { RecoilRoot } from "recoil";
-import { createMuiTheme, CssBaseline, makeStyles, ThemeProvider } from "@material-ui/core";
+import {
+  createMuiTheme,
+  CssBaseline,
+  makeStyles,
+  ThemeProvider,
+} from "@material-ui/core";
+import { AuthController } from "./auth/AuthController";
 
 const useStyles = makeStyles({
-  linkList: { // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
+  linkList: {
+    // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
     listStyle: "none",
     margin: 0,
     padding: 0,
     overflow: "hidden",
     backgroundColor: "#333333",
-    "& > *": { // list items
+    "& > *": {
+      // list items
       float: "left",
-      "& > *": { // link
+      "& > *": {
+        // link
         display: "block",
         color: "#fff",
         textAlign: "center",
         padding: "0px 16px 0px 16px",
         textDecoration: "none",
-      }
-    }
+      },
+    },
   },
 });
 
@@ -34,14 +42,14 @@ function App() {
 
   const theme = createMuiTheme({
     palette: {
-      type: "light"
-        //type: "dark"
-    }
-});
+      type: "light",
+      //type: "dark"
+    },
+  });
 
   return (
-    <RecoilRoot>
-      <Router>
+    <Router>
+      <RecoilRoot>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <div className="App">
@@ -51,7 +59,7 @@ function App() {
                   <Link to="/">Home</Link>
                 </li>
                 <li>
-                  <Link to="/login">Login</Link>
+                  <Link to="/auth">Auth</Link>
                 </li>
                 <li>
                   <Link to="/child">Child</Link>
@@ -63,8 +71,11 @@ function App() {
             </nav>
 
             <Switch>
-              <Route path="/login">
-                <LoginScreen />
+              <Route path="/auth">
+                <AuthController />
+              </Route>
+              <Route path="/app">
+                <p>App</p>
               </Route>
               <Route path="/child">
                 <ChildScreen />
@@ -78,8 +89,8 @@ function App() {
             </Switch>
           </div>
         </ThemeProvider>
-      </Router>
-    </RecoilRoot>
+      </RecoilRoot>
+    </Router>
   );
 }
 
