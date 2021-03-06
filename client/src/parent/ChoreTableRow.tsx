@@ -5,6 +5,7 @@ import {
   Button,
   makeStyles,
 } from "@material-ui/core";
+import { ChoreDetails } from "./ChoreDetails";
 import { AssignmentState } from "./models/AssignmentState";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 
@@ -49,7 +50,7 @@ export function ChoreTableRow(props: Prop) {
     <>
       <TableRow className={classes.row} key={props.chore.id}>
         <TableCell component="th" scope="row" colSpan={4}>
-          {props.chore.name}
+          <ChoreDetails chore={props.chore} />
         </TableCell>
       </TableRow>
       {props.chore.assignments.map((assignment, index) => {
