@@ -10,7 +10,7 @@ namespace MarbleCollectorApi.Data.Repository.Core
 {
     /// <summary>
     /// Class implementing basic interaction possibility with Database.
-    /// Stolen from https://geekrodion.com/blog/asp-react-blog/authentication
+    /// Copied with pride ;-) from https://geekrodion.com/blog/asp-react-blog/authentication.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class BaseEntityRepository<T> : IBaseEntityRepository<T>
@@ -41,17 +41,17 @@ namespace MarbleCollectorApi.Data.Repository.Core
             return query.AsEnumerable();
         }
 
-        public T GetSingle(int id)
+        public virtual T GetSingle(int id)
         {
-            return Context.Set<T>().FirstOrDefault(x => x.Id == id);
+            return GetSingle(x => x.Id == id);
         }
 
-        public T GetSingle(Expression<Func<T, bool>> predicate)
+        public virtual T GetSingle(Expression<Func<T, bool>> predicate)
         {
             return Context.Set<T>().FirstOrDefault(predicate);
         }
 
-        public T GetSingle(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        public virtual T GetSingle(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = Context.Set<T>();
             foreach (var includeProperty in includeProperties)

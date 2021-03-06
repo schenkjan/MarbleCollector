@@ -12,8 +12,10 @@ namespace MarbleCollectorApi.Data.Models
         public int RewardId { get; set; }
 
         public User User { get; set; }
+        //public virtual User User { get; set; } // TODO js (06.03.2021): Should we do lazy loading (enabled with virtual keyword)?
 
         public Reward Reward { get; set; }
+        //public virtual Reward Reward { get; set; } // TODO js (06.03.2021): Should we do lazy loading (enabled with virtual keyword)?
 
         public GrantState State { get; set; }
     }
