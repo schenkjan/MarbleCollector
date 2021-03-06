@@ -3,10 +3,11 @@ import {
   TableRow,
   TableCell,
   Checkbox,
-  Button,
   makeStyles,
+  Chip,
 } from "@material-ui/core";
 import { Assignment } from "./models/Assignment";
+import { Key } from "react";
 
 const useStyles = makeStyles({
   row: {
@@ -22,6 +23,7 @@ const useStyles = makeStyles({
 });
 
 type Prop = {
+  key: Key | null | undefined;
   assignment: Assignment;
   isLastRow: boolean;
 };
@@ -49,7 +51,7 @@ export function ChoreAssignment(props: Prop) {
   return (
     <TableRow
       className={!props.isLastRow ? classes.assignmentRow : ""}
-      key={`${props.assignment.userId}`}
+      key={props.key}
     >
       <TableCell component="th" scope="row"></TableCell>
       <TableCell align="left">{props.assignment.userName}</TableCell>
@@ -60,12 +62,10 @@ export function ChoreAssignment(props: Prop) {
           size="small"
         />
       </TableCell>
-      <TableCell align="center">
+      <TableCell align="right">
         {isDone(props.assignment.state) &&
         !isConfirmed(props.assignment.state) ? (
-          <Button variant="contained" color="primary" size="small">
-            Ok
-          </Button>
+          <Chip label="OK" color="primary" />
         ) : (
           ""
         )}

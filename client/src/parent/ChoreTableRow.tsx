@@ -28,6 +28,7 @@ export function ChoreTableRow(props: Prop) {
       {props.chore.assignments.map((assignment, index) => {
         return (
           <ChoreAssignment
+            key={`${props.chore.id}-${index}`}
             assignment={assignment}
             isLastRow={index === props.chore.assignments.length - 1}
           />
