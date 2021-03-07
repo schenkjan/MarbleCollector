@@ -78,6 +78,7 @@ namespace MarbleCollectorApi
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAssignmentRepository, AssignmentRepository>();
             services.AddScoped<IGrantRepository, GrantRepository>();
+            services.AddScoped<IRewardRepository, RewardRepository>();
 
             // Database Context
             services.AddDbContext<MarbleCollectorDbContext>(options =>
