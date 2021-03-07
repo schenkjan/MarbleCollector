@@ -38,6 +38,24 @@ namespace MarbleCollectorApi.Data.Init
                     ChoreId = 3,
                     State = AssignmentState.Archived
                 },
+                new Assignment
+                {
+                    UserId = 3,
+                    ChoreId = 5,
+                    State = AssignmentState.Assigned
+                },
+                new Assignment
+                {
+                    UserId = 4,
+                    ChoreId = 5,
+                    State = AssignmentState.Active
+                },
+                new Assignment
+                {
+                    UserId = 5,
+                    ChoreId = 5,
+                    State = AssignmentState.CheckRefused
+                },
             };
         }
     }

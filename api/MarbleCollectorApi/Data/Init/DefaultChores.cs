@@ -26,6 +26,19 @@ namespace MarbleCollectorApi.Data.Init
                     Name = "Rasen mähen",
                     Value = 7,
                     DueDate = DateTime.UtcNow.AddDays(5)
+                },
+                new Chore
+                {
+                    Name = "Abfallsack im Container entsorgen",
+                    Value = 1,
+                    DueDate = new DateTime(2021, 9, 28)
+                }
+                ,
+                new Chore
+                {
+                    Name = "Zimmer aufräumen und staubsaugen",
+                    Value = 10,
+                    DueDate = new DateTime(2021, 12, 24)
                 }
             };
         }
