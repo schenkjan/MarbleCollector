@@ -56,6 +56,42 @@ namespace MarbleCollectorApi.Data.Init
                     ChoreId = 5,
                     State = AssignmentState.CheckRefused
                 },
+                new Assignment
+                {
+                    UserId = 3,
+                    ChoreId = 6,
+                    State = AssignmentState.Archived
+                },
+                new Assignment
+                {
+                    UserId = 4,
+                    ChoreId = 6,
+                    State = AssignmentState.Active
+                },
+                new Assignment
+                {
+                    UserId = 5,
+                    ChoreId = 6,
+                    State = AssignmentState.CheckRefused
+                },
+                new Assignment
+                {
+                    UserId = 3,
+                    ChoreId = 7,
+                    State = AssignmentState.Archived
+                },
+                new Assignment
+                {
+                    UserId = 4,
+                    ChoreId = 7,
+                    State = AssignmentState.Active
+                },
+                new Assignment
+                {
+                    UserId = 5,
+                    ChoreId = 7,
+                    State = AssignmentState.CheckRefused
+                },
             };
         }
     }

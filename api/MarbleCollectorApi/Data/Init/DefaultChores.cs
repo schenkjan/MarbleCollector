@@ -39,6 +39,19 @@ namespace MarbleCollectorApi.Data.Init
                     Name = "Zimmer aufräumen und staubsaugen",
                     Value = 10,
                     DueDate = new DateTime(2021, 12, 24)
+                },
+                new Chore
+                {
+                    Name = "Zähne putzen",
+                    Value = 1,
+                    DueDate = DateTime.UtcNow.AddDays(-1)
+                }
+                ,
+                new Chore
+                {
+                    Name = "Tisch abräumen",
+                    Value = 1,
+                    DueDate = DateTime.UtcNow
                 }
             };
         }
