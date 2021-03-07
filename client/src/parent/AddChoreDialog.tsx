@@ -14,9 +14,12 @@ import { DatePicker } from "formik-material-ui-pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
+import { useRecoilState } from "recoil";
+import { Color } from "@material-ui/lab/Alert";
 
 import { ChoreValidation } from "../model/ChoreValidation";
 import { ShowSnack } from "../Snackbar";
+import { snackState } from "../AppState";
 
 type Prop = {
   open: boolean;
@@ -41,6 +44,9 @@ function ChoreTextField(props: TextFieldProps) {
 }
 
 export function AddChoreDialog(props: Prop) {
+  //   const snack = useRecoilValue(snackState);
+  const [snack, setSnackState] = useRecoilState(snackState);
+
   return (
     <Dialog open={props.open}>
       <DialogContent>
@@ -104,6 +110,12 @@ export function AddChoreDialog(props: Prop) {
             onSubmit={(ChoreValidation) => {
               alert(JSON.stringify(ChoreValidation, null, 2));
               props.onSave();
+              setSnackState({
+                open: true,
+                message: snack.message,
+                severity: snack.severity,
+              });
+              //   toggleSnack(snack);
               // programming below the POST-method for the backend
               // (in edit szenario --> PUT-method)
 
@@ -204,7 +216,7 @@ export function AddChoreDialog(props: Prop) {
               </MuiPickersUtilsProvider>
             )}
           </Formik>
-          <Box>{ShowSnack("huhu", "success")}</Box>
+          <ShowSnack />
         </DialogContentText>
       </DialogContent>
     </Dialog>

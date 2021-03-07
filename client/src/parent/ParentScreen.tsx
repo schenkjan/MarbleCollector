@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userAvatarInfo } from "../AppState";
+import { ShowSnack } from "../Snackbar";
 
 export function ParentScreen() {
   const { path } = useRouteMatch();
@@ -44,6 +45,7 @@ export function ParentScreen() {
           <ChoreTable />
         </DashboardLayout>
       </Route>
+      <ShowSnack />
     </Switch>
   );
 }
