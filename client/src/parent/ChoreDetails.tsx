@@ -1,4 +1,11 @@
-import { Box, Chip, createStyles, makeStyles, Theme } from "@material-ui/core";
+import {
+  Box,
+  Chip,
+  createStyles,
+  makeStyles,
+  PropTypes,
+  Theme,
+} from "@material-ui/core";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 
 type Prop = {
@@ -21,6 +28,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function ChoreDetails(props: Prop) {
   const classes = useStyles();
+
+  function getColor(): Exclude<PropTypes.Color, "inherit"> {
+    const today = new Date(Date.now());
+
+    if (new Date(props.chore.dueDate) < today) {
+      return "secondary";
+    }
+
+    return "default";
+  }
 
   return (
     <Box
@@ -50,6 +67,7 @@ export function ChoreDetails(props: Prop) {
               })}
               variant="outlined"
               className={classes.chip}
+              color={getColor()}
             />
           </li>
           <li key="value">
