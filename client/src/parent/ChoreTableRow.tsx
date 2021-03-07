@@ -1,4 +1,5 @@
-import { Chip, TableRow, TableCell, makeStyles } from "@material-ui/core";
+import { TableRow, TableCell, makeStyles } from "@material-ui/core";
+import { AssignmentTableRow } from "./AssignmentTableRow";
 import { ChoreAssignment } from "./ChoreAssignment";
 import { ChoreDetails } from "./ChoreDetails";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
@@ -21,14 +22,10 @@ export function ChoreTableRow(props: Prop) {
   function getChoreList(): JSX.Element[] {
     if (!props.chore.assignments?.length) {
       return [
-        <TableRow key={props.chore.id}>
-          <TableCell component="th" scope="row"></TableCell>
-          <TableCell align="left"></TableCell>
-          <TableCell align="left">
-            <Chip variant="outlined" label="keine Zuweisung" />
-          </TableCell>
-          <TableCell align="right"></TableCell>
-        </TableRow>,
+        <AssignmentTableRow
+          key={props.chore.id}
+          stateLabel="keine Zuweisung"
+        />,
       ];
     }
 

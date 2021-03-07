@@ -2,9 +2,10 @@ import {
   AssignmentState,
   AssignmentStateNames,
 } from "./models/AssignmentState";
-import { TableRow, TableCell, makeStyles, Chip } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { Assignment } from "./models/Assignment";
 import { Key } from "react";
+import { AssignmentTableRow } from "./AssignmentTableRow";
 
 const useStyles = makeStyles({
   row: {
@@ -46,26 +47,14 @@ export function ChoreAssignment(props: Prop) {
   }
 
   return (
-    <TableRow
+    <AssignmentTableRow
       className={!props.isLastRow ? classes.assignmentRow : ""}
       key={props.key}
-    >
-      <TableCell component="th" scope="row"></TableCell>
-      <TableCell align="left">{props.assignment.userName}</TableCell>
-      <TableCell align="left">
-        <Chip
-          variant="outlined"
-          label={AssignmentStateNames[props.assignment.state]}
-        />
-      </TableCell>
-      <TableCell align="right">
-        {isDone(props.assignment.state) &&
-        !isConfirmed(props.assignment.state) ? (
-          <Chip label="OK" color="primary" />
-        ) : (
-          ""
-        )}
-      </TableCell>
-    </TableRow>
+      nameLabel={props.assignment.userName}
+      stateLabel={AssignmentStateNames[props.assignment.state]}
+      showConfirm={
+        isDone(props.assignment.state) && !isConfirmed(props.assignment.state)
+      }
+    />
   );
 }
