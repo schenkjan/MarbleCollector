@@ -20,6 +20,9 @@ type Prop = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    tableCell: {
+      padding: "6px 8px",
+    },
     chip: {
       marginRight: theme.spacing(1),
     },
@@ -31,7 +34,7 @@ export function AssignmentTableRow(props: Prop) {
 
   return (
     <TableRow className={props.className}>
-      <TableCell component="th" scope="row">
+      <TableCell className={classes.tableCell} component="th" scope="row">
         {props.isAddable ? (
           <AddCircleIcon fontSize="large" color="primary" />
         ) : (
@@ -43,8 +46,10 @@ export function AssignmentTableRow(props: Prop) {
           ""
         )}
       </TableCell>
-      <TableCell align="left">{props.nameLabel}</TableCell>
-      <TableCell align="left">
+      <TableCell className={classes.tableCell} align="left">
+        {props.nameLabel}
+      </TableCell>
+      <TableCell className={classes.tableCell} align="left">
         <Chip
           className={classes.chip}
           variant="outlined"
