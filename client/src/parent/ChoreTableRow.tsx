@@ -25,6 +25,7 @@ export function ChoreTableRow(props: Prop) {
         <AssignmentTableRow
           key={props.chore.id}
           stateLabel="keine Zuweisung"
+          isAddable={true}
         />,
       ];
     }
@@ -43,7 +44,7 @@ export function ChoreTableRow(props: Prop) {
   return (
     <>
       <TableRow className={classes.row} key={props.chore.id}>
-        <TableCell component="th" scope="row" colSpan={4}>
+        <TableCell component="th" scope="row" colSpan={3}>
           <ChoreDetails chore={props.chore} />
         </TableCell>
       </TableRow>

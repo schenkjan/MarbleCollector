@@ -44,6 +44,10 @@ export function ChoreAssignment(props: Prop) {
     );
   }
 
+  function isInprogress(state: AssignmentState): boolean {
+    return state !== AssignmentState.Assigned;
+  }
+
   return (
     <AssignmentTableRow
       className={!props.isLastRow ? classes.assignmentRow : ""}
@@ -52,6 +56,8 @@ export function ChoreAssignment(props: Prop) {
       showConfirm={
         isDone(props.assignment.state) && !isConfirmed(props.assignment.state)
       }
+      isRemovable={!isInprogress(props.assignment.state)}
+      isAddable={props.isLastRow}
     />
   );
 }

@@ -6,12 +6,16 @@ import {
   makeStyles,
   Theme,
 } from "@material-ui/core";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 
 type Prop = {
   className?: string | undefined;
   nameLabel?: string;
   stateLabel?: string;
   showConfirm?: boolean;
+  isRemovable?: boolean;
+  isAddable?: boolean;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,7 +31,18 @@ export function AssignmentTableRow(props: Prop) {
 
   return (
     <TableRow className={props.className}>
-      <TableCell component="th" scope="row"></TableCell>
+      <TableCell component="th" scope="row">
+        {props.isAddable ? (
+          <AddCircleIcon fontSize="large" color="primary" />
+        ) : (
+          ""
+        )}
+        {props.isRemovable ? (
+          <RemoveCircleIcon fontSize="large" color="secondary" />
+        ) : (
+          ""
+        )}
+      </TableCell>
       <TableCell align="left">{props.nameLabel}</TableCell>
       <TableCell align="left">
         <Chip
@@ -41,7 +56,6 @@ export function AssignmentTableRow(props: Prop) {
           ""
         )}
       </TableCell>
-      <TableCell align="right"></TableCell>
     </TableRow>
   );
 }
