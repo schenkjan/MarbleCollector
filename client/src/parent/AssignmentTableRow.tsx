@@ -36,12 +36,12 @@ export function AssignmentTableRow(props: Prop) {
     <TableRow className={props.className}>
       <TableCell className={classes.tableCell} component="th" scope="row">
         {props.isAddable ? (
-          <AddCircleIcon fontSize="large" color="primary" />
+          <AddCircleIcon fontSize="small" color="primary" />
         ) : (
           ""
         )}
         {props.isRemovable ? (
-          <RemoveCircleIcon fontSize="large" color="secondary" />
+          <RemoveCircleIcon fontSize="small" color="secondary" />
         ) : (
           ""
         )}
