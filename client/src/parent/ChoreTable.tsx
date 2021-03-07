@@ -51,22 +51,6 @@ export function ChoreTable(): JSX.Element {
       .then((data) => data?.data)
   );
 
-  if (isLoading)
-    return (
-      <Box>
-        <p>Loading...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
-
-  if (error)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${error}`}</p>
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
-
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
   }
@@ -82,6 +66,22 @@ export function ChoreTable(): JSX.Element {
   function handleAddChore() {
     setShowDialog(true);
   }
+
+  if (isLoading)
+    return (
+      <Box>
+        <p>Loading...</p>
+        <CircularProgress />
+      </Box>
+    ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+
+  if (error)
+    return (
+      <Box>
+        <ErrorIcon color="secondary" fontSize="large" />
+        <p>{`An error has occurred: ${error}`}</p>
+      </Box>
+    ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <TableContainer className={classes.container} component={Paper}>
