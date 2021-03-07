@@ -7,7 +7,6 @@ import {
   Theme,
 } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 
 type Prop = {
   className?: string | undefined;
@@ -32,6 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
 export function AssignmentTableRow(props: Prop) {
   const classes = useStyles();
 
+  function handleRemove() {
+    console.log("Remove assignment...");
+  }
+
   return (
     <TableRow className={props.className}>
       <TableCell className={classes.tableCell} component="th" scope="row">
@@ -40,14 +43,19 @@ export function AssignmentTableRow(props: Prop) {
         ) : (
           ""
         )}
-        {props.isRemovable ? (
-          <RemoveCircleIcon fontSize="small" color="secondary" />
+      </TableCell>
+      <TableCell className={classes.tableCell} align="left">
+        {props.nameLabel ? (
+          <Chip
+            className={classes.chip}
+            label={props.nameLabel}
+            color="primary"
+            variant="outlined"
+            onDelete={props.isRemovable ? handleRemove : undefined}
+          />
         ) : (
           ""
         )}
-      </TableCell>
-      <TableCell className={classes.tableCell} align="left">
-        {props.nameLabel}
       </TableCell>
       <TableCell className={classes.tableCell} align="left">
         <Chip
