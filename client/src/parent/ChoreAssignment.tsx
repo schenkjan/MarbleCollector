@@ -4,7 +4,6 @@ import {
 } from "./models/AssignmentState";
 import { makeStyles } from "@material-ui/core";
 import { Assignment } from "./models/Assignment";
-import { Key } from "react";
 import { AssignmentTableRow } from "./AssignmentTableRow";
 
 const useStyles = makeStyles({
@@ -21,7 +20,6 @@ const useStyles = makeStyles({
 });
 
 type Prop = {
-  key: Key | null | undefined;
   assignment: Assignment;
   isLastRow: boolean;
 };
@@ -49,7 +47,6 @@ export function ChoreAssignment(props: Prop) {
   return (
     <AssignmentTableRow
       className={!props.isLastRow ? classes.assignmentRow : ""}
-      key={props.key}
       nameLabel={props.assignment.userName}
       stateLabel={AssignmentStateNames[props.assignment.state]}
       showConfirm={

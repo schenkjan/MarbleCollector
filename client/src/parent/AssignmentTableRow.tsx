@@ -1,9 +1,7 @@
 import { Chip, TableRow, TableCell } from "@material-ui/core";
-import { Key } from "react";
 
 type Prop = {
   className?: string | undefined;
-  key: Key | null | undefined;
   nameLabel?: string;
   stateLabel?: string;
   showConfirm?: boolean;
@@ -11,7 +9,7 @@ type Prop = {
 
 export function AssignmentTableRow(props: Prop) {
   return (
-    <TableRow key={props.key} className={props.className}>
+    <TableRow className={props.className}>
       <TableCell component="th" scope="row"></TableCell>
       <TableCell align="left">{props.nameLabel}</TableCell>
       <TableCell align="left">
