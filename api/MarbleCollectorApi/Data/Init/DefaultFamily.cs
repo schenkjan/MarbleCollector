@@ -31,7 +31,7 @@ namespace MarbleCollectorApi.Data.Init
                 },
                 new User
                 {
-                    Username = "lars",
+                    Username = "lars-frederik",
                     Email = "lars.muster@gmail.com",
                     Password = Password,
                     Avatar = "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/68.png",
