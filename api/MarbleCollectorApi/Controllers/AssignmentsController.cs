@@ -6,6 +6,8 @@ using System.Linq;
 using MarbleCollectorApi.Data.Mapping;
 using MarbleCollectorApi.Data.Repository;
 using MarbleCollectorApi.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MarbleCollectorApi.Controllers
 {
@@ -44,11 +46,25 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpPost()]
+        //[Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<Assignment> CreateAssignment(Assignment assignment)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            var entityEntry = _assignmentRepository.Add(assignment.Map());
+
+            try
+            {
+                _assignmentRepository.Commit();
+            }
+            catch
+            {
+                // TODO hs 210307, is i.e. foreign key constraint a bad request or internal server error?
+                return BadRequest(); ;
+            }
+
+            return Created("Get", entityEntry.Entity);
         }
 
         [HttpPut("{id}")]
@@ -57,7 +73,16 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Assignment> UpdateAssignment(int id, Assignment assignment)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            if (id != assignment.Id)
+            {
+                return BadRequest();
+            }
+
+            // TODO hs 210307, can a assignment be modified if the state is Archived, which is by defintion the final state
+            EntityEntry entityEntry = _assignmentRepository.Update(assignment.Map());
+            _assignmentRepository.Commit();
+
+            return Ok(entityEntry.Entity);
         }
 
         [HttpDelete("{id}")]
@@ -80,17 +105,9 @@ namespace MarbleCollectorApi.Controllers
 
         [HttpGet("Users/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<AssignmentWithChore>> GetAssignmentsForUser(int id)
         {
-            var assignments = _assignmentRepository.GetAll();
-
-            var assignmentsForUser = assignments.Where(assignments => assignments.UserId == id).Select(assignment => assignment.Map());
-
-            if (assignmentsForUser == null)
-            {
-                return NotFound();
-            }
+            var assignmentsForUser = _assignmentRepository.GetAll().Where(assignments => assignments.UserId == id).Select(assignment => assignment.Map());
 
             return Ok(assignmentsForUser);
         }

@@ -6,6 +6,7 @@ using System.Linq;
 using MarbleCollectorApi.Data.Mapping;
 using MarbleCollectorApi.Data.Repository;
 using MarbleCollectorApi.ViewModels;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MarbleCollectorApi.Controllers
 {
@@ -46,7 +47,19 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<Grant> CreateGrant(Grant grant)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            var entityEntry = _grantRepository.Add(grant.Map());
+
+            try
+            {
+                _grantRepository.Commit();
+            }
+            catch
+            {
+                // TODO hs 210307, is i.e. foreign key constraint a bad request or internal server error?
+                return BadRequest(); ;
+            }
+
+            return Created("Get", entityEntry.Entity);
         }
 
         [HttpPut("{id}")]
@@ -55,7 +68,16 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Grant> UpdateGrant(int id, Grant grant)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            if (id != grant.Id)
+            {
+                return BadRequest();
+            }
+
+            // TODO hs 210307, can a grant be modified if the state is Archived, which is by defintion the final state
+            EntityEntry entityEntry = _grantRepository.Update(grant.Map());
+            _grantRepository.Commit();
+
+            return Ok(entityEntry.Entity);
         }
 
         [HttpDelete("{id}")]
@@ -81,7 +103,9 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<GrantWithReward>> GetGrantsForUser(int id)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            var grantForUser = _grantRepository.GetAll().Where(grants => grants.UserId == id).Select(grants => grants.Map());
+
+            return Ok(grantForUser);
         }
     }
 }
