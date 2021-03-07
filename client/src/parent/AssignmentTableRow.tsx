@@ -1,4 +1,11 @@
-import { Chip, TableRow, TableCell } from "@material-ui/core";
+import {
+  Chip,
+  TableRow,
+  TableCell,
+  createStyles,
+  makeStyles,
+  Theme,
+} from "@material-ui/core";
 
 type Prop = {
   className?: string | undefined;
@@ -7,17 +14,34 @@ type Prop = {
   showConfirm?: boolean;
 };
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    chip: {
+      marginRight: theme.spacing(1),
+    },
+  })
+);
+
 export function AssignmentTableRow(props: Prop) {
+  const classes = useStyles();
+
   return (
     <TableRow className={props.className}>
       <TableCell component="th" scope="row"></TableCell>
       <TableCell align="left">{props.nameLabel}</TableCell>
       <TableCell align="left">
-        <Chip variant="outlined" label={props.stateLabel} />
+        <Chip
+          className={classes.chip}
+          variant="outlined"
+          label={props.stateLabel}
+        />
+        {props.showConfirm ? (
+          <Chip className={classes.chip} label="OK" color="primary" />
+        ) : (
+          ""
+        )}
       </TableCell>
-      <TableCell align="right">
-        {props.showConfirm ? <Chip label="OK" color="primary" /> : ""}
-      </TableCell>
+      <TableCell align="right"></TableCell>
     </TableRow>
   );
 }
