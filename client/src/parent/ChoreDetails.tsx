@@ -47,6 +47,7 @@ export function ChoreDetails(props: Prop) {
                 month: "short",
                 day: "numeric",
               })}
+              variant="outlined"
               className={classes.chip}
             />
           </li>

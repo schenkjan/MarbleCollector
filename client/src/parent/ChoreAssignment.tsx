@@ -53,7 +53,10 @@ export function ChoreAssignment(props: Prop) {
       <TableCell component="th" scope="row"></TableCell>
       <TableCell align="left">{props.assignment.userName}</TableCell>
       <TableCell align="left">
-        <Chip label={AssignmentStateNames[props.assignment.state]} />
+        <Chip
+          variant="outlined"
+          label={AssignmentStateNames[props.assignment.state]}
+        />
       </TableCell>
       <TableCell align="right">
         {isDone(props.assignment.state) &&
