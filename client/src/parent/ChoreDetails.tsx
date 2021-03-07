@@ -27,6 +27,7 @@ export function ChoreDetails(props: Prop) {
       component="ul"
       display="flex"
       justifyContent="space-between"
+      flexWrap="wrap"
       className={classes.box}
     >
       <li key="name">
