@@ -7,6 +7,7 @@ import {
   Theme,
 } from "@material-ui/core";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import EditIcon from "@material-ui/icons/Edit";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -38,6 +39,10 @@ export function ChoreDetails(props: Prop) {
     return "default";
   }
 
+  function handleEdit() {
+    console.log("Clicked...");
+  }
+
   return (
     <Box
       component="ul"
@@ -47,7 +52,13 @@ export function ChoreDetails(props: Prop) {
       className={classes.box}
     >
       <li key="name">
-        <Chip color="primary" label={props.chore.name} />
+        <Chip
+          color="primary"
+          label={props.chore.name}
+          deleteIcon={<EditIcon />}
+          onClick={handleEdit}
+          onDelete={handleEdit}
+        />
       </li>
       <li key="properties">
         <Box
