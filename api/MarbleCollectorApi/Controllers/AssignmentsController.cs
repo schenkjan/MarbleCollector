@@ -80,9 +80,19 @@ namespace MarbleCollectorApi.Controllers
 
         [HttpGet("Users/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<AssignmentWithChore>> GetAssignmentsForUser(int id)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            var assignments = _assignmentRepository.GetAll();
+
+            var assignmentsForUser = assignments.Where(assignments => assignments.UserId == id).Select(assignment => assignment.Map());
+
+            if (assignmentsForUser == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(assignmentsForUser);
         }
     }
 }
