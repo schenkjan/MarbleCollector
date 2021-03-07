@@ -21,7 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingInlineStart: 0,
     },
     chip: {
-      margin: theme.spacing(0.5),
+      marginBottom: theme.spacing(0.5),
+      marginRight: theme.spacing(1),
     },
   })
 );
@@ -55,6 +56,7 @@ export function ChoreDetails(props: Prop) {
         <Chip
           color="primary"
           label={props.chore.name}
+          className={classes.chip}
           deleteIcon={<EditIcon />}
           onClick={handleEdit}
           onDelete={handleEdit}
