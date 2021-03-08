@@ -10,7 +10,9 @@ namespace MarbleCollectorApi.Data.Models.Config
             var baseEntityConfig = new BaseEntityTypeConfiguration<Chore>();
             baseEntityConfig.ConfigureKey(builder);
             builder.Property(chore => chore.Name).IsRequired().HasMaxLength(50);
-            builder.Property(user => user.Description).HasMaxLength(250);
+            builder.Property(chore => chore.Description).HasMaxLength(250);
+            builder.Property(chore => chore.Value).IsRequired();
+            builder.Property(chore => chore.DueDate).IsRequired();
             baseEntityConfig.ConfigureFields(builder);
         }
     }
