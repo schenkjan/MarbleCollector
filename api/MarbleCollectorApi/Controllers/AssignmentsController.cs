@@ -6,17 +6,18 @@ using System.Linq;
 using MarbleCollectorApi.Data.Mapping;
 using MarbleCollectorApi.Data.Repository;
 using MarbleCollectorApi.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.AspNetCore.SignalR;
 using MarbleCollectorApi.Hubs;
-using MarbleCollectorApi.Services.Background;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MarbleCollectorApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class AssignmentsController : Controller
     {
         private readonly IAssignmentRepository _assignmentRepository;
@@ -25,8 +26,7 @@ namespace MarbleCollectorApi.Controllers
 
         public AssignmentsController(IAssignmentRepository assignmentRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
         {
-            _assignmentRepository =
-                assignmentRepository ?? throw new ArgumentNullException(nameof(assignmentRepository));
+            _assignmentRepository = assignmentRepository ?? throw new ArgumentNullException(nameof(assignmentRepository));
             _parentNotificationHubContext = parentNotificationHubContext;
             _childrenNotificationHubContext = childrenNotificationHubContext;
         }
@@ -54,7 +54,7 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpPost()]
-        //[Authorize(Roles = Const.UserRoleParent)]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -87,13 +87,14 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest();
             }
 
-            if ((int)assignment.State != (int)_assignmentRepository.GetSingle(id).State)
+            //TODO hs 210308, warum ist hier ein Cast nötig?
+            if ((int)assignment.State != (int)_assignmentRepository.GetSingleUntracked(id).State)
             {
                 if (assignment.State == AssignmentState.Assigned || assignment.State == AssignmentState.CheckConfirmed || assignment.State == AssignmentState.CheckRefused)
                 {
                     await _childrenNotificationHubContext.Clients.All.SendAsync("UpdateAssignments", assignment.UserId, assignment.ChoreId);
                 }
-                else
+                else if (assignment.State != AssignmentState.Archived)
                 {
                     await _parentNotificationHubContext.Clients.All.SendAsync("UpdateAssignments", assignment.UserId, assignment.ChoreId);
                 }
@@ -107,7 +108,9 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {

@@ -7,18 +7,27 @@ using MarbleCollectorApi.Data.Mapping;
 using MarbleCollectorApi.Data.Repository;
 using MarbleCollectorApi.ViewModels;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.AspNetCore.SignalR;
+using MarbleCollectorApi.Hubs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MarbleCollectorApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class GrantsController : Controller
     {
         private readonly IGrantRepository _grantRepository;
+        private readonly IHubContext<ParentNotificationHub> _parentNotificationHubContext;
+        private readonly IHubContext<ChildrenNotificationHub> _childrenNotificationHubContext;
 
-        public GrantsController(IGrantRepository grantRepository)
+        public GrantsController(IGrantRepository grantRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
         {
             _grantRepository = grantRepository ?? throw new ArgumentNullException(nameof(grantRepository));
+            _parentNotificationHubContext = parentNotificationHubContext;
+            _childrenNotificationHubContext = childrenNotificationHubContext;
         }
 
         // TODO js (04.03.2021): Can all users get all grants?
@@ -43,8 +52,10 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpPost()]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<Grant> CreateGrant(Grant grant)
         {
             var entityEntry = _grantRepository.Add(grant.Map());
@@ -66,11 +77,24 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Grant> UpdateGrant(int id, Grant grant)
+        public async System.Threading.Tasks.Task<ActionResult<Grant>> UpdateGrantAsync(int id, Grant grant)
         {
             if (id != grant.Id)
             {
                 return BadRequest();
+            }
+
+            //TODO hs 210308, warum ist hier ein Cast nötig?
+            if ((int)grant.State != (int)_grantRepository.GetSingleUntracked(id).State)
+            {
+                if (grant.State == GrantState.Assigned || grant.State == GrantState.RequestConfirmed)
+                {
+                    await _childrenNotificationHubContext.Clients.All.SendAsync("UpdateGrants", grant.UserId, grant.RewardId);
+                }
+                else if (grant.State != GrantState.Archived)
+                {
+                    await _parentNotificationHubContext.Clients.All.SendAsync("UpdateGrants", grant.UserId, grant.RewardId);
+                }
             }
 
             // TODO hs 210307, can a grant be modified if the state is Archived, which is by defintion the final state
@@ -81,8 +105,10 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public IActionResult Delete(int id)
         {
             var grant = _grantRepository.GetSingle(id);

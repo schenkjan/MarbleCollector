@@ -7,11 +7,14 @@ using MarbleCollectorApi.Data.Mapping;
 using MarbleCollectorApi.Data.Repository;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MarbleCollectorApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class RewardsController : Controller
     {
         private readonly IRewardRepository _rewardRepository;
@@ -45,8 +48,10 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpPost()]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<Reward> CreateReward(Reward reward)
         {
             if (string.IsNullOrEmpty(reward.Name) || string.IsNullOrEmpty(reward.Description))
@@ -61,8 +66,10 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Reward> UpdateReward(int id, Reward reward)
         {
@@ -79,7 +86,9 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
