@@ -15,11 +15,11 @@ export const userInfoState = atom<AuthResponse | null>({
 });
 
 export const snackState = atom({
-  key: "snackInfo",
+  key: "snackState",
   default: {
-    open: false,
-    message: "",
-    severity: "success" as Color,
+    open: true,
+    message: "Feedback's from here",
+    severity: "info" as Color,
   },
 });
 
@@ -53,15 +53,28 @@ export const userBearerToken = selector<string>({
   },
 });
 
-export const SnackValues = selector({
-  key: "SnackValues",
-  get: ({ get }) => {
-    const snackValues = get(snackState);
-    return {
-      open: snackValues.open,
-      message: snackValues.message,
-      severity: snackValues.severity,
-    };
-    // set(snackState, !currentValue);
-  },
-});
+// export const SnackValues = selector({
+//   key: "SnackValues",
+//   get: ({ get }) => {
+//     const snackValues = get(snackState);
+//     return {
+//       open: snackValues.open,
+//       message: snackValues.message,
+//       severity: snackValues.severity,
+//     };
+//   },
+// });
+
+// export const toggleSnackState = (message: string, severity: Color) =>
+//   selector({
+//     key: "toggleSnackState",
+//     get: ({ get }) => {
+//       get(snackState);
+//     },
+//     set: ({ set }) =>
+//       set(snackState, {
+//         open: true,
+//         message: message,
+//         severity: severity,
+//       }),
+//   });

@@ -5,6 +5,7 @@ import { LoginScreen } from "./login/LoginScreen";
 import { ChildScreen } from "./child/ChildScreen";
 import { ParentScreen } from "./parent/ParentScreen";
 import { HomeScreen } from "./home/HomeScreen";
+import { ShowSnack } from "./Snackbar";
 import {
   createMuiTheme,
   CssBaseline,
@@ -82,6 +83,7 @@ function App() {
               <HomeScreen />
             </Route>
           </Switch>
+          <ShowSnack />
         </div>
       </ThemeProvider>
     </Router>

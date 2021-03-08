@@ -15,11 +15,9 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import { useRecoilState } from "recoil";
-import { Color } from "@material-ui/lab/Alert";
-
 import { ChoreValidation } from "../model/ChoreValidation";
-import { ShowSnack } from "../Snackbar";
 import { snackState } from "../AppState";
+import { CreateSnack } from "../Snackbar";
 
 type Prop = {
   open: boolean;
@@ -44,8 +42,12 @@ function ChoreTextField(props: TextFieldProps) {
 }
 
 export function AddChoreDialog(props: Prop) {
-  //   const snack = useRecoilValue(snackState);
   const [snack, setSnackState] = useRecoilState(snackState);
+
+  function deleteForm() {
+    CreateSnack(setSnackState, "gelöscht", "info");
+    props.onDelete();
+  }
 
   return (
     <Dialog open={props.open}>
@@ -109,17 +111,8 @@ export function AddChoreDialog(props: Prop) {
             // submit-function for the complete Formik-Component
             onSubmit={(ChoreValidation) => {
               alert(JSON.stringify(ChoreValidation, null, 2));
+              CreateSnack(setSnackState, "erstellt", "success");
               props.onSave();
-              setSnackState({
-                open: true,
-                message: snack.message,
-                severity: snack.severity,
-              });
-              //   toggleSnack(snack);
-              // programming below the POST-method for the backend
-              // (in edit szenario --> PUT-method)
-
-              //
             }}
           >
             {({ submitForm }) => (
@@ -197,7 +190,7 @@ export function AddChoreDialog(props: Prop) {
                       <Button
                         variant="contained"
                         color="secondary"
-                        onClick={props.onDelete}
+                        onClick={deleteForm}
                       >
                         Löschen
                       </Button>
@@ -216,7 +209,6 @@ export function AddChoreDialog(props: Prop) {
               </MuiPickersUtilsProvider>
             )}
           </Formik>
-          <ShowSnack />
         </DialogContentText>
       </DialogContent>
     </Dialog>
