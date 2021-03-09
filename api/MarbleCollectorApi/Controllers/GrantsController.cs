@@ -66,7 +66,6 @@ namespace MarbleCollectorApi.Controllers
             }
             catch
             {
-                // TODO hs 210307, is i.e. foreign key constraint a bad request or internal server error?
                 return BadRequest(); ;
             }
 
