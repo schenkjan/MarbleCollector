@@ -87,8 +87,12 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest();
             }
 
+            // TODO hs 210307, can a assignment be modified if the state is Archived, which is by defintion the final state
+            EntityEntry entityEntry = _assignmentRepository.Update(assignment.Map());
+            _assignmentRepository.Commit();
+
             //TODO hs 210308, warum ist hier ein Cast nötig?
-            if ((int)assignment.State != (int)_assignmentRepository.GetSingleUntracked(id).State)
+            if (CheckHasStateChanged(assignment.State, id))
             {
                 if (assignment.State == AssignmentState.Assigned || assignment.State == AssignmentState.CheckConfirmed || assignment.State == AssignmentState.CheckRefused)
                 {
@@ -99,10 +103,6 @@ namespace MarbleCollectorApi.Controllers
                     await _parentNotificationHubContext.Clients.All.SendAsync("UpdateAssignments", assignment.UserId, assignment.ChoreId);
                 }
             }
-
-            // TODO hs 210307, can a assignment be modified if the state is Archived, which is by defintion the final state
-            EntityEntry entityEntry = _assignmentRepository.Update(assignment.Map());
-            _assignmentRepository.Commit();
 
             return Ok(entityEntry.Entity);
         }
@@ -134,6 +134,11 @@ namespace MarbleCollectorApi.Controllers
             var assignmentsForUser = _assignmentRepository.GetAll().Where(assignments => assignments.UserId == id).Select(assignment => assignment.Map());
 
             return Ok(assignmentsForUser);
+        }
+
+        private bool CheckHasStateChanged(AssignmentState newState, int id)
+        {
+            return (int)newState != (int)_assignmentRepository.GetSingleUntracked(id).State;
         }
     }
 }

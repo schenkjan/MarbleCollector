@@ -84,8 +84,11 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest();
             }
 
-            //TODO hs 210308, warum ist hier ein Cast nötig?
-            if ((int)grant.State != (int)_grantRepository.GetSingleUntracked(id).State)
+            // TODO hs 210307, can a grant be modified if the state is Archived, which is by defintion the final state
+            EntityEntry entityEntry = _grantRepository.Update(grant.Map());
+            _grantRepository.Commit();
+
+            if (CheckHasStateChanged(grant.State, id))
             {
                 if (grant.State == GrantState.Assigned || grant.State == GrantState.RequestConfirmed)
                 {
@@ -96,10 +99,6 @@ namespace MarbleCollectorApi.Controllers
                     await _parentNotificationHubContext.Clients.All.SendAsync("UpdateGrants", grant.UserId, grant.RewardId);
                 }
             }
-
-            // TODO hs 210307, can a grant be modified if the state is Archived, which is by defintion the final state
-            EntityEntry entityEntry = _grantRepository.Update(grant.Map());
-            _grantRepository.Commit();
 
             return Ok(entityEntry.Entity);
         }
@@ -132,6 +131,11 @@ namespace MarbleCollectorApi.Controllers
             var grantForUser = _grantRepository.GetAll().Where(grants => grants.UserId == id).Select(grants => grants.Map());
 
             return Ok(grantForUser);
+        }
+
+        private bool CheckHasStateChanged(GrantState newState, int id)
+        {
+            return (int)newState != (int)_grantRepository.GetSingleUntracked(id).State;
         }
     }
 }
