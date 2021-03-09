@@ -1,0 +1,113 @@
+import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import {
+  Avatar,
+  Badge,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Collapse,
+  Typography,
+} from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import AddIcon from "@material-ui/icons/Add";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { useState } from "react";
+import clsx from "clsx";
+import { AssignmentState } from "./models/AssignmentState";
+
+type Prop = {
+  chore: ChoreWithAssignments;
+};
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    header: {
+      textAlign: "left",
+    },
+    expand: {
+      transform: "rotate(0deg)",
+      marginLeft: "auto",
+      transition: theme.transitions.create("transform", {
+        duration: theme.transitions.duration.shortest,
+      }),
+    },
+    expandOpen: {
+      transform: "rotate(180deg)",
+    },
+    avatar: {
+      backgroundColor: theme.palette.primary.main,
+    },
+  })
+);
+
+export function ChoreCard(props: Prop): JSX.Element {
+  const classes = useStyles();
+  const [expanded, setExpanded] = useState(false);
+
+  function handleExpandClick() {
+    setExpanded(!expanded);
+  }
+
+  return (
+    <Card elevation={5}>
+      <CardHeader
+        className={classes.header}
+        avatar={
+          <Badge
+            badgeContent={
+              props.chore.assignments.filter(
+                (assignment) =>
+                  assignment.state === AssignmentState.RequestedToCheck
+              ).length
+            }
+            color="secondary"
+          >
+            <Avatar
+              aria-label="chore title"
+              className={classes.avatar}
+              onClick={handleExpandClick}
+            >
+              {props.chore.assignments.length}
+            </Avatar>
+          </Badge>
+        }
+        title={props.chore.name}
+        action={<Avatar>{props.chore.value}</Avatar>}
+        subheader={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
+          weekday: "short",
+          year: "2-digit",
+          month: "short",
+          day: "numeric",
+        })}
+      />
+      <CardActions disableSpacing>
+        <IconButton size="small" color="primary">
+          <AddIcon />
+        </IconButton>
+        <Typography variant="body2">Kind hinzufügen</Typography>
+        <IconButton
+          className={clsx(classes.expand, {
+            [classes.expandOpen]: expanded,
+          })}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
+          size="small"
+        >
+          <ExpandMoreIcon />
+        </IconButton>
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {props.chore.description
+              ? props.chore.description
+              : "Keine Beschreibung vorhanden."}
+          </Typography>
+        </CardContent>
+      </Collapse>
+    </Card>
+  );
+}
