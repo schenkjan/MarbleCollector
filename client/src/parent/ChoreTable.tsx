@@ -1,188 +1,123 @@
-import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, makeStyles, createStyles, Theme } from "@material-ui/core";
-import { useEffect, useState } from "react";
-import { Chore } from "../model/Chore";
+import {
+  Box,
+  CircularProgress,
+  Paper,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  makeStyles,
+  createStyles,
+  Theme,
+} from "@material-ui/core";
 import { ChoreTableRow } from "./ChoreTableRow";
 import { Fab } from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from "@material-ui/icons/Add";
+import ErrorIcon from "@material-ui/icons/Error";
+import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { AppState } from "../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
+import { useState } from "react";
 
-// TODO js (25.02.2021): Remove dummy data as soon as data is consumed from backend.
-const lars = {
-    id: 1,
-    name: "Lars",
-    avatarSrc: ""
- };
- const lara = {
-    id: 2,
-    name: "Lara",
-    avatarSrc: ""
- };
- const lena = {
-    id: 3,
-    name: "Lena",
-    avatarSrc: ""
- };
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      flex: "1 1 auto",
+    },
+    fab: {
+      position: "absolute",
+      bottom: theme.spacing(6),
+      right: theme.spacing(2),
+    },
+  })
+);
 
- const useStyles = makeStyles((theme: Theme) => 
-    createStyles({
-     container: {
-         flex: "1 1 auto",
-     },
-     fab: {
-        position: 'absolute',
-        bottom: theme.spacing(6),
-        right: theme.spacing(2),
-      },
-    }),
- );
+const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
-export function ChoreTable() {
-    const [chores, setChores] = useState<Chore[]>([]);
-    const [showDialog, setShowDialog] = useState(false);
-    const classes = useStyles();
+export function ChoreTable(): JSX.Element {
+  const classes = useStyles();
+  const [showDialog, setShowDialog] = useState(false);
 
-    useEffect(() => {
-        setChores([ // TODO js (25.02.2021): Remove dummy data as soon as data is consumed from backend.
-            {
-                id: 42, 
-                name: "Rasen mähen",
-                description: "", 
-                dueDate: Date.now(),
-                value: 20,
-                assignments: [
-                    {
-                        isDone: true,
-                        isConfirmed: false,
-                        assignee: lara
-                    }
-                ],
-            },
-            {
-                id: 1, 
-                name: "Zimmer staubsaugen",
-                description: "", 
-                dueDate: Date.now(),
-                value: 10, 
-                assignments: [
-                    {
-                        isDone: false,
-                        isConfirmed: false,
-                        assignee: lars
-                    },
-                    {
-                        isDone: true,
-                        isConfirmed: false,
-                        assignee: lara
-                    },
-                    {
-                        isDone: true,
-                        isConfirmed: true,
-                        assignee: lena
-                    }
-                ]
-            },
-            {
-                id: 2, 
-                name: "Abfall rausbringen",
-                description: "", 
-                dueDate: Date.now(),
-                value: 5,
-                assignments: [
-                    {
-                        isDone: true,
-                        isConfirmed: false,
-                        assignee: lara
-                    },
-                    {
-                        isDone: false,
-                        isConfirmed: false,
-                        assignee: lena
-                    }
-                ],
-            },
-            {
-                id: 3, 
-                name: "Abwaschen",
-                description: "", 
-                dueDate: Date.now(),
-                value: 5,
-                assignments: [
-                    {
-                        isDone: true,
-                        isConfirmed: false,
-                        assignee: lara
-                    },
-                    {
-                        isDone: false,
-                        isConfirmed: false,
-                        assignee: lena
-                    }
-                ],
-            },
-            {
-                id: 4, 
-                name: "Zimmer aufräumen",
-                description: "", 
-                dueDate: Date.now(),
-                value: 10, 
-                assignments: [
-                    {
-                        isDone: false,
-                        isConfirmed: false,
-                        assignee: lars
-                    },
-                    {
-                        isDone: true,
-                        isConfirmed: false,
-                        assignee: lara
-                    },
-                    {
-                        isDone: true,
-                        isConfirmed: true,
-                        assignee: lena
-                    }
-                ]
-            },
-        ]);   
-    }, []);
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
+    axios
+      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+      .then((data) => data?.data)
+  );
 
-    function handleOnCancel() {
-        setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
-    }
-
-    function handleOnDelete() {
-        setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
-    }
-
-    function handleOnSave() {
-        setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct save logic.
-    }
-
-    function handleAddChore() {
-        setShowDialog(true);
-    }
-   
+  if (isLoading)
     return (
-        <TableContainer className={classes.container} component={Paper}>
-            <Table stickyHeader aria-label="sticky table" size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Ämtli</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell align="center">Done</TableCell>
-                        <TableCell align="center">Bestätigen</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {chores.map((chore) => (
-                        <ChoreTableRow key={chore.id} chore={chore} />
-                    ))}
-                </TableBody>
-            </Table>
-            <Fab className={classes.fab} size="small" color="primary" aria-label="add" onClick={handleAddChore}>
-                <AddIcon />
-            </Fab>
-            <AddChoreDialog open={showDialog} onCancel={handleOnCancel} onDelete={handleOnDelete} onSave={handleOnSave}/>
-        </TableContainer>
-    );
+      <Box>
+        <p>Loading...</p>
+        <CircularProgress />
+      </Box>
+    ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+
+  if (error)
+    return (
+      <Box>
+        <ErrorIcon color="secondary" fontSize="large" />
+        <p>{`An error has occurred: ${error}`}</p>
+      </Box>
+    ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
+
+  function handleOnCancel() {
+    setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
+  }
+
+  function handleOnDelete() {
+    setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
+  }
+
+  function handleOnSave() {
+    setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct save logic.
+  }
+
+  function handleAddChore() {
+    setShowDialog(true);
+  }
+
+  return (
+    <TableContainer className={classes.container} component={Paper}>
+      <Table stickyHeader aria-label="sticky table" size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Ämtli</TableCell>
+            <TableCell></TableCell>
+            <TableCell align="center">Done</TableCell>
+            <TableCell align="center">Bestätigen</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {chores?.map((chore) => (
+            <ChoreTableRow key={chore.id} chore={chore} />
+          ))}
+        </TableBody>
+      </Table>
+      <Fab
+        className={classes.fab}
+        size="small"
+        color="primary"
+        aria-label="add"
+        onClick={handleAddChore}
+      >
+        <AddIcon />
+      </Fab>
+      <AddChoreDialog
+        open={showDialog}
+        onCancel={handleOnCancel}
+        onDelete={handleOnDelete}
+        onSave={handleOnSave}
+      />
+    </TableContainer>
+  );
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using MarbleCollectorApi.Data.Models;
 
 namespace MarbleCollectorApi.ViewModels
 {

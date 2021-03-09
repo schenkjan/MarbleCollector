@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MarbleCollectorApi.Data.Models;
+using MarbleCollectorApi.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
