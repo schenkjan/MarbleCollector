@@ -1,8 +1,8 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { currentScreen } from "../AppState";
+import { useSetRecoilState } from "recoil";
+import { AppState } from "../AppState";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 const apiRestTestUrl = `${apiBaseUrl}/api/weatherforecast`;
@@ -20,13 +20,13 @@ interface Message {
 }
 
 export function HomeScreen() {
-  const [screen, setScreen] = useRecoilState(currentScreen);
+  const setScreen = useSetRecoilState(AppState.currentScreenTitle);
   const [apiData, setApiData] = useState<WeatherForecast[]>([]);
   const [hubConnection, setHubConnection] = useState<HubConnection>();
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    setScreen(val => 'Home');
+    setScreen((val) => "Home");
     console.log("HomeScreen - Mounting component...");
     const getDataFromRestApi = async () => {
       console.log("REST API >>> Connecting", apiRestTestUrl);

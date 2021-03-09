@@ -43,6 +43,7 @@ namespace MarbleCollectorApi.Services
                 Id = user.Id,
                 Username = user.Username,
                 Role = user.Role,
+                Avatar = user.Avatar,
                 Token = token,
                 TokenExpirationTime = ((DateTimeOffset)expirationTime).ToUnixTimeSeconds(),
             };

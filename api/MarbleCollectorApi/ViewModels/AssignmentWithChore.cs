@@ -1,5 +1,4 @@
 ﻿using System;
-using MarbleCollectorApi.Data.Models;
 using MarbleCollectorApi.Data.Models.Core;
 
 namespace MarbleCollectorApi.ViewModels
@@ -20,6 +19,8 @@ namespace MarbleCollectorApi.ViewModels
         public string ModifiedBy { get; set; } = string.Empty;
 
         public int UserId { get; set; }
+
+        public string UserName { get; set; }
 
         public Chore Chore { get; set; }
 

@@ -1,54 +1,75 @@
 import { atom, selector } from "recoil";
-import { createFalse } from "typescript";
-import { AuthResponse } from "./login/models/AuthResponse";
+import { persistUserInfoState } from "./AppStatePersistence";
+import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 import { SnackState } from "./shell/models/SnackState";
 
-export const currentScreen = atom({
-  key: "currentScreen",
-  default: "",
-});
+/**
+ * Class holding the global app state with static properties.
+ */
+export class AppState {
+  /**
+   * Demo state
+   */
+  static currentScreenTitle = atom({
+    key: "currentScreenTitle",
+    default: "",
+  });
 
-export const userInfoState = atom<AuthResponse | null>({
-  key: "userInfoState",
-  default: null,
-});
+  /**
+   * Holding the currently logged in users basic information.
+   */
+  static userInfoState = atom<AuthResponse | null>({
+    key: "userInfoState",
+    default: null,
+    effects_UNSTABLE: [persistUserInfoState],
+  });
 
-export const snackState = atom<SnackState>({
-  key: "snackState",
-  default: {
-    open: false,
-    message: "",
-    severity: "success",
-  },
-});
+  /**
+   * Holding the currently message of Snackbar.
+   */
+  static snackState = atom<SnackState>({
+    key: "snackState",
+    default: {
+      open: false,
+      message: "",
+      severity: "success",
+    },
+  });
 
-export const userIsAuthenticated = selector<boolean>({
-  key: "userIsAuthenticated",
-  get: ({ get }) => {
-    const userInfo = get(userInfoState);
-    return userInfo != null;
-  },
-});
+  /**
+   * Convenience selector to check if the current user is authenticated/logged in
+   */
+  static userIsAuthenticated = selector<boolean>({
+    key: "userIsAuthenticated",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfoState);
+      return userInfo != null;
+    },
+  });
 
-export const userAvatarInfo = selector<UserAvatarInfo>({
-  key: "userAvatarInfo",
-  get: ({ get }) => {
-    const userInfo = get(userInfoState);
-    return {
-      imgSrc:
-        userInfo == null
-          ? ""
-          : "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/4.png", // TODO
-      imgAlt: userInfo?.username ?? "",
-    };
-  },
-});
+  /**
+   * Convenience selector to retrieve the current users avatar
+   */
+  static userAvatarInfo = selector<UserAvatarInfo>({
+    key: "userAvatarInfo",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfoState);
+      return {
+        imgSrc: userInfo?.avatar ?? "",
+        imgAlt: userInfo?.username ?? "",
+      };
+    },
+  });
 
-export const userBearerToken = selector<string>({
-  key: "userBearerToken",
-  get: ({ get }) => {
-    const userInfo = get(userInfoState);
-    return userInfo?.token ?? "";
-  },
-});
+  /**
+   * Convenience selector to retrieve the current users access token for api access.
+   */
+  static userBearerToken = selector<string>({
+    key: "userBearerToken",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfoState);
+      return userInfo?.token ?? "";
+    },
+  });
+}
