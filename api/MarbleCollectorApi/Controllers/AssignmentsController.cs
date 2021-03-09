@@ -91,7 +91,6 @@ namespace MarbleCollectorApi.Controllers
             EntityEntry entityEntry = _assignmentRepository.Update(assignment.Map());
             _assignmentRepository.Commit();
 
-            //TODO hs 210308, warum ist hier ein Cast nötig?
             if (CheckHasStateChanged(assignment.State, id))
             {
                 if (assignment.State == AssignmentState.Assigned || assignment.State == AssignmentState.CheckConfirmed || assignment.State == AssignmentState.CheckRefused)
