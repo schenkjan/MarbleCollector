@@ -2,7 +2,7 @@ import { atom, selector } from "recoil";
 import { createFalse } from "typescript";
 import { AuthResponse } from "./login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
-import { Color } from "@material-ui/lab/Alert";
+import { SnackState } from "./shell/models/SnackState";
 
 export const currentScreen = atom({
   key: "currentScreen",
@@ -14,12 +14,12 @@ export const userInfoState = atom<AuthResponse | null>({
   default: null,
 });
 
-export const snackState = atom({
+export const snackState = atom<SnackState>({
   key: "snackState",
   default: {
-    open: true,
-    message: "Feedback's from here",
-    severity: "info" as Color,
+    open: false,
+    message: "",
+    severity: "success",
   },
 });
 
@@ -52,29 +52,3 @@ export const userBearerToken = selector<string>({
     return userInfo?.token ?? "";
   },
 });
-
-// export const SnackValues = selector({
-//   key: "SnackValues",
-//   get: ({ get }) => {
-//     const snackValues = get(snackState);
-//     return {
-//       open: snackValues.open,
-//       message: snackValues.message,
-//       severity: snackValues.severity,
-//     };
-//   },
-// });
-
-// export const toggleSnackState = (message: string, severity: Color) =>
-//   selector({
-//     key: "toggleSnackState",
-//     get: ({ get }) => {
-//       get(snackState);
-//     },
-//     set: ({ set }) =>
-//       set(snackState, {
-//         open: true,
-//         message: message,
-//         severity: severity,
-//       }),
-//   });

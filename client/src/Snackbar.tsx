@@ -1,6 +1,6 @@
 import React from "react";
 import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert, { AlertProps, Color } from "@material-ui/lab/Alert";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Box from "@material-ui/core/Box";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useRecoilState } from "recoil";
@@ -18,14 +18,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }));
-
-export function CreateSnack(set: any, text: string, style: Color) {
-  set({
-    open: true,
-    message: text,
-    severity: style,
-  });
-}
 
 export function ShowSnack() {
   const classes = useStyles();
