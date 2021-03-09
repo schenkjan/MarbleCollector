@@ -83,11 +83,13 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest();
             }
 
+            var stateChanged = CheckHasStateChanged(grant.State, id);
+
             // TODO hs 210307, can a grant be modified if the state is Archived, which is by defintion the final state
             EntityEntry entityEntry = _grantRepository.Update(grant.Map());
             _grantRepository.Commit();
 
-            if (CheckHasStateChanged(grant.State, id))
+            if (stateChanged)
             {
                 if (grant.State == GrantState.Assigned || grant.State == GrantState.RequestConfirmed)
                 {

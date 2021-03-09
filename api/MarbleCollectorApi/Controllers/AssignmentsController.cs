@@ -86,11 +86,13 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest();
             }
 
+            var stateChanged = CheckHasStateChanged(assignment.State, id);
+
             // TODO hs 210307, can a assignment be modified if the state is Archived, which is by defintion the final state
             EntityEntry entityEntry = _assignmentRepository.Update(assignment.Map());
             _assignmentRepository.Commit();
 
-            if (CheckHasStateChanged(assignment.State, id))
+            if (stateChanged)
             {
                 if (assignment.State == AssignmentState.Assigned || assignment.State == AssignmentState.CheckConfirmed || assignment.State == AssignmentState.CheckRefused)
                 {
