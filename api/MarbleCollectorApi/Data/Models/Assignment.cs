@@ -12,8 +12,10 @@ namespace MarbleCollectorApi.Data.Models
         public int ChoreId { get; set; }
 
         public User User { get; set; }
+        //public virtual User User { get; set; } // TODO js (06.03.2021): Should we do lazy loading (enabled with virtual keyword)?
 
         public Chore Chore { get; set; }
+        //public virtual Chore Chore { get; set; } // TODO js (06.03.2021): Should we do lazy loading (enabled with virtual keyword)?
 
         public AssignmentState State { get; set; }
     }

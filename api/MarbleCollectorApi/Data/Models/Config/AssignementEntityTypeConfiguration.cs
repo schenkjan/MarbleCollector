@@ -9,9 +9,9 @@ namespace MarbleCollectorApi.Data.Models.Config
         {
             var baseEntityConfig = new BaseEntityTypeConfiguration<Assignment>();
             baseEntityConfig.ConfigureKey(builder);
-            builder.Property(assignement => assignement.UserId).IsRequired();
-            builder.Property(assignement => assignement.ChoreId).IsRequired();
-            builder.Property(assignement => assignement.State).IsRequired();
+            builder.Property(assignment => assignment.UserId).IsRequired();
+            builder.Property(assignment => assignment.ChoreId).IsRequired();
+            builder.Property(assignment => assignment.State).IsRequired();
             baseEntityConfig.ConfigureFields(builder);
         }
     }

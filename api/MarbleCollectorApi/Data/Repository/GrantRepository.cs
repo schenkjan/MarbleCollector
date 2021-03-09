@@ -1,72 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using MarbleCollectorApi.Data.Models;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using MarbleCollectorApi.Data.Repository.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace MarbleCollectorApi.Data.Repository
 {
-    // TODO js (04.03.2021): Replace mock implementation with database access logic (also using BaseEntityRepository<Grant>).
-    public class GrantRepository : IGrantRepository
+    public class GrantRepository : BaseEntityRepository<Grant>, IGrantRepository
     {
-        public IEnumerable<Grant> AllIncluding(params Expression<Func<Grant, object>>[] includeProperties)
+        public GrantRepository(MarbleCollectorDbContext context) : base(context) { }
+
+        public override IEnumerable<Grant> GetAll()
         {
-            throw new NotImplementedException();
+            return Context.Grants
+                .Include(grant => grant.User) // ensure loading of User object
+                .Include(grant => grant.Reward); // ensure loading of Reward object
         }
 
-        public IEnumerable<Grant> GetAll()
+        public override Grant GetSingle(int id)
         {
-            throw new NotImplementedException();
+            return GetSingle(grant => grant.Id == id);
         }
 
-        public int Count()
+        public override Grant GetSingle(Expression<Func<Grant, bool>> predicate)
         {
-            throw new NotImplementedException();
-        }
-
-        public Grant GetSingle(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Grant GetSingle(Expression<Func<Grant, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Grant GetSingle(Expression<Func<Grant, bool>> predicate, params Expression<Func<Grant, object>>[] includeProperties)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Grant> FindBy(Expression<Func<Grant, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityEntry<Grant> Add(Grant entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityEntry<Grant> Update(Grant entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(Grant entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteWhere(Expression<Func<Grant, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Commit()
-        {
-            throw new NotImplementedException();
+            return Context.Grants
+                .Include(grant => grant.User) // ensure loading of User object
+                .Include(grant => grant.Reward) // ensure loading of Reward object
+                .FirstOrDefault(predicate);
         }
     }
 }
