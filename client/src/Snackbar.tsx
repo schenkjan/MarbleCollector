@@ -4,7 +4,7 @@ import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Box from "@material-ui/core/Box";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useRecoilState } from "recoil";
-import { snackState } from "./AppState";
+import { AppState } from "./AppState";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function ShowSnack() {
   const classes = useStyles();
 
-  const [snack, setSnackState] = useRecoilState(snackState);
+  const [snack, setSnackState] = useRecoilState(AppState.snackState);
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
