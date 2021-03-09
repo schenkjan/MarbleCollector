@@ -11,11 +11,12 @@ import {
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AddIcon from "@material-ui/icons/Add";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import clsx from "clsx";
 import { AssignmentState } from "./models/AssignmentState";
+import { AssignmentList } from "./AssignmentList";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -50,6 +51,20 @@ export function ChoreCard(props: Prop): JSX.Element {
     setExpanded(!expanded);
   }
 
+  function handleAddChildClick() {
+    console.log(`Adding child to chore '${props.chore.name}'.`);
+  }
+
+  function getDescription() {
+    if (!props.chore.description) return;
+
+    return (
+      <Typography variant="body2" color="textSecondary" component="p">
+        {props.chore.description}
+      </Typography>
+    );
+  }
+
   return (
     <Card elevation={5}>
       <CardHeader
@@ -82,9 +97,9 @@ export function ChoreCard(props: Prop): JSX.Element {
           day: "numeric",
         })}
       />
-      <CardActions disableSpacing>
-        <IconButton size="small" color="primary">
-          <AddIcon />
+      <CardActions>
+        <IconButton size="small" color="primary" onClick={handleAddChildClick}>
+          <AddCircleIcon />
         </IconButton>
         <Typography variant="body2">Kind hinzufügen</Typography>
         <IconButton
@@ -101,11 +116,8 @@ export function ChoreCard(props: Prop): JSX.Element {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {props.chore.description
-              ? props.chore.description
-              : "Keine Beschreibung vorhanden."}
-          </Typography>
+          {getDescription()}
+          <AssignmentList assignments={props.chore.assignments} />
         </CardContent>
       </Collapse>
     </Card>
