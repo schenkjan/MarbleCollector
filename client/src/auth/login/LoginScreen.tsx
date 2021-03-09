@@ -56,6 +56,8 @@ export function LoginScreen() {
 
   const [userInfo, setUserInfo] = useRecoilState(AppState.userInfoState);
 
+  const authResponse = userInfo as AuthResponse;
+
   // TODO handle rememberme
   async function login(
     username: string,
@@ -99,7 +101,7 @@ export function LoginScreen() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <LoginForm username={userInfo?.username ?? ""} login={login} />
+            <LoginForm username={authResponse?.username ?? ""} login={login} />
           </div>
         </Grid>
       </Grid>
