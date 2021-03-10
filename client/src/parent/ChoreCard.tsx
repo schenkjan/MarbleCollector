@@ -89,7 +89,24 @@ export function ChoreCard(props: Prop): JSX.Element {
           </Badge>
         }
         title={props.chore.name}
-        action={<Avatar>{props.chore.value}</Avatar>}
+        action={
+          <Badge
+            badgeContent={
+              props.chore.assignments.filter(
+                (assignment) =>
+                  assignment.state === AssignmentState.CheckConfirmed ||
+                  assignment.state === AssignmentState.Archived
+              ).length
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            color="primary"
+          >
+            <Avatar>{props.chore.value}</Avatar>
+          </Badge>
+        }
         subheader={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
           weekday: "short",
           year: "2-digit",
