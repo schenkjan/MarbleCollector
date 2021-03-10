@@ -3,6 +3,7 @@ import { ChoreTable } from "./ChoreTable";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
+import HorizontalLabelPositionBelowStepper from "./components/stepper";
 
 export function ParentScreen() {
   const { path } = useRouteMatch();
@@ -19,6 +20,7 @@ export function ParentScreen() {
           title="Belohnungs-Pinwand"
         >
           <p>Belohnungen...</p>
+          <HorizontalLabelPositionBelowStepper />
         </DashboardLayout>
       </Route>
       <Route path={`${path}/profile`}>
