@@ -12,6 +12,7 @@ import {
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import clsx from "clsx";
@@ -119,6 +120,9 @@ export function ChoreCard(props: Prop): JSX.Element {
           <AddCircleIcon />
         </IconButton>
         <Typography variant="body2">Kind hinzufügen</Typography>
+        <IconButton size="small">
+          <MoreHorizIcon />
+        </IconButton>
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
