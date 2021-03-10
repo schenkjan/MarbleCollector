@@ -7,6 +7,7 @@ import { HomeScreen } from "./home/HomeScreen";
 import { RecoilRoot } from "recoil";
 import {
   createMuiTheme,
+  Container,
   CssBaseline,
   makeStyles,
   ThemeProvider,
@@ -46,7 +47,7 @@ function App() {
   const theme = createMuiTheme({
     palette: {
       type: "light",
-      //type: "dark"
+      // type: "dark",
     },
   });
 
@@ -55,43 +56,45 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
           <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <div className="App">
-              <nav>
-                <ul className={classes.linkList}>
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <Link to="/auth">Auth</Link>
-                  </li>
-                  <li>
-                    <Link to="/child">Child</Link>
-                  </li>
-                  <li>
-                    <Link to="/parent">Parent</Link>
-                  </li>
-                </ul>
-              </nav>
+            <Container maxWidth="md" disableGutters>
+              <CssBaseline />
+              <div className="App">
+                <nav>
+                  <ul className={classes.linkList}>
+                    <li>
+                      <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                      <Link to="/auth">Auth</Link>
+                    </li>
+                    <li>
+                      <Link to="/child">Child</Link>
+                    </li>
+                    <li>
+                      <Link to="/parent">Parent</Link>
+                    </li>
+                  </ul>
+                </nav>
 
-              <Switch>
-                <Route path="/auth">
-                  <AuthController />
-                </Route>
-                <Route path="/app">
-                  <p>App</p>
-                </Route>
-                <Route path="/child">
-                  <ChildScreen />
-                </Route>
-                <Route path="/parent">
-                  <ParentScreen />
-                </Route>
-                <Route path="/">
-                  <HomeScreen />
-                </Route>
-              </Switch>
-            </div>
+                <Switch>
+                  <Route path="/auth">
+                    <AuthController />
+                  </Route>
+                  <Route path="/app">
+                    <p>App</p>
+                  </Route>
+                  <Route path="/child">
+                    <ChildScreen />
+                  </Route>
+                  <Route path="/parent">
+                    <ParentScreen />
+                  </Route>
+                  <Route path="/">
+                    <HomeScreen />
+                  </Route>
+                </Switch>
+              </div>
+            </Container>
           </ThemeProvider>
         </RecoilRoot>
       </QueryClientProvider>
