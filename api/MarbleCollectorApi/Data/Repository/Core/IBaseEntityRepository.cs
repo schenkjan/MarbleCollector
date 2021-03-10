@@ -24,6 +24,8 @@ namespace MarbleCollectorApi.Data.Repository.Core
           Expression<Func<T, bool>> predicate,
           params Expression<Func<T, object>>[] includeProperties
         );
+        T GetSingleUntracked(int id);
+        T GetSingleUntracked(Expression<Func<T, bool>> predicate);
         IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate);
         EntityEntry<T> Add(T entity);
         EntityEntry<T> Update(T entity);
