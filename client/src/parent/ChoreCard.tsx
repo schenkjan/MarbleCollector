@@ -7,12 +7,18 @@ import {
   CardContent,
   CardHeader,
   Collapse,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Typography,
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import clsx from "clsx";
@@ -38,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) =>
     expandOpen: {
       transform: "rotate(180deg)",
     },
+    moreOpen: {
+      transform: "rotate(90deg)",
+    },
     avatar: {
       backgroundColor: theme.palette.primary.main,
     },
@@ -47,6 +56,10 @@ const useStyles = makeStyles((theme: Theme) =>
 export function ChoreCard(props: Prop): JSX.Element {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
+  const [showMoreActions, setShowMoreActions] = useState(false);
+  const [showMoreAnchor, setShowMoreAnchor] = useState<null | HTMLElement>(
+    null
+  );
 
   function handleExpandClick() {
     setExpanded(!expanded);
@@ -54,6 +67,32 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleAddChildClick() {
     console.log(`Adding child to chore '${props.chore.name}'.`);
+  }
+
+  function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
+    setShowMoreAnchor(event.currentTarget);
+    setShowMoreActions(true);
+
+    console.log("Opening more actions.");
+  }
+
+  function handleMoreClose() {
+    setShowMoreAnchor(null);
+    setShowMoreActions(false);
+
+    console.log("Closing more actions.");
+  }
+
+  function handleCopy() {
+    console.log("Copying...");
+
+    handleMoreClose();
+  }
+
+  function handleDelete() {
+    console.log("Deleting...");
+
+    handleMoreClose();
   }
 
   function getDescription() {
@@ -120,7 +159,13 @@ export function ChoreCard(props: Prop): JSX.Element {
           <AddCircleIcon />
         </IconButton>
         <Typography variant="body2">Kind hinzufügen</Typography>
-        <IconButton size="small">
+        <IconButton
+          className={clsx(classes.expand, {
+            [classes.moreOpen]: showMoreActions,
+          })}
+          onClick={handleMoreClick}
+          size="small"
+        >
           <MoreHorizIcon />
         </IconButton>
         <IconButton
@@ -141,6 +186,29 @@ export function ChoreCard(props: Prop): JSX.Element {
           <AssignmentList assignments={props.chore.assignments} />
         </CardContent>
       </Collapse>
+      <Menu
+        open={showMoreActions}
+        onClose={handleMoreClose}
+        anchorEl={showMoreAnchor}
+        keepMounted
+      >
+        <MenuItem onClick={handleCopy}>
+          <ListItemIcon>
+            <FileCopyIcon />
+          </ListItemIcon>
+          <ListItemText disableTypography>
+            <Typography variant="body2">Ämtli kopieren</Typography>
+          </ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleDelete}>
+          <ListItemIcon>
+            <DeleteForeverIcon />
+          </ListItemIcon>
+          <ListItemText disableTypography>
+            <Typography variant="body2">Ämtli löschen</Typography>
+          </ListItemText>
+        </MenuItem>
+      </Menu>
     </Card>
   );
 }
