@@ -1,7 +1,14 @@
-import { Avatar, createStyles, makeStyles, Theme } from "@material-ui/core";
+import {
+  Avatar,
+  createStyles,
+  IconButton,
+  makeStyles,
+  Theme,
+} from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDashboardBasePath } from "../hooks/DashboardBasePathHook";
+import HomeIcon from "@material-ui/icons/Home";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -9,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.default,
       color: theme.palette.text.primary,
       marginRight: theme.spacing(4),
+    },
+    home: {
+      marginRight: theme.spacing(2),
     },
     link: {
       textDecoration: "none",
@@ -19,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
 type TitleBarAvatarProps = {
   avatarAlt: string;
   avatarSrc: string;
+  userIsAuthenticated: boolean;
 };
 
 export function TitleBarAvatar(props: TitleBarAvatarProps) {
@@ -27,19 +38,21 @@ export function TitleBarAvatar(props: TitleBarAvatarProps) {
   var matches = props.avatarAlt.match(/\b(\w)/g);
   var acronym = matches?.join("") ?? "?";
 
-  if (props.avatarSrc) {
-    return (
-      <Link className={classes.link} to={`${dashboardBasePath}/profile`}>
+  const avatarLinkUrl = !props.userIsAuthenticated
+    ? "/"
+    : `${dashboardBasePath}/profile`;
+
+  return (
+    <Link className={classes.link} to={avatarLinkUrl}>
+      {props.userIsAuthenticated ? (
         <Avatar className={classes.avatar} alt={acronym} src={props.avatarSrc}>
           {acronym.toUpperCase()}
         </Avatar>
-      </Link>
-    );
-  }
-
-  return (
-    <Link className={classes.link} to={`${dashboardBasePath}/profile`}>
-      <Avatar className={classes.avatar}>{acronym.toUpperCase()}</Avatar>
+      ) : (
+        <IconButton className={classes.home}>
+          <HomeIcon style={{ color: "white" }} />
+        </IconButton>
+      )}
     </Link>
   );
 }

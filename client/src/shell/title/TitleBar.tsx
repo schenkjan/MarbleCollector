@@ -40,6 +40,7 @@ export function TitleBar(props: TitleBarProps) {
         <TitleBarAvatar
           avatarAlt={props.avatarAlt}
           avatarSrc={props.avatarSrc}
+          userIsAuthenticated={props.userIsAuthenticated}
         />
         <Typography className={classes.title} variant="h6">
           {props.title}
