@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) =>
     header: {
       textAlign: "left",
     },
+    description: {
+      textAlign: "left",
+    },
     expand: {
       transform: "rotate(0deg)",
       marginLeft: "auto",
@@ -103,7 +106,12 @@ export function ChoreCard(props: Prop): JSX.Element {
     if (!props.chore.description) return;
 
     return (
-      <Typography variant="body2" color="textSecondary" component="p">
+      <Typography
+        className={classes.description}
+        variant="body2"
+        color="textSecondary"
+        component="p"
+      >
         {props.chore.description}
       </Typography>
     );
