@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { AppState } from "../../AppState";
+import { AuthResponse } from "../login/models/AuthResponse";
 
 /**
  * Logout Screen Best Practices
@@ -14,18 +15,22 @@ export function LogoutScreen() {
   useEffect(() => {
     const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
     const apiRestTestUrl = `${apiBaseUrl}/api/auth/logout`;
-    debugger;
-    if (userInfo != null) {
-      setUsername(userInfo.username);
-      setUserInfo(null);
+    const authResponse = userInfo as AuthResponse;
+    if (authResponse != null) {
+      setUsername(authResponse.username);
       axios
         .post(apiRestTestUrl, null, {
           headers: {
-            Authorization: `Bearer ${userInfo.token}`,
+            Authorization: `Bearer ${authResponse.token}`,
           },
         })
-        .then(() => alert("Logout success"))
-        .catch(() => alert("Logout error"));
+        .then(() => {
+          alert("Logout success");
+          setUserInfo({});
+        })
+        .catch(() => {
+          alert("Logout error");
+        });
     }
   }, []);
 
