@@ -13,7 +13,8 @@ namespace MarbleCollectorApi.Data.Init
                 {
                     Name = "Zimmer aufräumen",
                     Value = 5,
-                    DueDate = DateTime.UtcNow.AddDays(1)
+                    DueDate = DateTime.UtcNow.AddDays(1),
+                    Description = "Alles ist an seinem Ort verstaut, nichts steht mehr im Weg rum.",
                 },
                 new Chore
                 {
@@ -25,13 +26,15 @@ namespace MarbleCollectorApi.Data.Init
                 {
                     Name = "Rasen mähen",
                     Value = 7,
-                    DueDate = DateTime.UtcNow.AddDays(5)
+                    DueDate = DateTime.UtcNow.AddDays(5),
+                    Description = "Vor und hinter dem Haus, ausserdem auch rund um die Garage.",
                 },
                 new Chore
                 {
                     Name = "Abfallsack im Container entsorgen",
                     Value = 1,
-                    DueDate = new DateTime(2021, 9, 28)
+                    DueDate = new DateTime(2021, 9, 28),
+                    Description = "Abfallmarke nicht vergessen auf den Sack zu kleben!",
                 }
                 ,
                 new Chore
