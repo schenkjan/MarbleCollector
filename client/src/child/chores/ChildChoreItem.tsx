@@ -21,7 +21,7 @@ import {
 } from "@material-ui/core";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import { useState } from "react";
-import ImgMarbles from "../images/Marble.png";
+import ImgMarbles from "../../images/Marble.png";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>

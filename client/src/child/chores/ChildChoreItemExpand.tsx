@@ -1,4 +1,4 @@
-import { Chore } from "./models/Chore";
+import { Chore } from "../models/Chore";
 import {
   Avatar,
   Badge,

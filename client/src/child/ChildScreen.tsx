@@ -1,5 +1,5 @@
 import { DashboardLayout } from "../shell/DashboardLayout";
-import { ChildChoreList } from "./ChildChoreList";
+import { ChildChoreList } from "./chores/ChildChoreList";
 
 export function ChildScreen() {
   return (

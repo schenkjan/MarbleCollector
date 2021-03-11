@@ -1,6 +1,6 @@
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
-import { loadChores } from "../api/BackendAccess";
+import { loadChores } from "../../api/BackendAccess";
 import { useState, useEffect } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import Grid from "@material-ui/core/Grid";
@@ -9,7 +9,7 @@ import { FigureItem } from "./FigureItem";
 import ImgMarbles from "../images/Marble.png";
 import ImgChores from "../images/Chores.png";
 import ImgRewards from "../images/Rewards.png";
-import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
+import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
 const useStyles = makeStyles({
   gridcontainer: {

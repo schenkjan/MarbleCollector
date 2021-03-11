@@ -1,5 +1,5 @@
 import { ChildChoreItem } from "./ChildChoreItem";
-import { Chore } from "./models/Chore";
+import { Chore } from "../models/Chore";
 import {
   Box,
   CircularProgress,
