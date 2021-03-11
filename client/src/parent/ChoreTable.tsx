@@ -1,6 +1,6 @@
 import {
-  Box,
-  CircularProgress,
+  // Box,
+  // CircularProgress,
   Paper,
   TableContainer,
   Table,
@@ -15,14 +15,19 @@ import {
 import { ChoreTableRow } from "./ChoreTableRow";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import ErrorIcon from "@material-ui/icons/Error";
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
-import { useQuery } from "react-query";
-import axios from "axios";
+// import ErrorIcon from "@material-ui/icons/Error";
+// import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+// import { useQuery } from "react-query";
+// import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
+import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { doLoading } from "../api/LoadingData";
+import { doError } from "../api/ErrorData";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,21 +60,27 @@ export function ChoreTable(): JSX.Element {
       .then((data) => data?.data)
   );
 
-  if (isLoading)
-    return (
-      <Box>
-        <p>Loading...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+  if (isLoading) {
+    return doLoading();
+  }
+  if (error) {
+    return doError(error);
+  }
+  // if (isLoading)
+  //   return (
+  //     <Box>
+  //       <p>Loading...</p>
+  //       <CircularProgress />
+  //     </Box>
+  //   ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
 
-  if (error)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${error}`}</p>
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
+  // if (error)
+  //   return (
+  //     <Box>
+  //       <ErrorIcon color="secondary" fontSize="large" />
+  //       <p>{`An error has occurred: ${error}`}</p>
+  //     </Box>
+  //   ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   function handleOnCancel() {
     setSnackState({
