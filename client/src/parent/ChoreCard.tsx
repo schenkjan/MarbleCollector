@@ -10,6 +10,7 @@ import { AddOptionsExpandCardActions } from "./AddOptionsExpandCardActions";
 import { BiAvatarCardHeader } from "./BiAvatarCardHeader";
 import { CollapsibleCardContent } from "./CollapsibleCardContent";
 import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
+import { AddButtonWithLabel } from "./AddButtonWithLabel";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -19,6 +20,10 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     description: {
       textAlign: "left",
+    },
+    cardContent: {
+      paddingTop: "0px",
+      paddingBottom: "8px",
     },
   })
 );
@@ -136,10 +141,18 @@ export function ChoreCard(props: Prop): JSX.Element {
         onAddClick={handleAddChildClick}
         onMoreClick={handleMoreClick}
         onExpandClick={handleExpandClick}
+        hideAddButton
       />
-      <CollapsibleCardContent expanded={expanded}>
+      <CollapsibleCardContent
+        className={classes.cardContent}
+        expanded={expanded}
+      >
         {getDescription()}
         <AssignmentList assignments={props.chore.assignments} />
+        <AddButtonWithLabel
+          title="Kind hinzufügen"
+          onClick={handleAddChildClick}
+        />
       </CollapsibleCardContent>
       <MoreOptionsMenu
         open={showMoreActions}
