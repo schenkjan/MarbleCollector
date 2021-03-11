@@ -16,10 +16,11 @@ import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
+import { useInfoNotification, useSuccessNotification } from "../Snackbar";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,8 +40,8 @@ const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 export function ChoreTable(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
-
-  const [snack, setSnackState] = useRecoilState(AppState.snackState);
+  const showInfo = useInfoNotification();
+  const showSuccess = useSuccessNotification();
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
     axios
@@ -53,30 +54,18 @@ export function ChoreTable(): JSX.Element {
   );
 
   function handleOnCancel() {
-    setSnackState({
-      open: true,
-      message: "abgebrochen",
-      severity: "info",
-    });
+    showInfo("abgebrochen");
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
   }
 
   function handleOnDelete() {
-    setSnackState({
-      open: true,
-      message: "Ämtli gelöscht",
-      severity: "info",
-    });
+    showInfo("Ämtli gelöscht");
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
   }
 
   function handleOnSave(ChoreObject: object) {
     alert(JSON.stringify(ChoreObject, null, 2));
-    setSnackState({
-      open: true,
-      message: "Ämtli erstellt",
-      severity: "success",
-    });
+    showSuccess("Ämtli erstellt");
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct save logic.
   }
 
