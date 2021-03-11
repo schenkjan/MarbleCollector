@@ -68,8 +68,10 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Chore> UpdateChore(int id, Chore chore)
         {
@@ -86,7 +88,9 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
@@ -120,9 +124,21 @@ namespace MarbleCollectorApi.Controllers
                     Value = group.Key.Value,
                     DueDate = group.Key.DueDate,
                     Assignments = group.Select(assignment => assignment.Map())
-                });
+                }).ToList();
 
-            return Ok(choresWithAssignments);
+            // Handle chores with no assignments yet.
+            var choreIds = choresWithAssignments.Select(chore => chore.Id).ToArray();
+            var choresWithNoAssignments = _choreRepository.GetAll().Where(chore => !choreIds.Contains(chore.Id));
+            choresWithAssignments.AddRange(choresWithNoAssignments.Select(chore => new ChoreWithAssignments {
+                Id = chore.Id,
+                Name = chore.Name,
+                Description = chore.Description,
+                Value = chore.Value,
+                DueDate = chore.DueDate,
+                Assignments = Array.Empty<Assignment>()
+            }));
+
+            return Ok(choresWithAssignments.OrderBy(chore => chore.Id));
         }
     }
 }

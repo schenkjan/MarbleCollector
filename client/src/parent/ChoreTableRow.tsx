@@ -1,20 +1,11 @@
-import {
-  TableRow,
-  TableCell,
-  Checkbox,
-  Button,
-  makeStyles,
-} from "@material-ui/core";
-import { AssignmentState } from "./models/AssignmentState";
+import { TableRow, TableCell, makeStyles } from "@material-ui/core";
+import { AssignmentTableRow } from "./AssignmentTableRow";
+import { ChoreAssignment } from "./ChoreAssignment";
+import { ChoreDetails } from "./ChoreDetails";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 
 const useStyles = makeStyles({
   row: {
-    "& > *": {
-      borderBottom: "unset",
-    },
-  },
-  assignmentRow: {
     "& > *": {
       borderBottom: "unset",
     },
@@ -28,61 +19,36 @@ type Prop = {
 export function ChoreTableRow(props: Prop) {
   const classes = useStyles();
 
-  function isDone(state: AssignmentState): boolean {
-    return (
-      state === AssignmentState.RequestedToCheck ||
-      state === AssignmentState.CheckConfirmed ||
-      state === AssignmentState.CheckRefused ||
-      state === AssignmentState.Archived
-    );
-  }
+  function getChoreList(): JSX.Element[] {
+    if (!props.chore.assignments?.length) {
+      return [
+        <AssignmentTableRow
+          key={props.chore.id}
+          stateLabel="keine Zuweisung"
+          isAddable={true}
+        />,
+      ];
+    }
 
-  function isConfirmed(state: AssignmentState): boolean {
-    return (
-      state === AssignmentState.CheckConfirmed ||
-      state === AssignmentState.CheckRefused ||
-      state === AssignmentState.Archived
-    );
+    return props.chore.assignments.map((assignment, index) => {
+      return (
+        <ChoreAssignment
+          key={`${props.chore.id}-${index}`}
+          assignment={assignment}
+          isLastRow={index === props.chore.assignments.length - 1}
+        />
+      );
+    });
   }
 
   return (
     <>
       <TableRow className={classes.row} key={props.chore.id}>
-        <TableCell component="th" scope="row" colSpan={4}>
-          {props.chore.name}
+        <TableCell component="th" scope="row" colSpan={3}>
+          <ChoreDetails chore={props.chore} />
         </TableCell>
       </TableRow>
-      {props.chore.assignments.map((assignment, index) => {
-        return (
-          <TableRow
-            className={
-              index !== props.chore.assignments.length - 1
-                ? classes.assignmentRow
-                : ""
-            }
-            key={`${props.chore.id}${assignment.userId}`}
-          >
-            <TableCell component="th" scope="row"></TableCell>
-            <TableCell align="left">{assignment.userName}</TableCell>
-            <TableCell align="center">
-              <Checkbox
-                checked={isDone(assignment.state)}
-                disabled
-                size="small"
-              />
-            </TableCell>
-            <TableCell align="center">
-              {isDone(assignment.state) && !isConfirmed(assignment.state) ? (
-                <Button variant="contained" color="primary" size="small">
-                  Ok
-                </Button>
-              ) : (
-                ""
-              )}
-            </TableCell>
-          </TableRow>
-        );
-      })}
+      {getChoreList()}
     </>
   );
 }

@@ -1,19 +1,11 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { AppState } from "../AppState";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
-const apiRestTestUrl = `${apiBaseUrl}/api/weatherforecast`;
 const hubTestUrl = `${apiBaseUrl}/hubs/parent`;
 
-interface WeatherForecast {
-  date: string;
-  summary: string;
-  temperatureC: number;
-  temperatureF: number;
-}
 interface Message {
   author: string;
   message: string;
@@ -21,19 +13,13 @@ interface Message {
 
 export function HomeScreen() {
   const setScreen = useSetRecoilState(AppState.currentScreenTitle);
-  const [apiData, setApiData] = useState<WeatherForecast[]>([]);
   const [hubConnection, setHubConnection] = useState<HubConnection>();
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
     setScreen((val) => "Home");
     console.log("HomeScreen - Mounting component...");
-    const getDataFromRestApi = async () => {
-      console.log("REST API >>> Connecting", apiRestTestUrl);
-      const result = await axios.get<WeatherForecast[]>(apiRestTestUrl);
-      console.log("REST API >>> Result", apiRestTestUrl);
-      setApiData(result.data);
-    };
+
     const createHubConnection = async () => {
       if (hubConnection == null) {
         console.log("SignalR >>> Connecting", hubTestUrl);
@@ -63,7 +49,6 @@ export function HomeScreen() {
       }
     };
 
-    getDataFromRestApi();
     createHubConnection();
   }, []);
 
@@ -86,15 +71,6 @@ export function HomeScreen() {
         <p>NODE_ENV={process.env.NODE_ENV}</p>
         <p>PUBLIC_URL={process.env.PUBLIC_URL}</p>
         <p>REACT_APP_APIBASEURL={apiBaseUrl}</p>
-      </section>
-      <section>
-        <h3>REST communication</h3>
-        <p>Rest API Test Url={apiRestTestUrl}</p>
-        <ul>
-          {apiData.map((wf, index) => {
-            return <li key={index}>{JSON.stringify(wf)}</li>;
-          })}
-        </ul>
       </section>
       <section>
         <h3>Hub communication</h3>
