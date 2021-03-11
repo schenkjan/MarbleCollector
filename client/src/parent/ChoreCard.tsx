@@ -3,23 +3,18 @@ import {
   Avatar,
   Badge,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   Collapse,
   Typography,
 } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useState } from "react";
-import clsx from "clsx";
 import { AssignmentState } from "./models/AssignmentState";
 import { AssignmentList } from "./AssignmentList";
 import { useInfoNotification } from "../Snackbar";
 import { MoreOptionsMenu } from "./MoreOptionsMenu";
+import { AddOptionsExpandCardActions } from "./AddOptionsExpandCardActions";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -32,19 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     description: {
       textAlign: "left",
-    },
-    expand: {
-      transform: "rotate(0deg)",
-      marginLeft: "auto",
-      transition: theme.transitions.create("transform", {
-        duration: theme.transitions.duration.shortest,
-      }),
-    },
-    expandOpen: {
-      transform: "rotate(180deg)",
-    },
-    moreOpen: {
-      transform: "rotate(90deg)",
     },
     avatar: {
       backgroundColor: theme.palette.primary.main,
@@ -161,32 +143,14 @@ export function ChoreCard(props: Prop): JSX.Element {
           day: "numeric",
         })}
       />
-      <CardActions>
-        <IconButton size="small" color="primary" onClick={handleAddChildClick}>
-          <AddCircleIcon />
-        </IconButton>
-        <Typography variant="body2">Kind hinzufügen</Typography>
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.moreOpen]: showMoreActions,
-          })}
-          onClick={handleMoreClick}
-          size="small"
-        >
-          <MoreHorizIcon />
-        </IconButton>
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-          size="small"
-        >
-          <ExpandMoreIcon />
-        </IconButton>
-      </CardActions>
+      <AddOptionsExpandCardActions
+        addLabel="Kind hinzufügen"
+        moreOpen={showMoreActions}
+        expandOpen={expanded}
+        onAddClick={handleAddChildClick}
+        onMoreClick={handleMoreClick}
+        onExpandClick={handleExpandClick}
+      />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           {getDescription()}
