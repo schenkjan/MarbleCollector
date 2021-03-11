@@ -18,11 +18,13 @@ namespace MarbleCollectorApi.Controllers
     public class RewardsController : Controller
     {
         private readonly IRewardRepository _rewardRepository;
+        private readonly IGrantRepository _grantRepository;
 
-        public RewardsController(IRewardRepository rewardRepository)
+        public RewardsController(IRewardRepository rewardRepository, IGrantRepository grantRepository)
         {
             _rewardRepository =
                 rewardRepository ?? throw new ArgumentNullException(nameof(rewardRepository));
+            _grantRepository = grantRepository ?? throw new ArgumentNullException(nameof(grantRepository));
         }
 
         // TODO js (04.03.2021): Can all users get all rewards?
@@ -103,6 +105,38 @@ namespace MarbleCollectorApi.Controllers
             _rewardRepository.Commit();
 
             return Ok();
+        }
+
+        // TODO js (04.03.2021): Can all users get all rewards?
+        [HttpGet("Grants")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<RewardWithGrants>> GetRewardsAndGrants()
+        {
+            var grants = _grantRepository.GetAll();
+
+            var rewardsWithGrants = grants.GroupBy(grant => grant.Reward)
+                .Select(group => new RewardWithGrants
+                {
+                    Id = group.Key.Id,
+                    Name = group.Key.Name,
+                    Description = group.Key.Description,
+                    Value = group.Key.Value,
+                    Grants = group.Select(grant => grant.Map())
+                }).ToList();
+
+            // Handle rewards with no grant yet.
+            var rewardIds = rewardsWithGrants.Select(reward => reward.Id).ToArray();
+            var rewardsWithNoGrants = _rewardRepository.GetAll().Where(reward => !rewardIds.Contains(reward.Id));
+            rewardsWithGrants.AddRange(rewardsWithNoGrants.Select(reward => new RewardWithGrants
+            {
+                Id = reward.Id,
+                Name = reward.Name,
+                Description = reward.Description,
+                Value = reward.Value,
+                Grants = Array.Empty<Grant>()
+            }));
+
+            return Ok(rewardsWithGrants.OrderBy(reward => reward.Id));
         }
     }
 }
