@@ -24,6 +24,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import { AssignmentState } from "./models/AssignmentState";
 import { AssignmentList } from "./AssignmentList";
+import { useInfoNotification } from "../Snackbar";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -60,13 +61,14 @@ export function ChoreCard(props: Prop): JSX.Element {
   const [showMoreAnchor, setShowMoreAnchor] = useState<null | HTMLElement>(
     null
   );
+  const showInfo = useInfoNotification();
 
   function handleExpandClick() {
     setExpanded(!expanded);
   }
 
   function handleAddChildClick() {
-    console.log(`Adding child to chore '${props.chore.name}'.`);
+    showInfo(`Adding child to chore '${props.chore.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -85,12 +87,14 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleCopy() {
     console.log("Copying...");
+    showInfo("Copying..."); // TODO js (11.03.2021): Replace dummy implementation.
 
     handleMoreClose();
   }
 
   function handleDelete() {
     console.log("Deleting...");
+    showInfo("Deleting..."); // TODO js (11.03.2021): Replace dummy implementation.
 
     handleMoreClose();
   }

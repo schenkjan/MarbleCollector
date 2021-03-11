@@ -13,6 +13,7 @@ import {
   AssignmentStateNames,
 } from "./models/AssignmentState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import { useInfoNotification } from "../Snackbar";
 
 type Prop = {
   assignment: Assignment;
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function AssignmentListItem(props: Prop) {
   const classes = useStyles();
+  const showInfo = useInfoNotification();
 
   function isDone(state: AssignmentState): boolean {
     return (
@@ -51,15 +53,11 @@ export function AssignmentListItem(props: Prop) {
   }
 
   function handleRemoveClick() {
-    console.log(
-      `Removing assignment for child '${props.assignment.userName}'.`
-    );
+    showInfo(`Removing assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleConfirmClick() {
-    console.log(
-      `Confirming assignment for child '${props.assignment.userName}'.`
-    );
+    showInfo(`Confirming assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   return (
