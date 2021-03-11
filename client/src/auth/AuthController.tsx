@@ -4,6 +4,12 @@ import { AppState } from "../AppState";
 import { LoginScreen } from "./login/LoginScreen";
 import { LogoutScreen } from "./logout/LogoutScreen";
 
+/**
+ * The Auth controller is responsible for the users auth routing.
+ * -> The user is redirected to the login screen if he is not authenticated for any route /auth/*
+ * -> The user is redirected to home if he wants to access login when he is already logged in
+ * -> The user is logged out only if he is authenticated and accessing auth/logout
+ */
 export function AuthController() {
   const { path } = useRouteMatch();
   const userIsAuthenticated = useRecoilValue(AppState.userIsAuthenticated);
@@ -15,7 +21,11 @@ export function AuthController() {
           {userIsAuthenticated ? <Redirect to="/" /> : <LoginScreen />}
         </Route>
         <Route path={`${path}/logout`}>
-          <LogoutScreen />
+          {userIsAuthenticated ? (
+            <LogoutScreen />
+          ) : (
+            <Redirect to={`${path}/login`} />
+          )}
         </Route>
         <Route path="*">
           <Redirect to={`${path}/login`} />

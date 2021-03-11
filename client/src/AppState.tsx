@@ -2,26 +2,43 @@ import { atom, selector } from "recoil";
 import { persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
+import { SnackState } from "./shell/models/SnackState";
 
 /**
  * Class holding the global app state with static properties.
  */
 export class AppState {
   /**
-   * Demo state
+   * To be used only for login and logout for everything else use userinfo.
+   * Holding the currently logged in users basic information which will be persisted to local storage or an empty object.
+   * The empty object workaround had to be introduced because of a bug in recoil-persist (no null check).
    */
-  static currentScreenTitle = atom({
-    key: "currentScreenTitle",
-    default: "",
+  static userInfoState = atom<AuthResponse | {}>({
+    key: "userInfoState",
+    default: {},
+    effects_UNSTABLE: [persistUserInfoState],
   });
 
   /**
-   * Holding the currently logged in users basic information.
+   * Accessor for the currently logged in users basic information.
    */
-  static userInfoState = atom<AuthResponse | null>({
-    key: "userInfoState",
-    default: null,
-    effects_UNSTABLE: [persistUserInfoState],
+  static userInfo = selector<AuthResponse | null>({
+    key: "userInfo",
+    get: ({ get }) => {
+      return get(AppState.userInfoState) as AuthResponse;
+    },
+  });
+
+  /*
+   * Holding the currently message of Snackbar.
+   */
+  static snackState = atom<SnackState>({
+    key: "snackState",
+    default: {
+      open: false,
+      message: "",
+      severity: "success",
+    },
   });
 
   /**
@@ -30,8 +47,8 @@ export class AppState {
   static userIsAuthenticated = selector<boolean>({
     key: "userIsAuthenticated",
     get: ({ get }) => {
-      const userInfo = get(AppState.userInfoState);
-      return userInfo != null;
+      const userInfo = get(AppState.userInfo);
+      return userInfo?.token != null;
     },
   });
 
@@ -41,7 +58,7 @@ export class AppState {
   static userAvatarInfo = selector<UserAvatarInfo>({
     key: "userAvatarInfo",
     get: ({ get }) => {
-      const userInfo = get(AppState.userInfoState);
+      const userInfo = get(AppState.userInfo);
       return {
         imgSrc: userInfo?.avatar ?? "",
         imgAlt: userInfo?.username ?? "",
@@ -55,7 +72,7 @@ export class AppState {
   static userBearerToken = selector<string>({
     key: "userBearerToken",
     get: ({ get }) => {
-      const userInfo = get(AppState.userInfoState);
+      const userInfo = get(AppState.userInfo);
       return userInfo?.token ?? "";
     },
   });
