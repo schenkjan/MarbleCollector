@@ -10,6 +10,10 @@ const useStyles = makeStyles({
   boxRoot: {
     height: "100vh",
   },
+  children: {
+    flex: "1 1 auto",
+    overflow: "auto",
+  },
 });
 
 type Props = {
@@ -18,6 +22,7 @@ type Props = {
 
 export function DashboardLayout(props: Props) {
   const classes = useStyles();
+
   const userAvatarInfo = useRecoilValue(AppState.userAvatarInfo);
   const dashboardTitle = useRecoilValue(DashboardState.dashboardTitle);
 
@@ -33,7 +38,7 @@ export function DashboardLayout(props: Props) {
         avatarSrc={userAvatarInfo.imgSrc}
         title={dashboardTitle}
       />
-      {props.children}
+      <div className={classes.children}>{props.children}</div>
       <NavigationBar />
     </Box>
   );

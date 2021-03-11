@@ -54,6 +54,7 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 - `npm add formik-material-ui-lab @material-ui/lab`
 - `npm add formik-material-ui-pickers @date-io/date-fns@1.x date-fns`
 - `npm install react-query`
+- `npm install xlsx`
 
 ## Code formatting
 

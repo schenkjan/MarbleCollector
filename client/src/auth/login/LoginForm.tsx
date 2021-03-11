@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  makeStyles,
-  TextField,
-} from "@material-ui/core";
+import { Box, Button, makeStyles, TextField } from "@material-ui/core";
 import React, { useState } from "react";
 import { Copyright } from "./Copyright";
 
@@ -21,21 +14,20 @@ const useStyles = makeStyles((theme) => ({
 
 export type LoginFormProps = {
   username: string;
-  login: (username: string, password: string, rememberMe: boolean) => void;
+  login: (username: string, password: string) => void;
 };
 
 export function LoginForm(props: LoginFormProps) {
   const classes = useStyles();
-  
+
   const [username, setUsername] = useState(props.username);
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
 
   const disableLoginButton = username.length === 0 || password.length === 0;
 
   function onFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    props.login(username, password, rememberMe);
+    props.login(username, password);
   }
 
   return (
@@ -47,7 +39,7 @@ export function LoginForm(props: LoginFormProps) {
           required
           fullWidth
           id="username"
-          label="Username"
+          label="Benutzername"
           name="username"
           autoComplete="off"
           autoFocus
@@ -62,24 +54,13 @@ export function LoginForm(props: LoginFormProps) {
           required
           fullWidth
           name="password"
-          label="Password"
+          label="Passwort"
           type="password"
           id="password"
           value={password}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setPassword(event.target.value)
           }
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              value="remember"
-              color="primary"
-              checked={rememberMe}
-              onChange={() => setRememberMe((rememberMe) => !rememberMe)}
-            />
-          }
-          label="Remember me"
         />
         <Button
           type="submit"

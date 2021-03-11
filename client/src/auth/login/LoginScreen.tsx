@@ -13,7 +13,7 @@ import { LoginRequest } from "./models/LoginRequest";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../../AppState";
 import { useHistory } from "react-router-dom";
 
@@ -52,18 +52,13 @@ export function LoginScreen() {
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
+  // todo replace with global snackbar
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
-  const [userInfo, setUserInfo] = useRecoilState(AppState.userInfoState);
+  const userInfo = useRecoilValue(AppState.userInfo);
+  const setUserInfo = useSetRecoilState(AppState.userInfoState);
 
-  const authResponse = userInfo as AuthResponse;
-
-  // TODO handle rememberme
-  async function login(
-    username: string,
-    password: string,
-    rememberMe: boolean
-  ) {
+  async function login(username: string, password: string) {
     setLoading(true);
     try {
       const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
@@ -77,11 +72,17 @@ export function LoginScreen() {
         loginRequest
       );
       setUserInfo(loginResponse.data);
+      setSnackbar({
+        open: true,
+        message: `Der Login war erfolgreich.`,
+      });
       history.push("/");
     } catch (error) {
       setSnackbar({
         open: true,
-        message: `${error.message}: ${JSON.stringify(error.response.data)}`,
+        message: `Der Login war nicht erfolgreich: ${JSON.stringify(
+          error.response.data
+        )}`,
       });
     } finally {
       setLoading(false);
@@ -99,9 +100,9 @@ export function LoginScreen() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Login - Marblecollector
             </Typography>
-            <LoginForm username={authResponse?.username ?? ""} login={login} />
+            <LoginForm username={userInfo?.username ?? ""} login={login} />
           </div>
         </Grid>
       </Grid>

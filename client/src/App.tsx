@@ -13,6 +13,7 @@ import { HomeScreen } from "./home/HomeScreen";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import {
   createMuiTheme,
+  Container,
   CssBaseline,
   makeStyles,
   ThemeProvider,
@@ -55,7 +56,6 @@ function App() {
   const theme = createMuiTheme({
     palette: {
       type: "light",
-      //type: "dark"
     },
   });
 
@@ -66,6 +66,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
           <ThemeProvider theme={theme}>
+        <Container maxWidth="md" disableGutters>
             <CssBaseline />
             <div className="App">
               <nav>
@@ -98,6 +99,7 @@ function App() {
               </Switch>
               <ShowSnack />
             </div>
+             </Container>
           </ThemeProvider>
         </RecoilRoot>
       </QueryClientProvider>
