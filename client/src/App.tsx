@@ -46,7 +46,6 @@ function App() {
   const theme = createMuiTheme({
     palette: {
       type: "light",
-      //type: "dark"
     },
   });
 
