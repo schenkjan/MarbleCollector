@@ -1,9 +1,7 @@
 import { DashboardLayout } from "../shell/DashboardLayout";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { ProfileDetails } from "./profile/ProfileDetails";
-import { RewardsTable } from "./rewards/RewardsTable";
-import { useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
+import { RewardsList } from "./rewards/RewardsList";
 import { ChoreList } from "./ChoreList";
 
 export function ParentScreen() {
@@ -13,7 +11,7 @@ export function ParentScreen() {
     <DashboardLayout>
       <Switch>
         <Route path={`${path}/rewards`}>
-          <RewardsTable />
+          <RewardsList />
         </Route>
         <Route path={`${path}/profile`}>
           <ProfileDetails />

@@ -9,7 +9,6 @@ import { MoreOptionsMenu } from "./MoreOptionsMenu";
 import { AddOptionsExpandCardActions } from "./AddOptionsExpandCardActions";
 import { BiAvatarCardHeader } from "./BiAvatarCardHeader";
 import { CollapsibleCardContent } from "./CollapsibleCardContent";
-import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
 import { AddButtonWithLabel } from "./AddButtonWithLabel";
 
 type Prop = {
@@ -29,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function ChoreCard(props: Prop): JSX.Element {
-  useDashboardTitle("Ämtli Pinnwand");
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [showMoreActions, setShowMoreActions] = useState(false);
