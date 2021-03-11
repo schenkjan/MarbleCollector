@@ -1,29 +1,40 @@
 import { Box, makeStyles } from "@material-ui/core";
 import { ReactNode } from "react";
+import { useRecoilValue } from "recoil";
+import { AppState } from "../AppState";
+import { DashboardState } from "./DashboardState";
 import { NavigationBar } from "./NavigationBar";
 import { TitleBar } from "./TitleBar";
 
 const useStyles = makeStyles({
-    boxRoot: {
-        height: "100vh",
-    },
+  boxRoot: {
+    height: "100vh",
+  },
 });
 
 type Props = {
-    children: ReactNode;
-    title: string;
-    avatarAlt: string;
-    avatarSrc: string;
-}
+  children: ReactNode;
+};
 
 export function DashboardLayout(props: Props) {
-    const classes = useStyles();
+  const classes = useStyles();
+  const userAvatarInfo = useRecoilValue(AppState.userAvatarInfo);
+  const dashboardTitle = useRecoilValue(DashboardState.dashboardTitle);
 
-    return (
-        <Box className={classes.boxRoot} display="flex" flexDirection="column" justifyContent="space-between">
-            <TitleBar avatarAlt={props.avatarAlt} avatarSrc={props.avatarSrc} title={props.title} />
-            {props.children}
-            <NavigationBar />
-        </Box>
-    );
+  return (
+    <Box
+      className={classes.boxRoot}
+      display="flex"
+      flexDirection="column"
+      justifyContent="space-between"
+    >
+      <TitleBar
+        avatarAlt={userAvatarInfo.imgAlt}
+        avatarSrc={userAvatarInfo.imgSrc}
+        title={dashboardTitle}
+      />
+      {props.children}
+      <NavigationBar />
+    </Box>
+  );
 }

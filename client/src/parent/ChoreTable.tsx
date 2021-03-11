@@ -19,10 +19,12 @@ import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { DashboardState } from "../shell/DashboardState";
+import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,10 +43,11 @@ const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
 export function ChoreTable(): JSX.Element {
   const classes = useStyles();
+  useDashboardTitle("Ämtli Pinnwand");
   const [showDialog, setShowDialog] = useState(false);
-
-  const [snack, setSnackState] = useRecoilState(AppState.snackState);
   const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const [snack, setSnackState] = useRecoilState(AppState.snackState);
+
   const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
     axios
       .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
