@@ -1,5 +1,4 @@
 import { DashboardLayout } from "../shell/DashboardLayout";
-import { ChoreTable } from "./ChoreTable";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
