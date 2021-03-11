@@ -16,7 +16,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
@@ -40,6 +40,7 @@ export function ChoreTable(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
 
+  const [snack, setSnackState] = useRecoilState(AppState.snackState);
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
     axios
@@ -52,14 +53,30 @@ export function ChoreTable(): JSX.Element {
   );
 
   function handleOnCancel() {
+    setSnackState({
+      open: true,
+      message: "abgebrochen",
+      severity: "info",
+    });
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
   }
 
   function handleOnDelete() {
+    setSnackState({
+      open: true,
+      message: "Ämtli gelöscht",
+      severity: "info",
+    });
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
   }
 
-  function handleOnSave() {
+  function handleOnSave(ChoreObject: object) {
+    alert(JSON.stringify(ChoreObject, null, 2));
+    setSnackState({
+      open: true,
+      message: "Ämtli erstellt",
+      severity: "success",
+    });
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct save logic.
   }
 

@@ -46,6 +46,16 @@ namespace MarbleCollectorApi.Data.Repository.Core
             return GetSingle(x => x.Id == id);
         }
 
+        public virtual T GetSingleUntracked(int id)
+        {
+            return GetSingleUntracked(x => x.Id == id);
+        }
+
+        public virtual T GetSingleUntracked(Expression<Func<T, bool>> predicate)
+        {
+            return Context.Set<T>().AsNoTracking().FirstOrDefault(predicate);
+        }
+
         public virtual T GetSingle(Expression<Func<T, bool>> predicate)
         {
             return Context.Set<T>().FirstOrDefault(predicate);

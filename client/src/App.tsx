@@ -13,6 +13,7 @@ import {
   ThemeProvider,
 } from "@material-ui/core";
 import { AuthController } from "./auth/AuthController";
+import { ShowSnack } from "./Snackbar";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();
@@ -93,6 +94,7 @@ function App() {
                     <HomeScreen />
                   </Route>
                 </Switch>
+                <ShowSnack />
               </div>
             </Container>
           </ThemeProvider>

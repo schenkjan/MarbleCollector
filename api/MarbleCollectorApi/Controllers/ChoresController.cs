@@ -68,8 +68,10 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Chore> UpdateChore(int id, Chore chore)
         {
@@ -86,7 +88,9 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
