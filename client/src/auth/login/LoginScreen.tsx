@@ -11,11 +11,13 @@ import { LoginForm } from "./LoginForm";
 import { AuthResponse } from "./models/AuthResponse";
 import { LoginRequest } from "./models/LoginRequest";
 import { Backdrop, CircularProgress } from "@material-ui/core";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../../AppState";
 import { useHistory } from "react-router-dom";
+import {
+  useErrorNotification,
+  useSuccessNotification,
+} from "../../shell/hooks/SnackbarHooks";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,11 +54,12 @@ export function LoginScreen() {
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  // todo replace with global snackbar
-  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
   const userInfo = useRecoilValue(AppState.userInfo);
   const setUserInfo = useSetRecoilState(AppState.userInfoState);
+
+  const showError = useErrorNotification();
+  const showSuccess = useSuccessNotification();
 
   async function login(username: string, password: string) {
     setLoading(true);
@@ -72,18 +75,14 @@ export function LoginScreen() {
         loginRequest
       );
       setUserInfo(loginResponse.data);
-      setSnackbar({
-        open: true,
-        message: `Der Login war erfolgreich.`,
-      });
+      showSuccess(`Der Login war erfolgreich.`);
       history.push("/");
     } catch (error) {
-      setSnackbar({
-        open: true,
-        message: `Der Login war nicht erfolgreich: ${JSON.stringify(
+      showError(
+        `Der Login war nicht erfolgreich: ${JSON.stringify(
           error.response.data
-        )}`,
-      });
+        )}`
+      );
     } finally {
       setLoading(false);
     }
@@ -109,20 +108,6 @@ export function LoginScreen() {
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={6000}
-        open={snackbar.open}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          onClose={() => setSnackbar({ open: false, message: "" })}
-          severity="error"
-        >
-          {snackbar.message}
-        </MuiAlert>
-      </Snackbar>
     </>
   );
 }

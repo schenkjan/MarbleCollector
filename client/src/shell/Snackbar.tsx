@@ -3,8 +3,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Box from "@material-ui/core/Box";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { AppState } from "./AppState";
+import { useRecoilState } from "recoil";
+import { AppState } from "../AppState";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -49,40 +49,4 @@ export function ShowSnack() {
       </Snackbar>
     </Box>
   );
-}
-
-export function useInfoNotification(): (message: string) => void {
-  const setSnackState = useSetRecoilState(AppState.snackState);
-
-  return (message: string): void => {
-    setSnackState({
-      open: true,
-      message: message,
-      severity: "info",
-    });
-  };
-}
-
-export function useSuccessNotification(): (message: string) => void {
-  const setSnackState = useSetRecoilState(AppState.snackState);
-
-  return (message: string): void => {
-    setSnackState({
-      open: true,
-      message: message,
-      severity: "success",
-    });
-  };
-}
-
-export function useErrorNotification(): (message: string) => void {
-  const setSnackState = useSetRecoilState(AppState.snackState);
-
-  return (message: string): void => {
-    setSnackState({
-      open: true,
-      message: message,
-      severity: "error",
-    });
-  };
 }

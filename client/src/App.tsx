@@ -19,7 +19,7 @@ import {
   ThemeProvider,
 } from "@material-ui/core";
 import { AuthController } from "./auth/AuthController";
-import { ShowSnack } from "./Snackbar";
+import { ShowSnack } from "./shell/Snackbar";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
 import { AppState } from "./AppState";
@@ -66,7 +66,6 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
           <ThemeProvider theme={theme}>
-        <Container maxWidth="md" disableGutters>
             <CssBaseline />
             <div className="App">
               <nav>
@@ -99,7 +98,6 @@ function App() {
               </Switch>
               <ShowSnack />
             </div>
-             </Container>
           </ThemeProvider>
         </RecoilRoot>
       </QueryClientProvider>
