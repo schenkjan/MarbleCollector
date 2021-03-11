@@ -9,14 +9,6 @@ import { SnackState } from "./shell/models/SnackState";
  */
 export class AppState {
   /**
-   * Demo state
-   */
-  static currentScreenTitle = atom({
-    key: "currentScreenTitle",
-    default: "",
-  });
-
-  /**
    * To be used only for login and logout for everything else use userinfo.
    * Holding the currently logged in users basic information which will be persisted to local storage or an empty object.
    * The empty object workaround had to be introduced because of a bug in recoil-persist (no null check).

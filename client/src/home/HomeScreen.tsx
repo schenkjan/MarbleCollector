@@ -1,6 +1,7 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { Redirect } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
@@ -12,12 +13,11 @@ interface Message {
 }
 
 export function HomeScreen() {
-  const setScreen = useSetRecoilState(AppState.currentScreenTitle);
+  const userIsAuthenticated = useRecoilValue(AppState.userIsAuthenticated);
   const [hubConnection, setHubConnection] = useState<HubConnection>();
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    setScreen((val) => "Home");
     console.log("HomeScreen - Mounting component...");
 
     const createHubConnection = async () => {
@@ -66,6 +66,7 @@ export function HomeScreen() {
 
   return (
     <>
+      {userIsAuthenticated && <Redirect to="/app" />}
       <section>
         <h3>Environment</h3>
         <p>NODE_ENV={process.env.NODE_ENV}</p>

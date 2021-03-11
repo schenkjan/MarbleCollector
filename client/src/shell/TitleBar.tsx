@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { LogoutButton } from "../auth/logout/LogoutButton";
-import { useDashboardBasePath } from "./DashboardBasePathHook";
+import { useDashboardBasePath } from "./hooks/DashboardBasePathHook";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

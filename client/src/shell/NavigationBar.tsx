@@ -11,7 +11,7 @@ import RedeemIcon from "@material-ui/icons/Redeem";
 import { useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { atom, useRecoilState } from "recoil";
-import { useDashboardBasePath } from "./DashboardBasePathHook";
+import { useDashboardBasePath } from "./hooks/DashboardBasePathHook";
 
 const useStyles = makeStyles({
   navigation: {
