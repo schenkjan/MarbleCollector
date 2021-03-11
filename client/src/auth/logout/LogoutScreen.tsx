@@ -1,40 +1,61 @@
+import React, { useEffect, useState } from "react";
+
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../../AppState";
+import { LogoutProgress } from "./LogoutProgress";
+import { LogoutSuccess } from "./LogoutSuccess";
 
 /**
  * Logout Screen Best Practices
  * https://usabilitygeek.com/ux-logout-lapse/
  */
 export function LogoutScreen() {
+  const secondsTillRedirect = 5;
+  const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
-  const [userInfo, setUserInfo] = useRecoilState(AppState.userInfoState);
+  const userInfo = useRecoilValue(AppState.userInfo);
+  const setUserInfo = useSetRecoilState(AppState.userInfoState);
 
   useEffect(() => {
-    const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
-    const apiRestTestUrl = `${apiBaseUrl}/api/auth/logout`;
-    debugger;
-    if (userInfo != null) {
-      setUsername(userInfo.username);
-      setUserInfo(null);
-      axios
-        .post(apiRestTestUrl, null, {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        })
-        .then(() => alert("Logout success"))
-        .catch(() => alert("Logout error"));
+    async function logout() {
+      const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
+      const apiRestTestUrl = `${apiBaseUrl}/api/auth/logout`;
+      if (userInfo != null) {
+        try {
+          setUsername(userInfo?.username);
+          const logoutResponse = await axios.post(apiRestTestUrl, null, {
+            headers: {
+              Authorization: `Bearer ${userInfo?.token}`,
+            },
+          });
+          // add global snackbar message
+
+          setTimeout(() => {
+            // ensure that the global state gets cleared, even if the component is unmounted
+            setUserInfo({});
+          }, secondsTillRedirect * 1000);
+        } catch (error) {
+          // todo replace with global snackbar
+          alert("Logout error");
+        } finally {
+          setLoading(false);
+        }
+      }
     }
+
+    logout();
   }, []);
 
   return (
     <>
-      <p>Confirmation - You have successfully logged out!</p>
-      <p>Acknowledgement - Thanks you {username} for using Marblecollector!</p>
-      <p>Signposting - Want to log back in? Here you go!</p>
-      <p>Engagement - Do you know that you do not have to logout? -- Here</p>
+      {loading && <LogoutProgress open={loading} />}
+      {!loading && (
+        <LogoutSuccess
+          username={username}
+          secondsTillRedirect={secondsTillRedirect}
+        />
+      )}
     </>
   );
 }
