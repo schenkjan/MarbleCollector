@@ -34,9 +34,10 @@ export class AppState {
     key: "userInfo",
     get: ({ get }) => {
       return get(AppState.userInfoState) as AuthResponse;
-     },
-    });
+    },
+  });
 
+  /*
    * Holding the currently message of Snackbar.
    */
   static snackState = atom<SnackState>({
