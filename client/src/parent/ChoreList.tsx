@@ -18,6 +18,7 @@ import { AppState } from "../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
+import { GetQuery } from "../api/BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,22 +34,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
+// const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
 export function ChoreList(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
 
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
-    axios
-      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => data?.data)
-  );
+  const chores: ChoreWithAssignments[] = GetQuery("/api/Chores/Assignments");
+
+  // const bearerToken = useRecoilValue(AppState.userBearerToken);
+  // const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
+  //   axios
+  //     .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
+  //       headers: {
+  //         Authorization: `Bearer ${bearerToken}`,
+  //       },
+  //     })
+  //     .then((data) => data?.data)
+  // );
 
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
@@ -66,21 +69,21 @@ export function ChoreList(): JSX.Element {
     setShowDialog(true);
   }
 
-  if (isLoading)
-    return (
-      <Box>
-        <p>Loading...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+  // if (true)
+  //   return (
+  // <Box>
+  //   <p>Loading...</p>
+  //   <CircularProgress />
+  // </Box>
+  //   ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
 
-  if (error)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${error}`}</p>
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
+  // if (error)
+  //   return (
+  //     <Box>
+  //       <ErrorIcon color="secondary" fontSize="large" />
+  //       <p>{`An error has occurred: ${error}`}</p>
+  //     </Box>
+  //   ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Box className={classes.container} component={Paper}>

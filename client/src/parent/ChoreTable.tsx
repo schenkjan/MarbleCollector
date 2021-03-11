@@ -25,6 +25,8 @@ import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
 import { useInfoNotification, useSuccessNotification } from "../Snackbar";
 import { doLoading } from "../api/LoadingData";
 import { doError } from "../api/ErrorData";
+import { ChoreAssignment } from "./ChoreAssignment";
+import { GetQuery } from "../api/BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,18 +51,21 @@ export function ChoreTable(): JSX.Element {
   const showInfo = useInfoNotification();
   const showSuccess = useSuccessNotification();
 
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  // const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [snack, setSnackState] = useRecoilState(AppState.snackState);
 
-  const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
-    axios
-      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => data?.data)
-  );
+  const chores: ChoreWithAssignments[] = GetQuery("/api/Cho");
+  // LoadChoreAssignments();
+
+  // const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
+  //   axios
+  //     .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
+  //       headers: {
+  //         Authorization: `Bearer ${bearerToken}`,
+  //       },
+  //     })
+  //     .then((data) => data?.data)
+  // );
 
   function handleOnCancel() {
     showInfo("abgebrochen");
@@ -80,13 +85,6 @@ export function ChoreTable(): JSX.Element {
 
   function handleAddChore() {
     setShowDialog(true);
-  }
-
-  if (isLoading) {
-    return doLoading();
-  }
-  if (error) {
-    return doError(error);
   }
 
   return (

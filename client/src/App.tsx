@@ -24,6 +24,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
 import { AppState } from "./AppState";
 import { ProtectedRoutesController } from "./auth/ProtectedRoutesController";
+import PortalOverlay from "./shell/PortalOverlay";
 
 const queryClient = new QueryClient();
 
@@ -66,40 +67,41 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
           <ThemeProvider theme={theme}>
-        <Container maxWidth="md" disableGutters>
-            <CssBaseline />
-            <div className="App">
-              <nav>
-                <ul className={classes.linkList}>
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <Link to="/auth">Auth</Link>
-                  </li>
-                  <li>
-                    <Link to="/app/child">Child</Link>
-                  </li>
-                  <li>
-                    <Link to="/app/parent">Parent</Link>
-                  </li>
-                </ul>
-              </nav>
+            <Container maxWidth="md" disableGutters>
+              <CssBaseline />
+              <div className="App">
+                <nav>
+                  <ul className={classes.linkList}>
+                    <li>
+                      <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                      <Link to="/auth">Auth</Link>
+                    </li>
+                    <li>
+                      <Link to="/app/child">Child</Link>
+                    </li>
+                    <li>
+                      <Link to="/app/parent">Parent</Link>
+                    </li>
+                  </ul>
+                </nav>
 
-              <Switch>
-                <Route path="/" exact>
-                  <HomeScreen />
-                </Route>
-                <Route path="/auth">
-                  <AuthController />
-                </Route>
-                <ProtectedRoute routeProps={{ path: "/app" }}>
-                  <ProtectedRoutesController />
-                </ProtectedRoute>
-              </Switch>
-              <ShowSnack />
-            </div>
-             </Container>
+                <Switch>
+                  <Route path="/" exact>
+                    <HomeScreen />
+                  </Route>
+                  <Route path="/auth">
+                    <AuthController />
+                  </Route>
+                  <ProtectedRoute routeProps={{ path: "/app" }}>
+                    <ProtectedRoutesController />
+                  </ProtectedRoute>
+                </Switch>
+                <PortalOverlay />
+                <ShowSnack />
+              </div>
+            </Container>
           </ThemeProvider>
         </RecoilRoot>
       </QueryClientProvider>

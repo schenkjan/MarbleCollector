@@ -3,6 +3,7 @@ import { persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 import { SnackState } from "./shell/models/SnackState";
+import { choreNewsCount } from "./shell/NavigationBar";
 
 /**
  * Class holding the global app state with static properties.
@@ -75,5 +76,13 @@ export class AppState {
       const userInfo = get(AppState.userInfo);
       return userInfo?.token ?? "";
     },
+  });
+
+  /*
+   * Holding the currently State of react-query requests.
+   */
+  static queryState = atom<string>({
+    key: "queryState",
+    default: "ready",
   });
 }
