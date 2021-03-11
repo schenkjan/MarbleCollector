@@ -25,6 +25,7 @@ import clsx from "clsx";
 import { AssignmentState } from "./models/AssignmentState";
 import { AssignmentList } from "./AssignmentList";
 import { useInfoNotification } from "../Snackbar";
+import { MoreOptionsMenu } from "./MoreOptionsMenu";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -198,29 +199,15 @@ export function ChoreCard(props: Prop): JSX.Element {
           <AssignmentList assignments={props.chore.assignments} />
         </CardContent>
       </Collapse>
-      <Menu
+      <MoreOptionsMenu
         open={showMoreActions}
-        onClose={handleMoreClose}
         anchorEl={showMoreAnchor}
-        keepMounted
-      >
-        <MenuItem onClick={handleCopy}>
-          <ListItemIcon>
-            <FileCopyIcon />
-          </ListItemIcon>
-          <ListItemText disableTypography>
-            <Typography variant="body2">Ämtli kopieren</Typography>
-          </ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleDelete}>
-          <ListItemIcon>
-            <DeleteForeverIcon />
-          </ListItemIcon>
-          <ListItemText disableTypography>
-            <Typography variant="body2">Ämtli löschen</Typography>
-          </ListItemText>
-        </MenuItem>
-      </Menu>
+        onMoreClose={handleMoreClose}
+        copyLabel="Ämtli kopieren"
+        onCopy={handleCopy}
+        deleteLabel={"Ämtli löschen"}
+        onDelete={handleDelete}
+      />
     </Card>
   );
 }
