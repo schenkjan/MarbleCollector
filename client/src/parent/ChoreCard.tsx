@@ -77,6 +77,11 @@ export function ChoreCard(props: Prop): JSX.Element {
     showInfo("Editing due date..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
+  function handleValueEdit() {
+    console.log("Editing amount of marbles...");
+    showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
+  }
+
   function getDescription() {
     if (!props.chore.description) return;
 
@@ -118,6 +123,7 @@ export function ChoreCard(props: Prop): JSX.Element {
               assignment.state === AssignmentState.Archived
           ).length
         }
+        onRightAvatarClick={handleValueEdit}
         onTitleClick={handleTitleEdit}
         onSubtitleClick={handleDueDateEdit}
       />
