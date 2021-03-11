@@ -1,10 +1,16 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 import { ChildScreen } from "./child/ChildScreen";
 import { ParentScreen } from "./parent/ParentScreen";
 import { HomeScreen } from "./home/HomeScreen";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilValue } from "recoil";
 import {
   createMuiTheme,
   Container,
@@ -15,6 +21,9 @@ import {
 import { AuthController } from "./auth/AuthController";
 import { ShowSnack } from "./Snackbar";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ProtectedRoute } from "./auth/ProtectedRoute";
+import { AppState } from "./AppState";
+import { ProtectedRoutesController } from "./auth/ProtectedRoutesController";
 
 const queryClient = new QueryClient();
 
@@ -44,58 +53,53 @@ const useStyles = makeStyles({
 // TODO js (25.02.2021): Nav element is only temporary remove it when ready.
 function App() {
   const classes = useStyles();
-
   const theme = createMuiTheme({
     palette: {
       type: "light",
     },
   });
 
+  const userIsAuthenticated = useRecoilValue(AppState.userIsAuthenticated);
+
   return (
     <Router>
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
           <ThemeProvider theme={theme}>
-            <Container maxWidth="md" disableGutters>
-              <CssBaseline />
-              <div className="App">
-                <nav>
-                  <ul className={classes.linkList}>
-                    <li>
-                      <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                      <Link to="/auth">Auth</Link>
-                    </li>
-                    <li>
-                      <Link to="/child">Child</Link>
-                    </li>
-                    <li>
-                      <Link to="/parent">Parent</Link>
-                    </li>
-                  </ul>
-                </nav>
+        <Container maxWidth="md" disableGutters>
+            <CssBaseline />
+            <div className="App">
+              <nav>
+                <ul className={classes.linkList}>
+                  <li>
+                    <Link to="/">Home</Link>
+                  </li>
+                  <li>
+                    <Link to="/auth">Auth</Link>
+                  </li>
+                  <li>
+                    <Link to="/app/child">Child</Link>
+                  </li>
+                  <li>
+                    <Link to="/app/parent">Parent</Link>
+                  </li>
+                </ul>
+              </nav>
 
-                <Switch>
-                  <Route path="/auth">
-                    <AuthController />
-                  </Route>
-                  <Route path="/app">
-                    <p>App</p>
-                  </Route>
-                  <Route path="/child">
-                    <ChildScreen />
-                  </Route>
-                  <Route path="/parent">
-                    <ParentScreen />
-                  </Route>
-                  <Route path="/">
-                    <HomeScreen />
-                  </Route>
-                </Switch>
-                <ShowSnack />
-              </div>
-            </Container>
+              <Switch>
+                <Route path="/" exact>
+                  <HomeScreen />
+                </Route>
+                <Route path="/auth">
+                  <AuthController />
+                </Route>
+                <ProtectedRoute routeProps={{ path: "/app" }}>
+                  <ProtectedRoutesController />
+                </ProtectedRoute>
+              </Switch>
+              <ShowSnack />
+            </div>
+             </Container>
           </ThemeProvider>
         </RecoilRoot>
       </QueryClientProvider>
