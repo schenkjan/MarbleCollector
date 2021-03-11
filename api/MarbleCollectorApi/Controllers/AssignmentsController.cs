@@ -6,19 +6,29 @@ using System.Linq;
 using MarbleCollectorApi.Data.Mapping;
 using MarbleCollectorApi.Data.Repository;
 using MarbleCollectorApi.ViewModels;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.AspNetCore.SignalR;
+using MarbleCollectorApi.Hubs;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MarbleCollectorApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class AssignmentsController : Controller
     {
         private readonly IAssignmentRepository _assignmentRepository;
+        private readonly IHubContext<ParentNotificationHub> _parentNotificationHubContext;
+        private readonly IHubContext<ChildrenNotificationHub> _childrenNotificationHubContext;
 
-        public AssignmentsController(IAssignmentRepository assignmentRepository)
+        public AssignmentsController(IAssignmentRepository assignmentRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
         {
-            _assignmentRepository =
-                assignmentRepository ?? throw new ArgumentNullException(nameof(assignmentRepository));
+            _assignmentRepository = assignmentRepository ?? throw new ArgumentNullException(nameof(assignmentRepository));
+            _parentNotificationHubContext = parentNotificationHubContext;
+            _childrenNotificationHubContext = childrenNotificationHubContext;
         }
 
         // TODO js (04.03.2021): Can all users get all assignments?
@@ -44,24 +54,63 @@ namespace MarbleCollectorApi.Controllers
         }
 
         [HttpPost()]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<Assignment> CreateAssignment(Assignment assignment)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            var entityEntry = _assignmentRepository.Add(assignment.Map());
+
+            try
+            {
+                _assignmentRepository.Commit();
+            }
+            catch
+            {
+                // TODO hs 210307, maybe add some more parameter validation?
+                return BadRequest(); ;
+            }
+
+            return Created("Get", entityEntry.Entity);
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Assignment> UpdateAssignment(int id, Assignment assignment)
+        public async Task<ActionResult<Assignment>> UpdateAssignment(int id, Assignment assignment)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            if (id != assignment.Id)
+            {
+                return BadRequest();
+            }
+
+            var stateChanged = CheckHasStateChanged(assignment.State, id);
+
+            // TODO hs 210307, can a assignment be modified if the state is Archived, which is by defintion the final state
+            EntityEntry entityEntry = _assignmentRepository.Update(assignment.Map());
+            _assignmentRepository.Commit();
+
+            if (stateChanged)
+            {
+                if (assignment.State == AssignmentState.Assigned || assignment.State == AssignmentState.CheckConfirmed || assignment.State == AssignmentState.CheckRefused)
+                {
+                    await _childrenNotificationHubContext.Clients.All.SendAsync("UpdateAssignments", assignment.UserId, assignment.ChoreId);
+                }
+                else if (assignment.State != AssignmentState.Archived)
+                {
+                    await _parentNotificationHubContext.Clients.All.SendAsync("UpdateAssignments", assignment.UserId, assignment.ChoreId);
+                }
+            }
+
+            return Ok(entityEntry.Entity);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Const.UserRoleParent)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
@@ -82,7 +131,14 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<AssignmentWithChore>> GetAssignmentsForUser(int id)
         {
-            return NotFound(); // TODO js (04.03.2021): To be implemented!
+            var assignmentsForUser = _assignmentRepository.GetAll().Where(assignments => assignments.UserId == id).Select(assignment => assignment.Map());
+
+            return Ok(assignmentsForUser);
+        }
+
+        private bool CheckHasStateChanged(AssignmentState newState, int id)
+        {
+            return (int)newState != (int)_assignmentRepository.GetSingleUntracked(id).State;
         }
     }
 }

@@ -2,6 +2,7 @@ import { atom, selector } from "recoil";
 import { persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
+import { SnackState } from "./shell/models/SnackState";
 
 /**
  * Class holding the global app state with static properties.
@@ -33,6 +34,17 @@ export class AppState {
     key: "userInfo",
     get: ({ get }) => {
       return get(AppState.userInfoState) as AuthResponse;
+     },
+    });
+
+   * Holding the currently message of Snackbar.
+   */
+  static snackState = atom<SnackState>({
+    key: "snackState",
+    default: {
+      open: false,
+      message: "",
+      severity: "success",
     },
   });
 
