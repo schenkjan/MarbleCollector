@@ -22,8 +22,13 @@ import {
 import clsx from "clsx";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useState } from "react";
-import ImgMarbles from "../images/Marble.png";
+import ImgMarbles from "../../images/Marble.png";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
+
+type Prop = {
+  chore: ChoreWithAssignments;
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,7 +83,7 @@ function getStepContent(stepIndex: any) {
   }
 }
 
-export function ChildChoreItemExpand(props: Chore): JSX.Element {
+export function ChildChoreItemExpand(props: Prop): JSX.Element {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -91,14 +96,18 @@ export function ChildChoreItemExpand(props: Chore): JSX.Element {
     <Card elevation={5}>
       <CardHeader
         className={classes.header}
-        title={props.name}
-        subheader={new Date(props.dueDate).toLocaleDateString("de-DE", {
+        title={props.chore.name}
+        subheader={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
           weekday: "short",
           year: "2-digit",
           month: "short",
           day: "numeric",
         })}
-        avatar={<Avatar aria-label="Chore">Z</Avatar>}
+        avatar={
+          <Avatar aria-label="Chore">
+            {props.chore.name[0].toUpperCase()}
+          </Avatar>
+        }
         action={
           <Badge
             overlap="circle"
@@ -106,7 +115,7 @@ export function ChildChoreItemExpand(props: Chore): JSX.Element {
               vertical: "bottom",
               horizontal: "right",
             }}
-            badgeContent={props.value}
+            badgeContent={props.chore.value}
           >
             <Avatar src={ImgMarbles}></Avatar>
           </Badge>
@@ -127,8 +136,7 @@ export function ChildChoreItemExpand(props: Chore): JSX.Element {
       <Collapse in={expanded} timeout="auto">
         <CardContent className={classes.content}>
           <Typography variant="body2" color="textSecondary" component="p">
-            Zimmer tip top aufräumen, auch unter dem Bett und hinter dem
-            Schrank!
+            {props.chore.description}
           </Typography>
         </CardContent>
         <CardActions>
