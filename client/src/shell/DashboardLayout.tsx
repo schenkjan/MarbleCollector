@@ -1,9 +1,10 @@
+import React, { ReactNode } from "react";
 import { Box, makeStyles } from "@material-ui/core";
-import { ReactNode } from "react";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import { DashboardState } from "./DashboardState";
 import { NavigationBar } from "./NavigationBar";
+import { ShowSnack } from "./Snackbar";
 import { TitleBar } from "./TitleBar";
 
 const useStyles = makeStyles({
@@ -40,6 +41,7 @@ export function DashboardLayout(props: Props) {
       />
       <div className={classes.children}>{props.children}</div>
       <NavigationBar />
+      <ShowSnack />
     </Box>
   );
 }

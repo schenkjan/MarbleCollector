@@ -1,6 +1,6 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { useEffect, useState } from "react";
-import { Redirect } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, Redirect } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 
@@ -68,6 +68,8 @@ export function HomeScreen() {
     <>
       {userIsAuthenticated && <Redirect to="/app" />}
       <section>
+        <h1>Welcome to MarbleCollector</h1>
+        <Link to="/auth">Auth</Link>
         <h3>Environment</h3>
         <p>NODE_ENV={process.env.NODE_ENV}</p>
         <p>PUBLIC_URL={process.env.PUBLIC_URL}</p>
