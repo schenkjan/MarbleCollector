@@ -99,7 +99,7 @@ export function LoginScreen() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Login - Marblecollector
+              Login - Entdecke die App
             </Typography>
             <LoginForm username={userInfo?.username ?? ""} login={login} />
           </div>

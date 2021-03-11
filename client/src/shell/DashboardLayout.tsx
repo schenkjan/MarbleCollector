@@ -3,9 +3,9 @@ import { Box, makeStyles } from "@material-ui/core";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import { DashboardState } from "./DashboardState";
-import { NavigationBar } from "./NavigationBar";
+import { NavigationBar } from "./navigation/NavigationBar";
 import { ShowSnack } from "./Snackbar";
-import { TitleBar } from "./TitleBar";
+import { TitleBar } from "./title/TitleBar";
 
 const useStyles = makeStyles({
   boxRoot: {
@@ -26,6 +26,7 @@ export function DashboardLayout(props: Props) {
 
   const userAvatarInfo = useRecoilValue(AppState.userAvatarInfo);
   const dashboardTitle = useRecoilValue(DashboardState.dashboardTitle);
+  const userIsAuthenticated = useRecoilValue(AppState.userIsAuthenticated);
 
   return (
     <Box
@@ -37,10 +38,11 @@ export function DashboardLayout(props: Props) {
       <TitleBar
         avatarAlt={userAvatarInfo.imgAlt}
         avatarSrc={userAvatarInfo.imgSrc}
+        userIsAuthenticated={userIsAuthenticated}
         title={dashboardTitle}
       />
       <div className={classes.children}>{props.children}</div>
-      <NavigationBar />
+      <NavigationBar showNavigationBar={userIsAuthenticated} />
       <ShowSnack />
     </Box>
   );

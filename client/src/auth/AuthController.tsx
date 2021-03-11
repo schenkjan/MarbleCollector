@@ -1,6 +1,7 @@
 import { Switch, Route, useRouteMatch, Redirect } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
+import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
 import { LoginScreen } from "./login/LoginScreen";
 import { LogoutScreen } from "./logout/LogoutScreen";
 
@@ -11,6 +12,7 @@ import { LogoutScreen } from "./logout/LogoutScreen";
  * -> The user is logged out only if he is authenticated and accessing auth/logout
  */
 export function AuthController() {
+  useDashboardTitle("MarbleCollector");
   const { path } = useRouteMatch();
   const userIsAuthenticated = useRecoilValue(AppState.userIsAuthenticated);
 
