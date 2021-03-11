@@ -1,13 +1,5 @@
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
-import {
-  Avatar,
-  Badge,
-  Card,
-  CardContent,
-  CardHeader,
-  Collapse,
-  Typography,
-} from "@material-ui/core";
+import { Card, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { AssignmentState } from "./models/AssignmentState";
@@ -15,6 +7,8 @@ import { AssignmentList } from "./AssignmentList";
 import { useInfoNotification } from "../Snackbar";
 import { MoreOptionsMenu } from "./MoreOptionsMenu";
 import { AddOptionsExpandCardActions } from "./AddOptionsExpandCardActions";
+import { BiAvatarCardHeader } from "./BiAvatarCardHeader";
+import { CollapsibleCardContent } from "./CollapsibleCardContent";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -22,14 +16,8 @@ type Prop = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    header: {
-      textAlign: "left",
-    },
     description: {
       textAlign: "left",
-    },
-    avatar: {
-      backgroundColor: theme.palette.primary.main,
     },
   })
 );
@@ -96,52 +84,30 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   return (
     <Card elevation={5}>
-      <CardHeader
-        className={classes.header}
-        avatar={
-          <Badge
-            badgeContent={
-              props.chore.assignments.filter(
-                (assignment) =>
-                  assignment.state === AssignmentState.RequestedToCheck
-              ).length
-            }
-            color="secondary"
-          >
-            <Avatar
-              aria-label="chore title"
-              className={classes.avatar}
-              onClick={handleExpandClick}
-            >
-              {props.chore.assignments.length}
-            </Avatar>
-          </Badge>
+      <BiAvatarCardHeader
+        leftAvatarLabel={props.chore.assignments.length.toString()}
+        leftAvatarNotifications={
+          props.chore.assignments.filter(
+            (assignment) =>
+              assignment.state === AssignmentState.RequestedToCheck
+          ).length
         }
+        onLeftAvatarClick={handleExpandClick}
         title={props.chore.name}
-        action={
-          <Badge
-            badgeContent={
-              props.chore.assignments.filter(
-                (assignment) =>
-                  assignment.state === AssignmentState.CheckConfirmed ||
-                  assignment.state === AssignmentState.Archived
-              ).length
-            }
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            color="primary"
-          >
-            <Avatar>{props.chore.value}</Avatar>
-          </Badge>
-        }
-        subheader={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
+        subtitle={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
           weekday: "short",
           year: "2-digit",
           month: "short",
           day: "numeric",
         })}
+        rightAvatarLabel={props.chore.value.toString()}
+        rightAvatarNotifications={
+          props.chore.assignments.filter(
+            (assignment) =>
+              assignment.state === AssignmentState.CheckConfirmed ||
+              assignment.state === AssignmentState.Archived
+          ).length
+        }
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"
@@ -151,12 +117,10 @@ export function ChoreCard(props: Prop): JSX.Element {
         onMoreClick={handleMoreClick}
         onExpandClick={handleExpandClick}
       />
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          {getDescription()}
-          <AssignmentList assignments={props.chore.assignments} />
-        </CardContent>
-      </Collapse>
+      <CollapsibleCardContent expanded={expanded}>
+        {getDescription()}
+        <AssignmentList assignments={props.chore.assignments} />
+      </CollapsibleCardContent>
       <MoreOptionsMenu
         open={showMoreActions}
         anchorEl={showMoreAnchor}
