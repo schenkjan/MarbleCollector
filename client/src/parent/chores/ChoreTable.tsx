@@ -13,17 +13,17 @@ import { ChoreTableRow } from "./ChoreTableRow";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorIcon from "@material-ui/icons/Error";
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { AppState } from "../AppState";
+import { AppState } from "../../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
 import { useEffect, useState } from "react";
-import { DashboardState } from "../shell/DashboardState";
-import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
-import { useInfoNotification, useSuccessNotification } from "../Snackbar";
+import { DashboardState } from "../../shell/DashboardState";
+import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
+import { useInfoNotification, useSuccessNotification } from "../../Snackbar";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,7 +47,7 @@ export function ChoreTable(): JSX.Element {
 
   const showInfo = useInfoNotification();
   const showSuccess = useSuccessNotification();
-        
+
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [snack, setSnackState] = useRecoilState(AppState.snackState);
 

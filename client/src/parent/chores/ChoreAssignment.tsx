@@ -1,9 +1,9 @@
 import {
   AssignmentState,
   AssignmentStateNames,
-} from "./models/AssignmentState";
+} from "../models/AssignmentState";
 import { makeStyles } from "@material-ui/core";
-import { Assignment } from "./models/Assignment";
+import { Assignment } from "../models/Assignment";
 import { AssignmentTableRow } from "./AssignmentTableRow";
 
 const useStyles = makeStyles({

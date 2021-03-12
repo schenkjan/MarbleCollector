@@ -10,15 +10,15 @@ import {
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorIcon from "@material-ui/icons/Error";
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
+import { AppState } from "../../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
-import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
+import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

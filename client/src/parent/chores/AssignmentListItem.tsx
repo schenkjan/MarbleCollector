@@ -7,13 +7,13 @@ import {
   Theme,
   Grid,
 } from "@material-ui/core";
-import { Assignment } from "./models/Assignment";
+import { Assignment } from "../models/Assignment";
 import {
   AssignmentState,
   AssignmentStateNames,
-} from "./models/AssignmentState";
+} from "../models/AssignmentState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import { useInfoNotification } from "../Snackbar";
+import { useInfoNotification } from "../../Snackbar";
 
 type Prop = {
   assignment: Assignment;
