@@ -36,11 +36,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
-export function RewardsList() {
-  useDashboardTitle("Belohnungspinnwand");
-  const classes = useStyles();
-  const [showDialog, setShowDialog] = useState(false);
+interface RewardLoadingData {
+  isLoading: boolean;
+  error: unknown;
+  rewards: RewardWithGrants[];
+}
 
+function useParentRewardData(): RewardLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const { isLoading, error, data: rewards } = useQuery("parentRewardData", () =>
     axios
@@ -51,6 +53,15 @@ export function RewardsList() {
       })
       .then((data) => data?.data)
   );
+
+  return { isLoading: isLoading, error: error, rewards: rewards ?? [] };
+}
+
+export function RewardsList() {
+  useDashboardTitle("Belohnungspinnwand");
+  const classes = useStyles();
+  const [showDialog, setShowDialog] = useState(false);
+  const { isLoading, error, rewards } = useParentRewardData();
 
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.

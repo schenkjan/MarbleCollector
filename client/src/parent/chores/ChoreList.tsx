@@ -36,11 +36,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
-export function ChoreList(): JSX.Element {
-  useDashboardTitle("Ämtli Pinnwand");
-  const classes = useStyles();
-  const [showDialog, setShowDialog] = useState(false);
+interface ChoreLoadingData {
+  isLoading: boolean;
+  error: unknown;
+  chores: ChoreWithAssignments[];
+}
 
+function useParentChoreData(): ChoreLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
     axios
@@ -51,6 +53,15 @@ export function ChoreList(): JSX.Element {
       })
       .then((data) => data?.data)
   );
+
+  return { isLoading: isLoading, error: error, chores: chores ?? [] };
+}
+
+export function ChoreList(): JSX.Element {
+  useDashboardTitle("Ämtli Pinnwand");
+  const classes = useStyles();
+  const [showDialog, setShowDialog] = useState(false);
+  const { isLoading, error, chores } = useParentChoreData();
 
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
