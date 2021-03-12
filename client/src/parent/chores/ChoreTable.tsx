@@ -17,13 +17,12 @@ import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
-import { useEffect, useState } from "react";
-import { DashboardState } from "../../shell/DashboardState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { useInfoNotification, useSuccessNotification } from "../../Snackbar";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,7 +48,6 @@ export function ChoreTable(): JSX.Element {
   const showSuccess = useSuccessNotification();
 
   const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const [snack, setSnackState] = useRecoilState(AppState.snackState);
 
   const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
     axios
