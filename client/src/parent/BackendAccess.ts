@@ -74,7 +74,5 @@ export function useChildrenData(family: string): ChildrenLoadingData {
 export function useChildrenDataForUser(): ChildrenLoadingData {
   const family = useFamilyMembership();
 
-  console.log(`Family:`, family);
-
   return useChildrenData(family);
 }
