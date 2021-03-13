@@ -10,6 +10,7 @@ import { AddOptionsExpandCardActions } from "../AddOptionsExpandCardActions";
 import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
 import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
+import { useChildren } from "../ParentState";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -35,6 +36,10 @@ export function ChoreCard(props: Prop): JSX.Element {
     null
   );
   const showInfo = useInfoNotification();
+  const children = useChildren();
+  const [allChildrenAssigned] = useState(
+    props.chore.assignments.length === children.length
+  );
 
   function handleExpandClick() {
     setExpanded(!expanded);
@@ -140,6 +145,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         onMoreClick={handleMoreClick}
         onExpandClick={handleExpandClick}
         hideAddButton
+        disabledAddButton={allChildrenAssigned}
       />
       <CollapsibleCardContent
         className={classes.cardContent}
@@ -150,6 +156,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         <AddButtonWithLabel
           title="Kind hinzufügen"
           onClick={handleAddChildClick}
+          disabled={allChildrenAssigned}
         />
       </CollapsibleCardContent>
       <MoreOptionsMenu

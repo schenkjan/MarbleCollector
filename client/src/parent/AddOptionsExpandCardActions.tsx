@@ -10,6 +10,7 @@ import { AddButtonWithLabel } from "./AddButtonWithLabel";
 type Prop = {
   hideAddButton?: boolean;
   addLabel: string;
+  disabledAddButton?: boolean;
   moreOpen: boolean;
   expandOpen: boolean;
   onAddClick?: MouseEventHandler<HTMLButtonElement> | undefined;
@@ -40,7 +41,11 @@ export function AddOptionsExpandCardActions(props: Prop): JSX.Element {
   return (
     <CardActions>
       {props.hideAddButton ? undefined : (
-        <AddButtonWithLabel title={props.addLabel} onClick={props.onAddClick} />
+        <AddButtonWithLabel
+          title={props.addLabel}
+          onClick={props.onAddClick}
+          disabled={props.disabledAddButton}
+        />
       )}
       <IconButton
         className={clsx(classes.expand, {
