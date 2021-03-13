@@ -24,6 +24,8 @@ import { useState } from "react";
 import ImgMarbles from "../../images/Marble.png";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
+import { Assignment } from "../../model/Assignment";
+import { AssignmentState } from "../../parent/models/AssignmentState";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -87,6 +89,38 @@ export function ChildChoreItem(props: Prop): JSX.Element {
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
 
+  function assignmentStateToStepper(chore: ChoreWithAssignments): number {
+    let steperState = 0;
+    switch (chore.assignments[0].state) {
+      case AssignmentState.Assigned: {
+        steperState = 0;
+        break;
+      }
+      case AssignmentState.Active: {
+        steperState = 1;
+        break;
+      }
+      case AssignmentState.RequestedToCheck: {
+        steperState = 2;
+        break;
+      }
+      case AssignmentState.CheckRefused: {
+        steperState = 1;
+        break;
+      }
+      case AssignmentState.CheckConfirmed: {
+        steperState = 4;
+        break;
+      }
+      case AssignmentState.Archived: {
+        steperState = 5;
+        break;
+      }
+    }
+    return steperState;
+  }
+  // setActiveStep(props.chore.assignments[0].state);
+
   return (
     <Card elevation={5}>
       <CardHeader
@@ -125,7 +159,7 @@ export function ChildChoreItem(props: Prop): JSX.Element {
         {/* <div className={classes.root}> */}
         <Stepper
           className={classes.root}
-          activeStep={activeStep}
+          activeStep={assignmentStateToStepper(props.chore)}
           alternativeLabel
         >
           {steps.map((label) => (
