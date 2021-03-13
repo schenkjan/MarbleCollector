@@ -10,10 +10,11 @@ import { AddOptionsExpandCardActions } from "../AddOptionsExpandCardActions";
 import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
 import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
-import { useChildren } from "../ParentState";
+import { User } from "../models/User";
 
 type Prop = {
   reward: RewardWithGrants;
+  children: User[];
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,9 +37,8 @@ export function RewardCard(props: Prop): JSX.Element {
     null
   );
   const showInfo = useInfoNotification();
-  const children = useChildren();
   const [allChildrenAssigned] = useState(
-    props.reward.grants.length === children.length
+    props.reward.grants.length === props.children.length
   );
   const [cardLocked] = useState(
     props.reward.grants.filter((grant) => grant.state !== GrantState.Assigned)

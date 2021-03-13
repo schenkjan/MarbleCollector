@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
+import { AppState, useFamilyMembership } from "../AppState";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { RewardWithGrants } from "./models/RewardWithGrants";
 import { User } from "./models/User";
@@ -58,17 +58,23 @@ interface ChildrenLoadingData {
 
 export function useChildrenData(family: string): ChildrenLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data: children } = useQuery(
-    "parentRewardData",
-    () =>
-      axios
-        .get<User[]>(`${apiBaseUrl}/api/Users/Families/${family}?role=Child`, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        })
-        .then((data) => data?.data)
+  const { isLoading, error, data: children } = useQuery("parentChildData", () =>
+    axios
+      .get<User[]>(`${apiBaseUrl}/api/Users/Families/${family}?role=Child`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+      .then((data) => data?.data)
   );
 
   return { isLoading: isLoading, error: error, children: children ?? [] };
+}
+
+export function useChildrenDataForUser(): ChildrenLoadingData {
+  const family = useFamilyMembership();
+
+  console.log(`Family:`, family);
+
+  return useChildrenData(family);
 }

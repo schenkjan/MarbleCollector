@@ -10,10 +10,11 @@ import { AddOptionsExpandCardActions } from "../AddOptionsExpandCardActions";
 import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
 import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
-import { useChildren } from "../ParentState";
+import { User } from "../models/User";
 
 type Prop = {
   chore: ChoreWithAssignments;
+  children: User[];
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,9 +37,8 @@ export function ChoreCard(props: Prop): JSX.Element {
     null
   );
   const showInfo = useInfoNotification();
-  const children = useChildren();
   const [allChildrenAssigned] = useState(
-    props.chore.assignments.length === children.length
+    props.chore.assignments.length === props.children.length
   );
   const [cardLocked] = useState(
     props.chore.assignments.filter(

@@ -14,7 +14,7 @@ import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useParentChoreData } from "../BackendAccess";
+import { useParentChoreData, useChildrenDataForUser } from "../BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,6 +34,11 @@ export function ChoreList(): JSX.Element {
   useDashboardTitle("Ämtli Pinnwand");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
+  const {
+    isLoading: isChildrenLoading,
+    error: childrenError,
+    children,
+  } = useChildrenDataForUser();
   const { isLoading, error, chores } = useParentChoreData();
 
   function handleOnCancel() {
@@ -52,7 +57,7 @@ export function ChoreList(): JSX.Element {
     setShowDialog(true);
   }
 
-  if (isLoading)
+  if (isLoading || isChildrenLoading)
     return (
       <Box>
         <p>Loading...</p>
@@ -60,7 +65,7 @@ export function ChoreList(): JSX.Element {
       </Box>
     ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
 
-  if (error)
+  if (error || childrenError)
     return (
       <Box>
         <ErrorIcon color="secondary" fontSize="large" />
@@ -72,7 +77,7 @@ export function ChoreList(): JSX.Element {
     <Box className={classes.container} component={Paper}>
       <List>
         {chores?.map((chore) => (
-          <ChoreCard key={chore.id} chore={chore} />
+          <ChoreCard key={chore.id} chore={chore} children={children} />
         ))}
       </List>
       <Fab
