@@ -76,4 +76,15 @@ export class AppState {
       return userInfo?.token ?? "";
     },
   });
+
+  /**
+   * Convenience selector to retrieve the current users id
+   */
+  static userId = selector<number>({
+    key: "userId",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfo);
+      return userInfo?.id ?? 0;
+    },
+  });
 }
