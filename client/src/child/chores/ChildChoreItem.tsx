@@ -27,8 +27,9 @@ import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { Assignment } from "../../model/Assignment";
 import { AssignmentState } from "../../parent/models/AssignmentState";
 
-type Prop = {
+type ChildChoreItemprops = {
   chore: ChoreWithAssignments;
+  onUpdateState: (chore: ChoreWithAssignments) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -84,7 +85,10 @@ function getStepContent(stepIndex: any) {
   }
 }
 
-export function ChildChoreItem(props: Prop): JSX.Element {
+export function ChildChoreItem({
+  chore,
+  onUpdateState,
+}: ChildChoreItemprops): JSX.Element {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
@@ -125,17 +129,15 @@ export function ChildChoreItem(props: Prop): JSX.Element {
     <Card elevation={5}>
       <CardHeader
         className={classes.header}
-        title={props.chore.name}
-        subheader={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
+        title={chore.name}
+        subheader={new Date(chore.dueDate).toLocaleDateString("de-DE", {
           weekday: "short",
           year: "2-digit",
           month: "short",
           day: "numeric",
         })}
         avatar={
-          <Avatar aria-label="Chore">
-            {props.chore.name[0].toUpperCase()}
-          </Avatar>
+          <Avatar aria-label="Chore">{chore.name[0].toUpperCase()}</Avatar>
         }
         action={
           <Badge
@@ -144,7 +146,7 @@ export function ChildChoreItem(props: Prop): JSX.Element {
               vertical: "bottom",
               horizontal: "right",
             }}
-            badgeContent={props.chore.value}
+            badgeContent={chore.value}
           >
             <Avatar src={ImgMarbles}></Avatar>
           </Badge>
@@ -152,14 +154,14 @@ export function ChildChoreItem(props: Prop): JSX.Element {
       />
       <CardContent className={classes.content}>
         <Typography variant="body2" color="textSecondary" component="p">
-          {props.chore.description}
+          {chore.description}
         </Typography>
       </CardContent>
       <CardActions>
         {/* <div className={classes.root}> */}
         <Stepper
           className={classes.root}
-          activeStep={assignmentStateToStepper(props.chore)}
+          activeStep={assignmentStateToStepper(chore)}
           alternativeLabel
         >
           {steps.map((label) => (
@@ -169,6 +171,7 @@ export function ChildChoreItem(props: Prop): JSX.Element {
           ))}
         </Stepper>
         <Button
+          onClick={() => onUpdateState(chore)}
           className={classes.stepButton}
           variant="contained"
           size="small"
