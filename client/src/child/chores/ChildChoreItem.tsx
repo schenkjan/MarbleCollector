@@ -72,19 +72,6 @@ function getSteps() {
   return ["Neu", "Aktiv", "Prüfen", "Erledigt"];
 }
 
-function getStepContent(stepIndex: any) {
-  switch (stepIndex) {
-    case 0:
-      return "Select campaign settings...";
-    case 1:
-      return "What is an ad group anyways?";
-    case 2:
-      return "This is the bit I really care about!";
-    default:
-      return "Unknown stepIndex";
-  }
-}
-
 export function ChildChoreItem({
   chore,
   onUpdateState,
@@ -123,7 +110,14 @@ export function ChildChoreItem({
     }
     return steperState;
   }
-  // setActiveStep(props.chore.assignments[0].state);
+
+  function disableButton(): boolean {
+    if (chore.assignments[0].state > 1) {
+      return true;
+    }
+
+    return false;
+  }
 
   return (
     <Card elevation={5}>
@@ -172,6 +166,7 @@ export function ChildChoreItem({
         </Stepper>
         <Button
           onClick={() => onUpdateState(chore)}
+          disabled={disableButton()}
           className={classes.stepButton}
           variant="contained"
           size="small"
