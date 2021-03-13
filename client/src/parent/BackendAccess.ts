@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { RewardWithGrants } from "./models/RewardWithGrants";
+import { User } from "./models/User";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
@@ -47,4 +48,27 @@ export function useParentRewardData(): RewardLoadingData {
   );
 
   return { isLoading: isLoading, error: error, rewards: rewards ?? [] };
+}
+
+interface ChildrenLoadingData {
+  isLoading: boolean;
+  error: unknown;
+  children: User[];
+}
+
+export function useChildrenData(family: string): ChildrenLoadingData {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const { isLoading, error, data: children } = useQuery(
+    "parentRewardData",
+    () =>
+      axios
+        .get<User[]>(`${apiBaseUrl}/api/Users/Families/${family}?role=Child`, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        })
+        .then((data) => data?.data)
+  );
+
+  return { isLoading: isLoading, error: error, children: children ?? [] };
 }
