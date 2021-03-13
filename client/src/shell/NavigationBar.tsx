@@ -9,7 +9,7 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 //import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'; // TODO js (25.02.2021): Alternative icon for rewards.
 import RedeemIcon from "@material-ui/icons/Redeem";
 import { useEffect, useState } from "react";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { atom, useRecoilState } from "recoil";
 import { useDashboardBasePath } from "./hooks/DashboardBasePathHook";
 
@@ -47,18 +47,18 @@ export const profileNewsCount = atom<number>({
 export function NavigationBar() {
   const classes = useStyles();
   const [value, setValue] = useState<number>();
-  const { path } = useRouteMatch();
+  const { pathname: path } = useLocation();
   const dashboardBasePath = useDashboardBasePath();
   const [choreNews, setChoreNews] = useRecoilState(choreNewsCount);
   const [rewardNews, setRewardNews] = useRecoilState(rewardNewsCount);
   const [profileNews, setProfileNews] = useRecoilState(profileNewsCount);
 
   useEffect(() => {
-    if (path.match(/\/rewards/)) {
+    if (path.match(/(.*)rewards$/)) {
       setValue(1);
-    } else if (path.match(/\/profile/)) {
+    } else if (path.match(/(.*)profile$/)) {
       setValue(2);
-    } else if (path.match(/\/chores/)) {
+    } else if (path.match(/(.*)chores$/)) {
       setValue(0);
     } else {
       setValue(0);
