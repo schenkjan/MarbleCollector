@@ -46,7 +46,7 @@ namespace MarbleCollectorApi.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var user = _userRepository.GetSingle(u => u.Username == model.Username);
+            var user = _userRepository.GetUser(model.Username);
 
             if (user == null)
             {
