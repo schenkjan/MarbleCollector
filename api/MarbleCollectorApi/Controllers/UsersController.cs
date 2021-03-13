@@ -32,18 +32,13 @@ namespace MarbleCollectorApi.Controllers
         }
 
         // TODO js (13.03.2021): Can all users get all users?
-        [HttpGet("{name}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<User> GetUser(string name)
+        public ActionResult<User> GetUser(int id)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                return BadRequest();
-            }
-
-            var user =_userRepository.GetUser(name);
+            var user = _userRepository.GetSingle(id);
 
             if (user == null)
             {
