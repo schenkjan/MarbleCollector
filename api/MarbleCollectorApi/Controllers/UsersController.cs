@@ -31,6 +31,28 @@ namespace MarbleCollectorApi.Controllers
             return Ok(_userRepository.GetAll().Select(user => user.Map()));
         }
 
+        // TODO js (13.03.2021): Can all users get all users?
+        [HttpGet("{name}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<User> GetUser(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest();
+            }
+
+            var user =_userRepository.GetUser(name);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
         // TODO js (13.03.2021): Can all users get all families?
         [HttpGet("families")]
         [ProducesResponseType(StatusCodes.Status200OK)]
