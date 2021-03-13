@@ -23,8 +23,6 @@ import { useEffect, useState } from "react";
 import { DashboardState } from "../shell/DashboardState";
 import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
 import { useInfoNotification, useSuccessNotification } from "../Snackbar";
-import { doLoading } from "../api/LoadingData";
-import { doError } from "../api/ErrorData";
 import { ChoreAssignment } from "./ChoreAssignment";
 import { GetQuery } from "../api/BackendAccess";
 
@@ -54,7 +52,7 @@ export function ChoreTable(): JSX.Element {
   // const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [snack, setSnackState] = useRecoilState(AppState.snackState);
 
-  const chores: ChoreWithAssignments[] = GetQuery("/api/Cho");
+  const chores: any = [];
   // LoadChoreAssignments();
 
   // const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
@@ -90,11 +88,7 @@ export function ChoreTable(): JSX.Element {
   return (
     <TableContainer className={classes.container} component={Paper}>
       <Table stickyHeader aria-label="sticky table" size="small">
-        <TableBody>
-          {chores?.map((chore) => (
-            <ChoreTableRow key={chore.id} chore={chore} />
-          ))}
-        </TableBody>
+        <TableBody>{}</TableBody>
       </Table>
       <Fab
         className={classes.fab}

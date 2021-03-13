@@ -5,6 +5,7 @@ import { RewardsTable } from "./rewards/RewardsTable";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import { ChoreList } from "./ChoreList";
+import PortalOverlay from "../shell/PortalOverlay";
 
 export function ParentScreen() {
   const { path } = useRouteMatch();
@@ -22,6 +23,7 @@ export function ParentScreen() {
           <ChoreList />
         </Route>
       </Switch>
+      <PortalOverlay />
     </DashboardLayout>
   );
 }

@@ -1,9 +1,7 @@
-import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Portal from "@material-ui/core/Portal";
 import { CircularProgress } from "@material-ui/core";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import ErrorIcon from "@material-ui/icons/Error";
 
@@ -23,28 +21,23 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function PortalOverlay() {
   const classes = useStyles();
 
-  const queryCondition = useRecoilValue(AppState.queryState);
-  const [open, setOpen] = React.useState(false);
+  const queryState = useRecoilValue(AppState.queryStateInfo);
 
-  const overlay = () => {
-    if (queryCondition === "error") {
+  const overlayVariant = (value: string) => {
+    if (value === "error") {
       return <ErrorIcon color="secondary" fontSize="large" />;
     } else {
       return <CircularProgress />;
     }
   };
 
-  if (queryCondition !== "ready" && !open) {
-    setOpen((prev) => !prev);
-  } else if (queryCondition === "ready" && open) {
-    setOpen(false);
-  }
-
   return (
     <div>
-      {open ? (
+      {queryState.open ? (
         <Portal>
-          <div className={classes.dropdown}>{overlay()}</div>
+          <div className={classes.dropdown}>
+            {overlayVariant(queryState.variant)}
+          </div>
         </Portal>
       ) : null}
     </div>

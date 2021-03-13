@@ -24,7 +24,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
 import { AppState } from "./AppState";
 import { ProtectedRoutesController } from "./auth/ProtectedRoutesController";
-import PortalOverlay from "./shell/PortalOverlay";
 
 const queryClient = new QueryClient();
 
@@ -98,7 +97,6 @@ function App() {
                     <ProtectedRoutesController />
                   </ProtectedRoute>
                 </Switch>
-                <PortalOverlay />
                 <ShowSnack />
               </div>
             </Container>

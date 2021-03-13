@@ -10,7 +10,6 @@ import {
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorIcon from "@material-ui/icons/Error";
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
@@ -19,6 +18,8 @@ import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { GetQuery } from "../api/BackendAccess";
+import { LoadingData } from "../api/models/LoadingData";
+import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,7 +41,12 @@ export function ChoreList(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
 
-  const chores: ChoreWithAssignments[] = GetQuery("/api/Chores/Assignments");
+  const choresQuery: LoadingData = GetQuery("/api/Chores/Assignments");
+  const chores: ChoreWithAssignments[] = choresQuery.data;
+
+  // const test: any = GetQuery("/api/Chores/Assignments");
+
+  // console.log(test);
 
   // const bearerToken = useRecoilValue(AppState.userBearerToken);
   // const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>

@@ -1,12 +1,11 @@
 import { TableBody } from "@material-ui/core";
 import axios, { AxiosRequestConfig, AxiosStatic } from "axios";
+import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../AppState";
 import { ChoreTableRow } from "../parent/ChoreTableRow";
-import { ChoreWithAssignments } from "../parent/models/ChoreWithAssignments";
-import { doError } from "./ErrorData";
-import { doLoading } from "./LoadingData";
+import { LoadingData } from "./models/LoadingData";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
@@ -22,15 +21,14 @@ export async function loadChores() {
   });
 }
 
-export function GetQuery(url: string) {
+export function GetQuery(url: string): LoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
 
-  // const setqueryState = useSetRecoilState(AppState.queryState);
-  const [queryCondition, setqueryState] = useRecoilState(AppState.queryState);
+  // const queryState = useRecoilValue(AppState.queryStateInfo);
+  // const setqueryState = useSetRecoilState(AppState.queryStateInfo);
+  const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
 
   let queryKey: string = "";
-
-  console.log(url);
 
   if (url === "/api/Chores/Assignments") {
     queryKey = "choreData";
@@ -47,13 +45,23 @@ export function GetQuery(url: string) {
       })
       .then((data) => data?.data)
   );
-  if (isLoading && queryCondition !== "loading") {
-    setqueryState("loading");
-  } else if (error && queryCondition !== "error") {
-    setqueryState("error");
-  } else if (!isLoading && !error && queryCondition !== "ready") {
-    setqueryState("ready");
-  }
 
-  return queryData;
+  // Change State of the PortalOverlay function show the request-state
+  if (isLoading && queryState.open === false) {
+    setqueryState({
+      open: true,
+      variant: "isLoading",
+    });
+  } else if (error && queryState.open === false) {
+    setqueryState({
+      open: true,
+      variant: "error",
+    });
+  } else if (!isLoading && !error && queryState.open === true) {
+    setqueryState({
+      open: false,
+      variant: "isLoading",
+    });
+  }
+  return { isLoading: isLoading, error: error, data: queryData ?? [] };
 }

@@ -4,6 +4,7 @@ import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 import { SnackState } from "./shell/models/SnackState";
 import { choreNewsCount } from "./shell/NavigationBar";
+import { PortalOverlayState } from "./shell/models/PortalOverlayState";
 
 /**
  * Class holding the global app state with static properties.
@@ -81,8 +82,11 @@ export class AppState {
   /*
    * Holding the currently State of react-query requests.
    */
-  static queryState = atom<string>({
-    key: "queryState",
-    default: "ready",
+  static queryStateInfo = atom<PortalOverlayState>({
+    key: "queryStateInfo",
+    default: {
+      open: false,
+      variant: "isLoading",
+    },
   });
 }

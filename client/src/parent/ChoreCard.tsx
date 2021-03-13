@@ -1,4 +1,3 @@
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { Card, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useState } from "react";
@@ -9,6 +8,7 @@ import { MoreOptionsMenu } from "./MoreOptionsMenu";
 import { AddOptionsExpandCardActions } from "./AddOptionsExpandCardActions";
 import { BiAvatarCardHeader } from "./BiAvatarCardHeader";
 import { CollapsibleCardContent } from "./CollapsibleCardContent";
+import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 
 type Prop = {
   chore: ChoreWithAssignments;
