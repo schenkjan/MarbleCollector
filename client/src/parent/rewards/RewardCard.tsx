@@ -40,6 +40,10 @@ export function RewardCard(props: Prop): JSX.Element {
   const [allChildrenAssigned] = useState(
     props.reward.grants.length === children.length
   );
+  const [cardLocked] = useState(
+    props.reward.grants.filter((grant) => grant.state !== GrantState.Assigned)
+      .length > 0
+  );
 
   function handleExpandClick() {
     setExpanded(!expanded);
@@ -154,6 +158,7 @@ export function RewardCard(props: Prop): JSX.Element {
         onCopy={handleCopy}
         deleteLabel={"Belohnung löschen"}
         onDelete={handleDelete}
+        disableDelete={cardLocked}
       />
     </Card>
   );

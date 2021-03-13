@@ -40,6 +40,11 @@ export function ChoreCard(props: Prop): JSX.Element {
   const [allChildrenAssigned] = useState(
     props.chore.assignments.length === children.length
   );
+  const [cardLocked] = useState(
+    props.chore.assignments.filter(
+      (assignment) => assignment.state !== AssignmentState.Assigned
+    ).length > 0
+  );
 
   function handleExpandClick() {
     setExpanded(!expanded);
@@ -167,6 +172,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         onCopy={handleCopy}
         deleteLabel={"Ämtli löschen"}
         onDelete={handleDelete}
+        disableDelete={cardLocked}
       />
     </Card>
   );
