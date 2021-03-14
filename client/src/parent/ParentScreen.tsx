@@ -1,16 +1,16 @@
-import { DashboardLayout } from "../shell/DashboardLayout";
+import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { ProfileDetails } from "./profile/ProfileDetails";
 import { RewardsTable } from "./rewards/RewardsTable";
-import { useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
 import { ChoreList } from "./ChoreList";
+import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 
 export function ParentScreen() {
   const { path } = useRouteMatch();
 
   return (
-    <DashboardLayout>
+    <>
+      <ProtectedRouteForRole />
       <Switch>
         <Route path={`${path}/rewards`}>
           <RewardsTable />
@@ -22,6 +22,6 @@ export function ParentScreen() {
           <ChoreList />
         </Route>
       </Switch>
-    </DashboardLayout>
+    </>
   );
 }
