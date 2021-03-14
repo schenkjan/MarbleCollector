@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+//if the actuell request of react-query in loading or error, we noticed that here
 export default function PortalOverlay() {
   const classes = useStyles();
 
@@ -31,6 +32,7 @@ export default function PortalOverlay() {
     }
   };
 
+  //shows overlayd on top of the actuell screen, a loadingcirle or errorMessage,
   return (
     <div>
       {queryState.open ? (

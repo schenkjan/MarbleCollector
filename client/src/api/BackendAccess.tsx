@@ -1,50 +1,40 @@
-import { TableBody } from "@material-ui/core";
 import axios, { AxiosRequestConfig, AxiosStatic } from "axios";
-import { useEffect } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../AppState";
-import { ChoreTableRow } from "../parent/ChoreTableRow";
 import { LoadingData } from "./models/LoadingData";
+import { QueryUrl } from "./models/QueryMethod";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
-// Severin -->
-export async function loadChores() {
-  const apiAccessToken = ""; // useRecoilValue(AppState.userBearerToken); TODO not implemented as hook
-
-  //Todo: Implement axios with async await...
-  return axios.get(apiBaseUrl + "/Chores", {
-    headers: {
-      Authorization: `Bearer ${apiAccessToken}`,
-    },
-  });
-}
-
-export function GetQuery(url: string): LoadingData {
+// GET function
+export function GetDataQuery(url: QueryUrl, id?: number): LoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
-
-  // const queryState = useRecoilValue(AppState.queryStateInfo);
-  // const setqueryState = useSetRecoilState(AppState.queryStateInfo);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
 
-  let queryKey: string = "";
+  let getId: string = "";
 
-  if (url === "/api/Chores/Assignments") {
-    queryKey = "choreData";
-  } else if (url === "api/Rewards") {
-    queryKey = "rewardData";
+  if (id) {
+    getId = "/" + id;
   }
 
-  const { isLoading, error, data: queryData } = useQuery(queryKey, () =>
+  // console.log(apiBaseUrl + url + getId);
+
+  const { isLoading, error, data: queryData } = useQuery("getData", () =>
     axios
-      .get(`${apiBaseUrl}${url}`, {
+      .get(`${apiBaseUrl}${url}${getId}`, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
       })
       .then((data) => data?.data)
   );
+  // console.log(
+  //   "Testbeginn = offen: " +
+  //     queryState.open +
+  //     " Variante: " +
+  //     queryState.variant
+  // );
 
   // Change State of the PortalOverlay function show the request-state
   if (isLoading && queryState.open === false) {
@@ -63,5 +53,12 @@ export function GetQuery(url: string): LoadingData {
       variant: "isLoading",
     });
   }
+  // console.log(
+  //   "Testschluss = offen: " +
+  //     queryState.open +
+  //     " Variante: " +
+  //     queryState.variant
+  // );
+
   return { isLoading: isLoading, error: error, data: queryData ?? [] };
 }

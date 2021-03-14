@@ -3,7 +3,6 @@ import { persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 import { SnackState } from "./shell/models/SnackState";
-import { choreNewsCount } from "./shell/NavigationBar";
 import { PortalOverlayState } from "./shell/models/PortalOverlayState";
 
 /**

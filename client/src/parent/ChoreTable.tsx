@@ -24,7 +24,6 @@ import { DashboardState } from "../shell/DashboardState";
 import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
 import { useInfoNotification, useSuccessNotification } from "../Snackbar";
 import { ChoreAssignment } from "./ChoreAssignment";
-import { GetQuery } from "../api/BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

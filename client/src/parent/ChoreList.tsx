@@ -1,6 +1,5 @@
 import {
   Box,
-  CircularProgress,
   Paper,
   makeStyles,
   createStyles,
@@ -9,17 +8,12 @@ import {
 } from "@material-ui/core";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import ErrorIcon from "@material-ui/icons/Error";
-import { useQuery } from "react-query";
-import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
-import { GetQuery } from "../api/BackendAccess";
 import { LoadingData } from "../api/models/LoadingData";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { GetDataQuery } from "../api/BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,23 +35,8 @@ export function ChoreList(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
 
-  const choresQuery: LoadingData = GetQuery("/api/Chores/Assignments");
-  const chores: ChoreWithAssignments[] = choresQuery.data;
-
-  // const test: any = GetQuery("/api/Chores/Assignments");
-
-  // console.log(test);
-
-  // const bearerToken = useRecoilValue(AppState.userBearerToken);
-  // const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
-  //   axios
-  //     .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
-  //       headers: {
-  //         Authorization: `Bearer ${bearerToken}`,
-  //       },
-  //     })
-  //     .then((data) => data?.data)
-  // );
+  const queryInfo: LoadingData = GetDataQuery("/api/Chores/Assignments");
+  const chores: ChoreWithAssignments[] = queryInfo.data;
 
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
@@ -74,22 +53,6 @@ export function ChoreList(): JSX.Element {
   function handleAddChore() {
     setShowDialog(true);
   }
-
-  // if (true)
-  //   return (
-  // <Box>
-  //   <p>Loading...</p>
-  //   <CircularProgress />
-  // </Box>
-  //   ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
-
-  // if (error)
-  //   return (
-  //     <Box>
-  //       <ErrorIcon color="secondary" fontSize="large" />
-  //       <p>{`An error has occurred: ${error}`}</p>
-  //     </Box>
-  //   ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Box className={classes.container} component={Paper}>
