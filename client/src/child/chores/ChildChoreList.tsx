@@ -1,7 +1,6 @@
 import { ChildChoreItem } from "./ChildChoreItem";
 import { ChildChoreItemExpand } from "./ChildChoreItemExpand";
-import { Chore } from "../models/Chore";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Box,
   CircularProgress,
@@ -18,7 +17,6 @@ import axios from "axios";
 import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { AssignmentState } from "../../parent/models/AssignmentState";
-import { Assignment } from "../../model/Assignment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,9 +40,10 @@ export function ChildChoreList(): JSX.Element {
   const [chores, setChores] = useState<ChoreWithAssignments[]>([]);
 
   function updateState(chore: ChoreWithAssignments): void {
-    chore.assignments[0].state = chore.assignments[0].state + 1;
+    setNextAssignmentState(chore);
 
     //Optimisitic UI :-)
+    // TODO hs (210314): Do we want an optimistic or pessimistic UI?
     const updatedChores = chores.map((t) => (t.id !== chore.id ? t : chore));
     setChores(updatedChores);
 
@@ -60,6 +59,16 @@ export function ChildChoreList(): JSX.Element {
         }
       )
       .then((data) => console.log("update succesfull: ", data?.data));
+  }
+
+  function setNextAssignmentState(chore: ChoreWithAssignments) {
+    if (chore.assignments[0].state === AssignmentState.CheckConfirmed) {
+      chore.assignments[0].state = chore.assignments[0].state + 2;
+    } else if (chore.assignments[0].state === AssignmentState.CheckRefused)
+      chore.assignments[0].state = AssignmentState.RequestedToCheck;
+    else {
+      chore.assignments[0].state++;
+    }
   }
 
   const { isLoading, error } = useQuery("childChoreData", () =>
@@ -102,7 +111,11 @@ export function ChildChoreList(): JSX.Element {
           />
         ))}
         {chores?.map((chore) => (
-          <ChildChoreItemExpand key={chore.id} chore={chore} />
+          <ChildChoreItemExpand
+            key={chore.id}
+            chore={chore}
+            onUpdateState={updateState}
+          />
         ))}
       </List>
     </Box>

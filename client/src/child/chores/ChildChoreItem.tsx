@@ -1,4 +1,3 @@
-import { Chore } from "../models/Chore";
 import {
   Avatar,
   Badge,
@@ -6,25 +5,15 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Collapse,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
   Typography,
-  Checkbox,
   Stepper,
   Step,
   StepLabel,
   Button,
-  IconButton,
 } from "@material-ui/core";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import { useState } from "react";
 import ImgMarbles from "../../images/Marble.png";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
-import { Assignment } from "../../model/Assignment";
 import { AssignmentState } from "../../parent/models/AssignmentState";
 
 type ChildChoreItemprops = {
@@ -54,16 +43,28 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.primary.main,
     },
     content: {
-      padding: "8px",
+      "padding-bottom": "0px",
+      "padding-top": "4px",
+      "padding-left": "8px",
+      "padding-right": "8px",
       textAlign: "center",
+    },
+    description: {
+      padding: "0px",
+    },
+    actions: {
+      padding: "2px",
+      "margin-left": "0px",
     },
     root: {
       width: "100%",
       padding: "8px",
+      "padding-right": "0px",
       textAlign: "left",
     },
     stepButton: {
       "margin-bottom": "35px",
+      "margin-right": "16px",
     },
   })
 );
@@ -77,34 +78,40 @@ export function ChildChoreItem({
   onUpdateState,
 }: ChildChoreItemprops): JSX.Element {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
+  let buttonText = "Start";
 
   function assignmentStateToStepper(chore: ChoreWithAssignments): number {
     let steperState = 0;
     switch (chore.assignments[0].state) {
       case AssignmentState.Assigned: {
         steperState = 0;
+        buttonText = "Start";
         break;
       }
       case AssignmentState.Active: {
         steperState = 1;
+        buttonText = "Prüfen";
         break;
       }
       case AssignmentState.RequestedToCheck: {
         steperState = 2;
+        buttonText = "Warten";
         break;
       }
       case AssignmentState.CheckRefused: {
         steperState = 1;
+        buttonText = "Prüfen";
         break;
       }
       case AssignmentState.CheckConfirmed: {
-        steperState = 4;
+        steperState = 3;
+        buttonText = "Archiv";
         break;
       }
       case AssignmentState.Archived: {
-        steperState = 5;
+        steperState = 4;
+        buttonText = "Fertig";
         break;
       }
     }
@@ -112,10 +119,12 @@ export function ChildChoreItem({
   }
 
   function disableButton(): boolean {
-    if (chore.assignments[0].state > 1) {
+    if (
+      chore.assignments[0].state === AssignmentState.RequestedToCheck ||
+      chore.assignments[0].state === AssignmentState.Archived
+    ) {
       return true;
     }
-
     return false;
   }
 
@@ -147,12 +156,16 @@ export function ChildChoreItem({
         }
       />
       <CardContent className={classes.content}>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography
+          className={classes.description}
+          variant="body2"
+          color="textSecondary"
+          component="p"
+        >
           {chore.description}
         </Typography>
       </CardContent>
-      <CardActions>
-        {/* <div className={classes.root}> */}
+      <CardActions className={classes.actions}>
         <Stepper
           className={classes.root}
           activeStep={assignmentStateToStepper(chore)}
@@ -172,7 +185,7 @@ export function ChildChoreItem({
           size="small"
           color="primary"
         >
-          Weiter
+          {buttonText}
         </Button>
       </CardActions>
     </Card>

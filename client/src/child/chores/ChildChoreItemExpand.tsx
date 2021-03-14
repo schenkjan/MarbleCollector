@@ -1,4 +1,3 @@
-import { Chore } from "../models/Chore";
 import {
   Avatar,
   Badge,
@@ -7,12 +6,7 @@ import {
   CardContent,
   CardHeader,
   Collapse,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
   Typography,
-  Checkbox,
   Stepper,
   Step,
   StepLabel,
@@ -25,15 +19,18 @@ import { useState } from "react";
 import ImgMarbles from "../../images/Marble.png";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
+import { AssignmentState } from "../../parent/models/AssignmentState";
 
-type Prop = {
+type ChildChoreItemprops = {
   chore: ChoreWithAssignments;
+  onUpdateState: (chore: ChoreWithAssignments) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     header: {
       textAlign: "left",
+      "padding-bottom": "0px",
     },
     expand: {
       transform: "rotate(0deg)",
@@ -52,16 +49,28 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.primary.main,
     },
     content: {
-      padding: "8px",
+      "padding-bottom": "0px",
+      "padding-top": "0px",
+      "padding-left": "8px",
+      "padding-right": "8px",
       textAlign: "center",
+    },
+    description: {
+      padding: "0px",
+    },
+    actions: {
+      padding: "2px",
+      "margin-left": "0px",
     },
     root: {
       width: "100%",
       padding: "8px",
+      "padding-right": "0px",
       textAlign: "left",
     },
     stepButton: {
       "margin-bottom": "35px",
+      "margin-right": "16px",
     },
   })
 );
@@ -70,43 +79,80 @@ function getSteps() {
   return ["Neu", "Aktiv", "Prüfen", "Erledigt"];
 }
 
-function getStepContent(stepIndex: any) {
-  switch (stepIndex) {
-    case 0:
-      return "Select campaign settings...";
-    case 1:
-      return "What is an ad group anyways?";
-    case 2:
-      return "This is the bit I really care about!";
-    default:
-      return "Unknown stepIndex";
-  }
-}
-
-export function ChildChoreItemExpand(props: Prop): JSX.Element {
+export function ChildChoreItemExpand({
+  chore,
+  onUpdateState,
+}: ChildChoreItemprops): JSX.Element {
   const classes = useStyles();
-  const [expanded, setExpanded] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
+
+  let buttonText = "Start";
+  const [expanded, setExpanded] = useState(false);
+
   function handleExpandClick() {
     setExpanded(!expanded);
+  }
+
+  function assignmentStateToStepper(chore: ChoreWithAssignments): number {
+    let steperState = 0;
+    switch (chore.assignments[0].state) {
+      case AssignmentState.Assigned: {
+        steperState = 0;
+        buttonText = "Start";
+        break;
+      }
+      case AssignmentState.Active: {
+        steperState = 1;
+        buttonText = "Prüfen";
+        break;
+      }
+      case AssignmentState.RequestedToCheck: {
+        steperState = 2;
+        buttonText = "Warten";
+        break;
+      }
+      case AssignmentState.CheckRefused: {
+        steperState = 1;
+        buttonText = "Prüfen";
+        break;
+      }
+      case AssignmentState.CheckConfirmed: {
+        steperState = 3;
+        buttonText = "Archiv";
+        break;
+      }
+      case AssignmentState.Archived: {
+        steperState = 4;
+        buttonText = "Fertig";
+        break;
+      }
+    }
+    return steperState;
+  }
+
+  function disableButton(): boolean {
+    if (
+      chore.assignments[0].state === AssignmentState.RequestedToCheck ||
+      chore.assignments[0].state === AssignmentState.Archived
+    ) {
+      return true;
+    }
+    return false;
   }
 
   return (
     <Card elevation={5}>
       <CardHeader
         className={classes.header}
-        title={props.chore.name}
-        subheader={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
+        title={chore.name}
+        subheader={new Date(chore.dueDate).toLocaleDateString("de-DE", {
           weekday: "short",
           year: "2-digit",
           month: "short",
           day: "numeric",
         })}
         avatar={
-          <Avatar aria-label="Chore">
-            {props.chore.name[0].toUpperCase()}
-          </Avatar>
+          <Avatar aria-label="Chore">{chore.name[0].toUpperCase()}</Avatar>
         }
         action={
           <Badge
@@ -115,7 +161,7 @@ export function ChildChoreItemExpand(props: Prop): JSX.Element {
               vertical: "bottom",
               horizontal: "right",
             }}
-            badgeContent={props.chore.value}
+            badgeContent={chore.value}
           >
             <Avatar src={ImgMarbles}></Avatar>
           </Badge>
@@ -135,14 +181,19 @@ export function ChildChoreItemExpand(props: Prop): JSX.Element {
       </IconButton>
       <Collapse in={expanded} timeout="auto">
         <CardContent className={classes.content}>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {props.chore.description}
+          <Typography
+            className={classes.description}
+            variant="body2"
+            color="textSecondary"
+            component="p"
+          >
+            {chore.description}
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions className={classes.actions}>
           <Stepper
             className={classes.root}
-            activeStep={activeStep}
+            activeStep={assignmentStateToStepper(chore)}
             alternativeLabel
           >
             {steps.map((label) => (
@@ -152,12 +203,14 @@ export function ChildChoreItemExpand(props: Prop): JSX.Element {
             ))}
           </Stepper>
           <Button
+            onClick={() => onUpdateState(chore)}
+            disabled={disableButton()}
             className={classes.stepButton}
             variant="contained"
             size="small"
             color="primary"
           >
-            Weiter
+            {buttonText}
           </Button>
         </CardActions>
       </Collapse>
