@@ -1,4 +1,4 @@
-import { Avatar, Badge, CardHeader } from "@material-ui/core";
+import { Avatar, Badge, Box, CardHeader, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { MouseEventHandler } from "react";
 
@@ -10,9 +10,9 @@ type Prop = {
   rightAvatarNotifications: number;
   onRightAvatarClick?: MouseEventHandler<HTMLDivElement>;
   title: string;
-  //onTitleClick?: MouseEventHandler<HTMLDivElement>; // TODO js (11.03.2021): Find a way to provide a onTitleClick event.
-  subtitle: string;
-  //onSubtitleClick?: MouseEventHandler<HTMLDivElement>; // TODO js (11.03.2021): Find a way to provide a onSubtitleClick event.
+  onTitleClick?: MouseEventHandler<HTMLDivElement>;
+  subtitle?: string;
+  onSubtitleClick?: MouseEventHandler<HTMLDivElement>;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,7 +39,11 @@ export function BiAvatarCardHeader(props: Prop): JSX.Element {
           </Avatar>
         </Badge>
       }
-      title={props.title}
+      title={
+        <Box onClick={props.onTitleClick}>
+          <Typography variant="body2">{props.title}</Typography>
+        </Box>
+      }
       action={
         <Badge
           badgeContent={props.rightAvatarNotifications}
@@ -54,7 +58,11 @@ export function BiAvatarCardHeader(props: Prop): JSX.Element {
           </Avatar>
         </Badge>
       }
-      subheader={props.subtitle}
+      subheader={
+        <Box onClick={props.onSubtitleClick}>
+          <Typography variant="body2">{props.subtitle}</Typography>
+        </Box>
+      }
     />
   );
 }

@@ -1,13 +1,14 @@
-import { CardActions, Typography } from "@material-ui/core";
+import { CardActions } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { MouseEventHandler } from "react";
+import { AddButtonWithLabel } from "./AddButtonWithLabel";
 
 type Prop = {
+  hideAddButton?: boolean;
   addLabel: string;
   moreOpen: boolean;
   expandOpen: boolean;
@@ -20,7 +21,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     expand: {
       transform: "rotate(0deg)",
-      marginLeft: "auto",
       transition: theme.transitions.create("transform", {
         duration: theme.transitions.duration.shortest,
       }),
@@ -39,12 +39,9 @@ export function AddOptionsExpandCardActions(props: Prop): JSX.Element {
 
   return (
     <CardActions>
-      <IconButton size="small" color="primary" onClick={props.onAddClick}>
-        <AddCircleIcon />
-        <Typography variant="body2" color="textPrimary">
-          {props.addLabel}
-        </Typography>
-      </IconButton>
+      {props.hideAddButton ? undefined : (
+        <AddButtonWithLabel title={props.addLabel} onClick={props.onAddClick} />
+      )}
       <IconButton
         className={clsx(classes.expand, {
           [classes.moreOpen]: props.moreOpen,

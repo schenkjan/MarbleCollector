@@ -24,6 +24,12 @@ namespace MarbleCollectorApi.Data.Init
                 {
                     Name = "Bräteln auf dem Gurten",
                     Value = 10
+                },
+                new Reward
+                {
+                    Name = "Wochenendausflug in den Europapark",
+                    Value = 100,
+                    Description = "Mit Übernachtung im Hotel, 2 Tage im Europapark, Hin- und Rückreise."
                 }
             };
         }
