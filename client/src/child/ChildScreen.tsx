@@ -1,10 +1,12 @@
-import { DashboardLayout } from "../shell/DashboardLayout";
+import React from "react";
+import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { FiguresOverview } from "./FiguresOverview";
 
 export function ChildScreen() {
   return (
-    <DashboardLayout>
+    <>
+      <ProtectedRouteForRole />
       <FiguresOverview></FiguresOverview>
-    </DashboardLayout>
+    </>
   );
 }

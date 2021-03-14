@@ -1,25 +1,25 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import { LockOpen } from "@material-ui/icons";
+import { ExitToApp } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 
-export function LogoutButton() {
+export function LoginButton() {
   const history = useHistory();
 
-  function logout() {
-    history.push("/auth/logout");
+  function login() {
+    history.push("/auth");
   }
 
   return (
     <>
       <Button
-        aria-label="logout"
+        aria-label="Login"
         color="inherit"
         variant="text"
-        onClick={logout}
-        startIcon={<LockOpen />}
+        onClick={login}
+        startIcon={<ExitToApp />}
       >
-        Logout
+        Login
       </Button>
     </>
   );

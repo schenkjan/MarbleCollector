@@ -7,13 +7,9 @@ import { ParentScreen } from "../parent/ParentScreen";
 
 export function ProtectedRoutesController() {
   const { path } = useRouteMatch();
-  const userInfo = useRecoilValue(AppState.userInfo);
+  const userRole = useRecoilValue(AppState.userRole);
 
-  //   if (userInfo?.role === "Child") {
-  //       return <Redirect to={`${path}/child`} />;
-  //   } else {
-  //       userInfo.
-  //   }
+  const currentUserRoleRedirect = `${path}/${userRole?.toLowerCase()}`;
   return (
     <>
       <Switch>
@@ -24,8 +20,7 @@ export function ProtectedRoutesController() {
           <ParentScreen />
         </Route>
         <Route path="*">
-          {userInfo?.role === "Child" && <Redirect to={`${path}/child`} />}
-          {userInfo?.role === "Parent" && <Redirect to={`${path}/parent`} />}
+          <Redirect to={currentUserRoleRedirect} />
         </Route>
       </Switch>
     </>
