@@ -13,7 +13,7 @@ import {
   AssignmentStateNames,
 } from "../models/AssignmentState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import { useInfoNotification } from "../../Snackbar";
+import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 
 type Prop = {
   assignment: Assignment;

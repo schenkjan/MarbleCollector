@@ -5,17 +5,25 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../../AppState";
 import { LogoutProgress } from "./LogoutProgress";
 import { LogoutSuccess } from "./LogoutSuccess";
+import {
+  useSuccessNotification,
+  useErrorNotification,
+} from "../../shell/hooks/SnackbarHooks";
+import { useHistory } from "react-router-dom";
 
 /**
  * Logout Screen Best Practices
  * https://usabilitygeek.com/ux-logout-lapse/
  */
 export function LogoutScreen() {
+  const history = useHistory();
   const secondsTillRedirect = 5;
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const userInfo = useRecoilValue(AppState.userInfo);
   const setUserInfo = useSetRecoilState(AppState.userInfoState);
+  const showSuccess = useSuccessNotification();
+  const showError = useErrorNotification();
 
   useEffect(() => {
     async function logout() {
@@ -24,20 +32,19 @@ export function LogoutScreen() {
       if (userInfo != null) {
         try {
           setUsername(userInfo?.username);
-          const logoutResponse = await axios.post(apiRestTestUrl, null, {
+          await axios.post(apiRestTestUrl, null, {
             headers: {
               Authorization: `Bearer ${userInfo?.token}`,
             },
           });
-          // add global snackbar message
-
+          showSuccess("Erfolgreich ausgeloggt.");
           setTimeout(() => {
             // ensure that the global state gets cleared, even if the component is unmounted
             setUserInfo({});
+            history.push("/");
           }, secondsTillRedirect * 1000);
         } catch (error) {
-          // todo replace with global snackbar
-          alert("Logout error");
+          showError(`Logout ist fehlgeschlagen: ${JSON.stringify(error)}`);
         } finally {
           setLoading(false);
         }

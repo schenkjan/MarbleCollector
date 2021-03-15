@@ -16,13 +16,15 @@ import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
-
 import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useInfoNotification, useSuccessNotification } from "../../Snackbar";
 import { useState } from "react";
+import {
+  useInfoNotification,
+  useSuccessNotification,
+} from "../../shell/hooks/SnackbarHooks";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
