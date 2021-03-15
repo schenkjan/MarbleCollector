@@ -21,14 +21,18 @@ namespace MarbleCollectorApi.Controllers
     public class AssignmentsController : Controller
     {
         private readonly IAssignmentRepository _assignmentRepository;
+        private readonly IChoreRepository _choreRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IHubContext<ParentNotificationHub> _parentNotificationHubContext;
         private readonly IHubContext<ChildrenNotificationHub> _childrenNotificationHubContext;
 
-        public AssignmentsController(IAssignmentRepository assignmentRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
+        public AssignmentsController(IAssignmentRepository assignmentRepository, IChoreRepository choreRepository, IUserRepository userRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
         {
             _assignmentRepository = assignmentRepository ?? throw new ArgumentNullException(nameof(assignmentRepository));
-            _parentNotificationHubContext = parentNotificationHubContext;
-            _childrenNotificationHubContext = childrenNotificationHubContext;
+            _choreRepository = choreRepository ?? throw new ArgumentNullException(nameof(choreRepository));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _parentNotificationHubContext = parentNotificationHubContext ?? throw new ArgumentNullException(nameof(parentNotificationHubContext));
+            _childrenNotificationHubContext = childrenNotificationHubContext ?? throw new ArgumentNullException(nameof(childrenNotificationHubContext));
         }
 
         // TODO js (04.03.2021): Can all users get all assignments?
@@ -60,7 +64,19 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<Assignment> CreateAssignment(Assignment assignment)
         {
-            var entityEntry = _assignmentRepository.Add(assignment.Map());
+            var user = _userRepository.GetSingle(assignment.UserId);
+            var chore = _choreRepository.GetSingle(assignment.ChoreId);
+
+            if (user == null || chore == null)
+            {
+                return NotFound();
+            }
+
+            var assignmentEntity = assignment.Map();
+            assignmentEntity.User = user;
+            assignmentEntity.Chore = chore;
+
+            var entityEntry = _assignmentRepository.Add(assignmentEntity);
 
             try
             {
@@ -69,10 +85,10 @@ namespace MarbleCollectorApi.Controllers
             catch
             {
                 // TODO hs 210307, maybe add some more parameter validation?
-                return BadRequest(); ;
+                return BadRequest();
             }
 
-            return Created("Get", entityEntry.Entity);
+            return Created("Get", entityEntry.Entity.Map());
         }
 
         [HttpPut("{id}")]
