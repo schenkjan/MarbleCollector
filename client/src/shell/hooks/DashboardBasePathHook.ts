@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-
-const pages = ["chores", "rewards", "profile"];
+import { useRecoilValue } from "recoil";
+import { AppState } from "../../AppState";
 
 export function useDashboardBasePath() {
+  const userRole = useRecoilValue(AppState.userRole);
   const [basePath, setBasePath] = useState<string>();
-  const { path } = useRouteMatch();
 
   useEffect(() => {
-    const pathParts = path.split("/");
+    let currentBasePath = `/`;
+    if (userRole) {
+      currentBasePath = `/app/${userRole.toLowerCase()}`;
+    }
 
-    setBasePath(pathParts.filter((part) => !pages.includes(part)).join("/"));
-  }, [path]);
+    setBasePath(currentBasePath);
+  }, [userRole]);
 
   return basePath;
 }

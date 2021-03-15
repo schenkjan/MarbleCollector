@@ -22,8 +22,10 @@ import { AddChoreDialog } from "./AddChoreDialog";
 import { useEffect, useState } from "react";
 import { DashboardState } from "../shell/DashboardState";
 import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
-import { useInfoNotification, useSuccessNotification } from "../Snackbar";
-import { ChoreAssignment } from "./ChoreAssignment";
+import {
+  useInfoNotification,
+  useSuccessNotification,
+} from "../shell/hooks/SnackbarHooks";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

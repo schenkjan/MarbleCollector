@@ -13,7 +13,7 @@ import {
   AssignmentStateNames,
 } from "./models/AssignmentState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import { useInfoNotification } from "../Snackbar";
+import { useInfoNotification } from "../shell/hooks/SnackbarHooks";
 
 type Prop = {
   assignment: Assignment;
@@ -64,7 +64,7 @@ export function AssignmentListItem(props: Prop) {
     <Grid container spacing={1}>
       <Grid item xs={2}>
         {!isInprogress(props.assignment.state) ? (
-          <RemoveCircleIcon color="secondary" onClick={handleRemoveClick} />
+          <RemoveCircleIcon color="primary" onClick={handleRemoveClick} />
         ) : (
           ""
         )}

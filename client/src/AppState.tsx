@@ -78,7 +78,18 @@ export class AppState {
     },
   });
 
-  /*
+  /**
+   * Convenience selector to retrieve the current users role.
+   */
+  static userRole = selector<string>({
+    key: "userRole",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfo);
+      return userInfo?.role ?? "";
+    },
+  });
+
+  /**
    * Holding the currently State of react-query requests.
    */
   static queryStateInfo = atom<PortalOverlayState>({

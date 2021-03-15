@@ -3,11 +3,13 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { AssignmentState } from "./models/AssignmentState";
 import { AssignmentList } from "./AssignmentList";
-import { useInfoNotification } from "../Snackbar";
+import { useInfoNotification } from "../shell/hooks/SnackbarHooks";
 import { MoreOptionsMenu } from "./MoreOptionsMenu";
 import { AddOptionsExpandCardActions } from "./AddOptionsExpandCardActions";
 import { BiAvatarCardHeader } from "./BiAvatarCardHeader";
 import { CollapsibleCardContent } from "./CollapsibleCardContent";
+import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
+import { AddButtonWithLabel } from "./AddButtonWithLabel";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 
 type Prop = {
@@ -19,10 +21,15 @@ const useStyles = makeStyles((theme: Theme) =>
     description: {
       textAlign: "left",
     },
+    cardContent: {
+      paddingTop: "0px",
+      paddingBottom: "8px",
+    },
   })
 );
 
 export function ChoreCard(props: Prop): JSX.Element {
+  useDashboardTitle("Ämtli Pinnwand");
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [showMoreActions, setShowMoreActions] = useState(false);
@@ -67,6 +74,21 @@ export function ChoreCard(props: Prop): JSX.Element {
     handleMoreClose();
   }
 
+  function handleTitleEdit() {
+    console.log("Editing title...");
+    showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
+  }
+
+  function handleDueDateEdit() {
+    console.log("Editing due date...");
+    showInfo("Editing due date..."); // TODO js (11.03.2021): Replace dummy implementation.
+  }
+
+  function handleValueEdit() {
+    console.log("Editing amount of marbles...");
+    showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
+  }
+
   function getDescription() {
     if (!props.chore.description) return;
 
@@ -108,6 +130,9 @@ export function ChoreCard(props: Prop): JSX.Element {
               assignment.state === AssignmentState.Archived
           ).length
         }
+        onRightAvatarClick={handleValueEdit}
+        onTitleClick={handleTitleEdit}
+        onSubtitleClick={handleDueDateEdit}
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"
@@ -116,10 +141,18 @@ export function ChoreCard(props: Prop): JSX.Element {
         onAddClick={handleAddChildClick}
         onMoreClick={handleMoreClick}
         onExpandClick={handleExpandClick}
+        hideAddButton
       />
-      <CollapsibleCardContent expanded={expanded}>
+      <CollapsibleCardContent
+        className={classes.cardContent}
+        expanded={expanded}
+      >
         {getDescription()}
         <AssignmentList assignments={props.chore.assignments} />
+        <AddButtonWithLabel
+          title="Kind hinzufügen"
+          onClick={handleAddChildClick}
+        />
       </CollapsibleCardContent>
       <MoreOptionsMenu
         open={showMoreActions}
