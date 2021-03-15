@@ -11,6 +11,7 @@ import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { AddChildMenu } from "./AddChildMenu";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -36,6 +37,11 @@ export function ChoreCard(props: Prop): JSX.Element {
   const [showMoreAnchor, setShowMoreAnchor] = useState<null | HTMLElement>(
     null
   );
+  const [showAddChild, setShowAddChild] = useState(false);
+  const [
+    showAddChildAnchor,
+    setShowAddChildAnchor,
+  ] = useState<null | HTMLElement>(null);
   const showInfo = useInfoNotification();
   const [allChildrenAssigned] = useState(
     props.chore.assignments.length === props.children.length
@@ -47,11 +53,28 @@ export function ChoreCard(props: Prop): JSX.Element {
   );
 
   function handleExpandClick() {
-    setExpanded(!expanded);
+    setExpanded((prevExpanded) => !prevExpanded);
   }
 
-  function handleAddChildClick() {
+  function handleAddChildClick(event: React.MouseEvent<HTMLButtonElement>) {
+    setShowAddChildAnchor(event.currentTarget);
+    setShowAddChild(true);
+
     showInfo(`Adding child to chore '${props.chore.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+  }
+
+  function handleSelectedChild(id: number): void {
+    setShowAddChildAnchor(null);
+    setShowAddChild(false);
+
+    showInfo(`Adding assignment for child with id ${id}.`); // TODO js (15.03.2021): Replace dummy implementation.
+  }
+
+  function handleAddChildClose(): void {
+    setShowAddChildAnchor(null);
+    setShowAddChild(false);
+
+    showInfo(`Closing without add child.`); // TODO js (15.03.2021): Replace dummy implementation.
   }
 
   function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -173,6 +196,18 @@ export function ChoreCard(props: Prop): JSX.Element {
         deleteLabel={"Ämtli löschen"}
         onDelete={handleDelete}
         disableDelete={cardLocked}
+      />
+      <AddChildMenu
+        open={showAddChild}
+        anchorEl={showAddChildAnchor}
+        onClose={handleAddChildClose}
+        children={props.children.filter(
+          (child) =>
+            !props.chore.assignments.some(
+              (assignment) => assignment.userId === child.id
+            )
+        )}
+        onChildSelected={handleSelectedChild}
       />
     </Card>
   );
