@@ -10,7 +10,7 @@ import {
 import { Grant } from "../models/Grant";
 import { GrantState, GrantStateNames } from "../models/GrantState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import { useInfoNotification } from "../../Snackbar";
+import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 
 type Prop = {
   grant: Grant;
