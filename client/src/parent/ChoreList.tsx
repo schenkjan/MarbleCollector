@@ -14,6 +14,7 @@ import { ChoreCard } from "./ChoreCard";
 import { LoadingData } from "../api/models/LoadingData";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { DeleteSingleData, GetData } from "../api/BackendAccess";
+import { queryUrl } from "../api/models/QueryUrl";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +36,8 @@ export function ChoreList(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
 
-  const queryInfo: LoadingData = GetData("/api/Chores/Assignments");
+  const queryInfo: LoadingData = GetData(queryUrl.choresAssignments);
+  // const queryInfo: LoadingData = GetData("/api/Chores/Assignments");
   const chores: ChoreWithAssignments[] = queryInfo.data;
 
   function handleOnCancel() {
@@ -54,6 +56,8 @@ export function ChoreList(): JSX.Element {
   function handleAddChore() {
     setShowDialog(true);
   }
+
+  DeleteSingleData("/api/Chores", 4);
 
   return (
     <Box className={classes.container} component={Paper}>
