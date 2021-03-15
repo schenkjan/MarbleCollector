@@ -9,6 +9,10 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 //import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'; // TODO js (25.02.2021): Alternative icon for rewards.
 import RedeemIcon from "@material-ui/icons/Redeem";
 import { useEffect, useState } from "react";
+import { Link, useRouteMatch } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { DashboardState } from "../DashboardState";
+import { useDashboardBasePath } from "../hooks/DashboardBasePathHook";
 import { Link, useLocation } from "react-router-dom";
 import { atom, useRecoilState } from "recoil";
 import { useDashboardBasePath } from "./hooks/DashboardBasePathHook";
@@ -26,32 +30,24 @@ const useStyles = makeStyles({
   },
 });
 
-// TODO js (27.02.2021): Should we move the state handling code to a store file?
-export const choreNewsCount = atom<number>({
-  key: "choreNewsCount",
-  default: 10, // TODO js 27.02.2021: Set correct value.
-});
+type NavigationBarProps = {
+  showNavigationBar: boolean;
+};
 
-// TODO js (27.02.2021): Should we move the state handling code to a store file?
-export const rewardNewsCount = atom<number>({
-  key: "rewardNewsCount",
-  default: 100, // TODO js 27.02.2021: Set correct value.
-});
-
-// TODO js (27.02.2021): Should we move the state handling code to a store file?
-export const profileNewsCount = atom<number>({
-  key: "profileNewsCount",
-  default: 1, // TODO js 27.02.2021: Set correct value.
-});
-
-export function NavigationBar() {
+export function NavigationBar(props: NavigationBarProps) {
   const classes = useStyles();
   const [value, setValue] = useState<number>();
   const { pathname: path } = useLocation();
   const dashboardBasePath = useDashboardBasePath();
-  const [choreNews, setChoreNews] = useRecoilState(choreNewsCount);
-  const [rewardNews, setRewardNews] = useRecoilState(rewardNewsCount);
-  const [profileNews, setProfileNews] = useRecoilState(profileNewsCount);
+  const [choreNews, setChoreNews] = useRecoilState(
+    DashboardState.choreNewsCount
+  );
+  const [rewardNews, setRewardNews] = useRecoilState(
+    DashboardState.rewardNewsCount
+  );
+  const [profileNews, setProfileNews] = useRecoilState(
+    DashboardState.profileNewsCount
+  );
 
   useEffect(() => {
     if (path.match(/(.*)rewards$/)) {
@@ -68,6 +64,8 @@ export function NavigationBar() {
   function handleOnChange(event: React.ChangeEvent<{}>, newValue: any) {
     setValue(newValue);
   }
+
+  if (!props.showNavigationBar) return <></>;
 
   // TODO js (27.02.2021): Consider to improve onClick handlers!
   return (
