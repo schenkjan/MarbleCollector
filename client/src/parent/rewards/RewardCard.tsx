@@ -4,7 +4,7 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { GrantState } from "../models/GrantState";
 import { GrantList } from "./GrantList";
-import { useInfoNotification } from "../../Snackbar";
+import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { MoreOptionsMenu } from "../MoreOptionsMenu";
 import { AddOptionsExpandCardActions } from "../AddOptionsExpandCardActions";
 import { BiAvatarCardHeader } from "../BiAvatarCardHeader";

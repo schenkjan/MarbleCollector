@@ -87,4 +87,15 @@ export class AppState {
       return userInfo?.id ?? 0;
     },
   });
+
+  /**
+   * Convenience selector to retrieve the current users role.
+   */
+  static userRole = selector<string>({
+    key: "userRole",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfo);
+      return userInfo?.role ?? "";
+    },
+  });
 }
