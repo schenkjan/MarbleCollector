@@ -20,11 +20,31 @@ import ImgMarbles from "../../images/Marble.png";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { AssignmentState } from "../../parent/models/AssignmentState";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 type ChildChoreItemprops = {
   chore: ChoreWithAssignments;
   onUpdateState: (chore: ChoreWithAssignments) => void;
 };
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiAvatar: {
+      img: {
+        opacity: "0.75",
+      },
+    },
+    MuiBadge: {
+      badge: {
+        "font-weight": "bold",
+        "font-size": "1.25rem",
+      },
+      anchorOriginBottomRightCircle: {
+        transform: "scale(1) translate(40%, 50%)",
+      },
+    },
+  },
+});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,6 +68,11 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       backgroundColor: theme.palette.primary.main,
     },
+    badgestyle: {
+      "font-weight": "Bold",
+      "font-size": "1rem",
+      "padding-right": "8px",
+    },
     content: {
       "padding-bottom": "0px",
       "padding-top": "0px",
@@ -56,7 +81,11 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: "center",
     },
     description: {
-      padding: "0px",
+      "padding-bottom": "8px",
+      "padding-top": "0px",
+      "padding-left": "16px",
+      "padding-right": "16px",
+      textAlign: "left",
     },
     actions: {
       padding: "2px",
@@ -155,16 +184,19 @@ export function ChildChoreItemExpand({
           <Avatar aria-label="Chore">{chore.name[0].toUpperCase()}</Avatar>
         }
         action={
-          <Badge
-            overlap="circle"
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            badgeContent={chore.value}
-          >
-            <Avatar src={ImgMarbles}></Avatar>
-          </Badge>
+          <ThemeProvider theme={theme}>
+            <Badge
+              overlap="circle"
+              className={classes.badgestyle}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              badgeContent={chore.value}
+            >
+              <Avatar src={ImgMarbles}></Avatar>
+            </Badge>
+          </ThemeProvider>
         }
       />
 
