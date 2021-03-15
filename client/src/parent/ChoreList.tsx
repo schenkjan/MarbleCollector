@@ -13,8 +13,9 @@ import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { LoadingData } from "../api/models/LoadingData";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
-import { DeleteSingleData, GetData } from "../api/BackendAccess";
-import { queryUrl } from "../api/models/QueryUrl";
+import { GetData } from "../api/BackendAccess";
+import { AppState } from "../AppState";
+import { useRecoilState } from "recoil";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,22 +31,27 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-// const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
-
 export function ChoreList(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
+  const [queryStateGetInfo, setQueryStateGetInfo] = useRecoilState(
+    AppState.queryStateGetInfo
+  );
 
-  const queryInfo: LoadingData = GetData(queryUrl.choresAssignments);
-  // const queryInfo: LoadingData = GetData("/api/Chores/Assignments");
-  const chores: ChoreWithAssignments[] = queryInfo.data;
+  setQueryStateGetInfo({
+    active: true,
+    url: "/api/Assignments",
+  });
+
+  const chores = queryStateGetInfo.response?.data as ChoreWithAssignments[];
+
+  // DeleteSingleData("/api/Chores", 4);
 
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
   }
 
   function handleOnDelete() {
-    // DeleteSingleData("/api/Chores", 4);
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
   }
 
@@ -56,8 +62,6 @@ export function ChoreList(): JSX.Element {
   function handleAddChore() {
     setShowDialog(true);
   }
-
-  DeleteSingleData("/api/Chores", 4);
 
   return (
     <Box className={classes.container} component={Paper}>

@@ -8,7 +8,7 @@ const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
 // GET function
 // export function GetData(): LoadingData {
-export function GetData(url: string, id?: number): LoadingData {
+const GetData = (): LoadingData => {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
 
@@ -158,20 +158,20 @@ export function GetData(url: string, id?: number): LoadingData {
 // }
 
 // DELETE function
-export function DeleteSingleData(url: string, id?: number) {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  // const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
+// export function DeleteSingleData(url: string, id?: number) {
+//   const bearerToken = useRecoilValue(AppState.userBearerToken);
+//   // const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
 
-  const {} = useMutation("singleDelete", () =>
-    axios
-      .delete(`${apiBaseUrl}${url}${id ? "/" + id : ""}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => console.log(data?.data))
-  );
-  console.log("passed delete!");
+//   const {} = useMutation("singleDelete", () =>
+//     axios
+//       .delete(`${apiBaseUrl}${url}${id ? "/" + id : ""}`, {
+//         headers: {
+//           Authorization: `Bearer ${bearerToken}`,
+//         },
+//       })
+//       .then((data) => console.log(data?.data))
+//   );
+//   console.log("passed delete!");
   // Change State of the PortalOverlay function show the request-state
   // if (isLoading && queryState.open === false) {
   //   setqueryState({

@@ -47,6 +47,7 @@ namespace MarbleCollectorApi
                 options.AddPolicy(MarbleCollectorCorsPolicy,
                     builder => builder.WithOrigins(MarbleCollectorCorsOrigins)
                                         .AllowAnyHeader()
+                                        .AllowAnyMethod()
                                         .AllowCredentials() // added for signalr connection
                 );
             });
