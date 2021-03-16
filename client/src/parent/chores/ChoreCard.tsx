@@ -1,7 +1,7 @@
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { Card, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AssignmentState } from "../models/AssignmentState";
 import { AssignmentList } from "./AssignmentList";
 import { MoreOptionsMenu } from "../MoreOptionsMenu";
@@ -43,14 +43,22 @@ export function ChoreCard(props: Prop): JSX.Element {
     setShowAddChildAnchor,
   ] = useState<null | HTMLElement>(null);
   const showInfo = useInfoNotification();
-  const [allChildrenAssigned] = useState(
-    props.chore.assignments.length === props.children.length
-  );
-  const [cardLocked] = useState(
-    props.chore.assignments.filter(
-      (assignment) => assignment.state !== AssignmentState.Assigned
-    ).length > 0
-  );
+  const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
+  const [cardLocked, setCardLocked] = useState(true);
+
+  useEffect(() => {
+    setAllChildrenAssigned(
+      props.chore.assignments.length === props.children.length
+    );
+  }, [props.children.length, props.chore.assignments.length]);
+
+  useEffect(() => {
+    setCardLocked(
+      props.chore.assignments.filter(
+        (assignment) => assignment.state !== AssignmentState.Assigned
+      ).length > 0
+    );
+  }, [props.chore.assignments]);
 
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
