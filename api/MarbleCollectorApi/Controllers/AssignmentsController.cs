@@ -62,7 +62,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<Assignment> CreateAssignment(Assignment assignment)
+        public async Task<ActionResult<Assignment>> CreateAssignment(Assignment assignment)
         {
             var user = _userRepository.GetSingle(assignment.UserId);
             var chore = _choreRepository.GetSingle(assignment.ChoreId);
@@ -87,6 +87,10 @@ namespace MarbleCollectorApi.Controllers
                 // TODO hs 210307, maybe add some more parameter validation?
                 return BadRequest();
             }
+
+            await _childrenNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", assignment.UserId, assignment.Id);
+
+            await _parentNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", assignment.ChoreId, assignment.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
 
             return Created("Get", entityEntry.Entity.Map());
         }
