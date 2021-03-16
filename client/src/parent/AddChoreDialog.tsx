@@ -19,8 +19,7 @@ import { ChoreValidation } from "../model/ChoreValidation";
 type Prop = {
   open: boolean;
   onCancel: () => void;
-  onDelete: () => void;
-  onSave: (choreObject: {}) => void;
+  onSave: (choreObject: object) => void;
 };
 
 function ChoreTextField(props: TextFieldProps) {
@@ -172,15 +171,6 @@ export function AddChoreDialog(props: Prop) {
                         onClick={submitForm}
                       >
                         Speichern
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={props.onDelete}
-                      >
-                        Löschen
                       </Button>
                     </Grid>
                     <Grid item>

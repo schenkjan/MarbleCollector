@@ -71,11 +71,6 @@ export function ChoreTable(): JSX.Element {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
   }
 
-  function handleOnDelete() {
-    showInfo("Ämtli gelöscht");
-    setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
-  }
-
   function handleOnSave(ChoreObject: object) {
     alert(JSON.stringify(ChoreObject, null, 2));
     showSuccess("Ämtli erstellt");
@@ -103,7 +98,6 @@ export function ChoreTable(): JSX.Element {
       <AddChoreDialog
         open={showDialog}
         onCancel={handleOnCancel}
-        onDelete={handleOnDelete}
         onSave={handleOnSave}
       />
     </TableContainer>

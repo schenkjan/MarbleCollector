@@ -70,7 +70,7 @@ export function ChoreCard(props: Prop): JSX.Element {
   function handleDelete() {
     console.log("Deleting...");
     showInfo("Deleting..."); // TODO js (11.03.2021): Replace dummy implementation.
-
+    // DeleteSingleData("/api/Chores", 4);
     handleMoreClose();
   }
 

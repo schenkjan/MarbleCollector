@@ -1,28 +1,28 @@
-import axios from "axios";
-import { useMutation, useQuery } from "react-query";
+import axios, { AxiosResponse } from "axios";
+import { AnyNaptrRecord } from "dns";
+import { UseMutateFunction, useMutation, useQuery } from "react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
-import { LoadingData } from "./models/LoadingData";
+import { ChoreWithAssignments } from "../parent/models/ChoreWithAssignments";
+import { ChoreLoadingData } from "./models/ChoreLoadingData";
+import { Chore } from "../parent/models/Chore";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
-// GET function
-// export function GetData(): LoadingData {
-const GetData = (): LoadingData => {
+// GET Parent Chores
+export function useParentChoreData(): ChoreLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
 
-  const { isLoading, error, data } = useQuery("get", () =>
+  const { isLoading, error, data: chores } = useQuery("parentChoreGet", () =>
     axios
-      .get(`${apiBaseUrl}${url}${id ? "/" + id : ""}`, {
+      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
       })
       .then((data) => data?.data)
   );
-  console.log("passed get!");
-  // Change State of the PortalOverlay function show the request-state
   if (isLoading && queryState.open === false) {
     setqueryState({
       open: true,
@@ -33,15 +33,83 @@ const GetData = (): LoadingData => {
       open: true,
       variant: "error",
     });
-  } else if (!isLoading && !error && queryState.open === true) {
+  } else if (chores && queryState.open === true) {
     setqueryState({
       open: false,
       variant: "isLoading",
     });
   }
 
-  return { isLoading: isLoading, error: error, data: data };
+  return { isLoading: isLoading, error: error, chores: chores ?? [] };
 }
+
+// type SingleChorePostData = {
+//   mutate: {
+//     onError: string,
+//     onSettled: string,
+//     onSuccess: string
+//   }
+// }
+
+// POST Single Chore
+export function useSingleChorePost(
+  singleChore: object
+): any | unknown | void | unknown {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
+  console.log(singleChore);
+
+  // const { mutate } = useMutation(() =>
+  axios.post(
+    `${apiBaseUrl}/api/Chores`,
+    {
+      data: singleChore,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    }
+  );
+  // console.log(mutate);
+  // return { mutate: mutate };
+}
+
+// GET function
+// export function GetData(url: string, id?: number): LoadingData {
+//   const bearerToken = useRecoilValue(AppState.userBearerToken);
+//   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
+
+//   const { isLoading, error, data } = useQuery("get", () =>
+//     axios
+//       .get(`${apiBaseUrl}${url}${id ? "/" + id : ""}`, {
+//         headers: {
+//           Authorization: `Bearer ${bearerToken}`,
+//         },
+//       })
+//       .then((data) => data?.data)
+//   );
+//   console.log("passed get!");
+//   // Change State of the PortalOverlay function show the request-state
+//   if (isLoading && queryState.open === false) {
+//     setqueryState({
+//       open: true,
+//       variant: "isLoading",
+//     });
+//   } else if (error && queryState.open === false) {
+//     setqueryState({
+//       open: true,
+//       variant: "error",
+//     });
+//   } else if (!isLoading && !error && queryState.open === true) {
+//     setqueryState({
+//       open: false,
+//       variant: "isLoading",
+//     });
+//   }
+
+//   return { isLoading: isLoading, error: error, data: data };
+// }
 
 // // Single-GET function
 // export function GetSingleData(url: QueryUrl, id: number) {
@@ -162,7 +230,7 @@ const GetData = (): LoadingData => {
 //   const bearerToken = useRecoilValue(AppState.userBearerToken);
 //   // const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
 
-//   const {} = useMutation("singleDelete", () =>
+//   const { mutate } = useMutation("singleDelete", () =>
 //     axios
 //       .delete(`${apiBaseUrl}${url}${id ? "/" + id : ""}`, {
 //         headers: {
@@ -172,23 +240,23 @@ const GetData = (): LoadingData => {
 //       .then((data) => console.log(data?.data))
 //   );
 //   console.log("passed delete!");
-  // Change State of the PortalOverlay function show the request-state
-  // if (isLoading && queryState.open === false) {
-  //   setqueryState({
-  //     open: true,
-  //     variant: "isLoading",
-  //   });
-  // } else if (error && queryState.open === false) {
-  //   setqueryState({
-  //     open: true,
-  //     variant: "error",
-  //   });
-  // } else if (!isLoading && !error && queryState.open === true) {
-  //   setqueryState({
-  //     open: false,
-  //     variant: "isLoading",
-  //   });
-  // }
+// Change State of the PortalOverlay function show the request-state
+// if (isLoading && queryState.open === false) {
+//   setqueryState({
+//     open: true,
+//     variant: "isLoading",
+//   });
+// } else if (error && queryState.open === false) {
+//   setqueryState({
+//     open: true,
+//     variant: "error",
+//   });
+// } else if (!isLoading && !error && queryState.open === true) {
+//   setqueryState({
+//     open: false,
+//     variant: "isLoading",
+//   });
+// }
 
-  // return { isLoading: isLoading, error: error, data: data };
-}
+// return { isLoading: isLoading, error: error, data: data };
+// }
