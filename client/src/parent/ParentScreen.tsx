@@ -1,9 +1,9 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { ProfileDetails } from "./profile/ProfileDetails";
-import { RewardsTable } from "./rewards/RewardsTable";
-import { ChoreList } from "./ChoreList";
+import { ChoreList } from "./chores/ChoreList";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
+import { RewardsList } from "./rewards/RewardsList";
 import PortalOverlay from "../shell/PortalOverlay";
 
 export function ParentScreen() {
@@ -14,7 +14,7 @@ export function ParentScreen() {
       <ProtectedRouteForRole />
       <Switch>
         <Route path={`${path}/rewards`}>
-          <RewardsTable />
+          <RewardsList />
         </Route>
         <Route path={`${path}/profile`}>
           <ProfileDetails />

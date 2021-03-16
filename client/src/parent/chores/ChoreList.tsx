@@ -8,16 +8,21 @@ import {
 } from "@material-ui/core";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import ErrorIcon from "@material-ui/icons/Error";
 import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
-import { useParentChoreData, GetPost, UpdatePost } from "../api/BackendAccess";
-import { queryUrl } from "../api/models/queryUrl";
+import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
+import {
+  useParentChoreData,
+  GetPost,
+  UpdatePost,
+} from "../../api/BackendAccess";
+import { queryUrl } from "../../api/models/queryUrl";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
+import { AppState } from "../../AppState";
 import { useMutation, useQuery } from "react-query";
-import { AddChoreState } from "../shell/models/AddChoreState";
+import { AddChoreState } from "../../shell/models/AddChoreState";
 import { convertToObject } from "typescript";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function ChoreList(): JSX.Element {
+  useDashboardTitle("Ämtli Pinnwand");
   const classes = useStyles();
 
   const [showDialog, setShowDialog] = useState(false);
@@ -95,6 +101,7 @@ export function ChoreList(): JSX.Element {
   //     });
   //   } catch (e) {}
   // };
+  // const { isLoading, error, chores } = useParentChoreData();
 
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.

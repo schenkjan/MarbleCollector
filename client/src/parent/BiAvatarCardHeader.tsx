@@ -11,7 +11,7 @@ type Prop = {
   onRightAvatarClick?: MouseEventHandler<HTMLDivElement>;
   title: string;
   onTitleClick?: MouseEventHandler<HTMLDivElement>;
-  subtitle: string;
+  subtitle?: string;
   onSubtitleClick?: MouseEventHandler<HTMLDivElement>;
 };
 

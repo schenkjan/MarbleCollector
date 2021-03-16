@@ -75,6 +75,7 @@ namespace MarbleCollectorApi.Data.Mapping
                 ModifiedBy = sourceObject.ModifiedBy,
                 RewardId = sourceObject.RewardId,
                 UserId = sourceObject.UserId,
+                UserName = sourceObject.User.Username,
                 State = Enum.Parse<GrantState>(sourceObject.State.ToString())
             };
         }

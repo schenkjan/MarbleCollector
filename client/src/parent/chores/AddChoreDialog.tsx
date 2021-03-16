@@ -14,8 +14,8 @@ import { DatePicker } from "formik-material-ui-pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
-import { ChoreValidation } from "../model/ChoreValidation";
-import { AddChoreState } from "../shell/models/AddChoreState";
+import { ChoreValidation } from "../../model/ChoreValidation";
+import { AddChoreState } from "../../shell/models/AddChoreState";
 
 type Prop = {
   open: boolean;

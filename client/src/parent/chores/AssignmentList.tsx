@@ -1,6 +1,6 @@
 import { List } from "@material-ui/core";
 import { AssignmentListItem } from "./AssignmentListItem";
-import { Assignment } from "./models/Assignment";
+import { Assignment } from "../models/Assignment";
 
 type Prop = {
   assignments: Assignment[];
