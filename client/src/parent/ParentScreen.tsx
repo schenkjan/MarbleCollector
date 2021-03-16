@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { ProfileDetails } from "./profile/ProfileDetails";
-import { RewardsTable } from "./rewards/RewardsTable";
+import { RewardsList } from "./rewards/RewardsList";
 import { ChoreList } from "./ChoreList";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 
@@ -13,7 +13,7 @@ export function ParentScreen() {
       <ProtectedRouteForRole />
       <Switch>
         <Route path={`${path}/rewards`}>
-          <RewardsTable />
+          <RewardsList />
         </Route>
         <Route path={`${path}/profile`}>
           <ProfileDetails />

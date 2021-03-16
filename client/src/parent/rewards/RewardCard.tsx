@@ -1,18 +1,18 @@
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { RewardWithGrants } from "../models/RewardWithGrants";
 import { Card, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useState } from "react";
-import { AssignmentState } from "./models/AssignmentState";
-import { AssignmentList } from "./AssignmentList";
-import { useInfoNotification } from "../shell/hooks/SnackbarHooks";
-import { MoreOptionsMenu } from "./MoreOptionsMenu";
-import { AddOptionsExpandCardActions } from "./AddOptionsExpandCardActions";
-import { BiAvatarCardHeader } from "./BiAvatarCardHeader";
-import { CollapsibleCardContent } from "./CollapsibleCardContent";
-import { AddButtonWithLabel } from "./AddButtonWithLabel";
+import { GrantState } from "../models/GrantState";
+import { GrantList } from "./GrantList";
+import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { MoreOptionsMenu } from "../MoreOptionsMenu";
+import { AddOptionsExpandCardActions } from "../AddOptionsExpandCardActions";
+import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
+import { CollapsibleCardContent } from "../CollapsibleCardContent";
+import { AddButtonWithLabel } from "../AddButtonWithLabel";
 
 type Prop = {
-  chore: ChoreWithAssignments;
+  reward: RewardWithGrants;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export function ChoreCard(props: Prop): JSX.Element {
+export function RewardCard(props: Prop): JSX.Element {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [showMoreActions, setShowMoreActions] = useState(false);
@@ -41,7 +41,7 @@ export function ChoreCard(props: Prop): JSX.Element {
   }
 
   function handleAddChildClick() {
-    showInfo(`Adding child to chore '${props.chore.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+    showInfo(`Adding child to reward '${props.reward.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -77,18 +77,13 @@ export function ChoreCard(props: Prop): JSX.Element {
     showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
-  function handleDueDateEdit() {
-    console.log("Editing due date...");
-    showInfo("Editing due date..."); // TODO js (11.03.2021): Replace dummy implementation.
-  }
-
   function handleValueEdit() {
     console.log("Editing amount of marbles...");
     showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function getDescription() {
-    if (!props.chore.description) return;
+    if (!props.reward.description) return;
 
     return (
       <Typography
@@ -97,7 +92,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         color="textSecondary"
         component="p"
       >
-        {props.chore.description}
+        {props.reward.description}
       </Typography>
     );
   }
@@ -105,32 +100,24 @@ export function ChoreCard(props: Prop): JSX.Element {
   return (
     <Card elevation={5}>
       <BiAvatarCardHeader
-        leftAvatarLabel={props.chore.assignments.length.toString()}
+        leftAvatarLabel={props.reward.grants.length.toString()}
         leftAvatarNotifications={
-          props.chore.assignments.filter(
-            (assignment) =>
-              assignment.state === AssignmentState.RequestedToCheck
+          props.reward.grants.filter(
+            (grant) => grant.state === GrantState.Requested
           ).length
         }
         onLeftAvatarClick={handleExpandClick}
-        title={props.chore.name}
-        subtitle={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
-          weekday: "short",
-          year: "2-digit",
-          month: "short",
-          day: "numeric",
-        })}
-        rightAvatarLabel={props.chore.value.toString()}
+        title={props.reward.name}
+        rightAvatarLabel={props.reward.value.toString()}
         rightAvatarNotifications={
-          props.chore.assignments.filter(
-            (assignment) =>
-              assignment.state === AssignmentState.CheckConfirmed ||
-              assignment.state === AssignmentState.Archived
+          props.reward.grants.filter(
+            (grant) =>
+              grant.state === GrantState.RequestConfirmed ||
+              grant.state === GrantState.Archived
           ).length
         }
         onRightAvatarClick={handleValueEdit}
         onTitleClick={handleTitleEdit}
-        onSubtitleClick={handleDueDateEdit}
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"
@@ -146,7 +133,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         expanded={expanded}
       >
         {getDescription()}
-        <AssignmentList assignments={props.chore.assignments} />
+        <GrantList grants={props.reward.grants} />
         <AddButtonWithLabel
           title="Kind hinzufügen"
           onClick={handleAddChildClick}
@@ -156,9 +143,9 @@ export function ChoreCard(props: Prop): JSX.Element {
         open={showMoreActions}
         anchorEl={showMoreAnchor}
         onMoreClose={handleMoreClose}
-        copyLabel="Ämtli kopieren"
+        copyLabel="Belohnung kopieren"
         onCopy={handleCopy}
-        deleteLabel={"Ämtli löschen"}
+        deleteLabel={"Belohnung löschen"}
         onDelete={handleDelete}
       />
     </Card>

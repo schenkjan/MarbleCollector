@@ -10,15 +10,15 @@ import {
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorIcon from "@material-ui/icons/Error";
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
-import { AddChoreDialog } from "./AddChoreDialog";
+import { AppState } from "../../AppState";
+import { AddRewardDialog } from "../AddRewardDialog";
 import { useState } from "react";
-import { ChoreCard } from "./ChoreCard";
-import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
+import { RewardCard } from "./RewardCard";
+import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
+import { RewardWithGrants } from "../models/RewardWithGrants";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,15 +36,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
-export function ChoreList(): JSX.Element {
-  useDashboardTitle("Ämtli Pinnwand");
+export function RewardsList() {
+  useDashboardTitle("Belohnungspinnwand");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
 
   const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
+  const { isLoading, error, data: rewards } = useQuery("parentRewardData", () =>
     axios
-      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
+      .get<RewardWithGrants[]>(`${apiBaseUrl}/api/Rewards/Grants`, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
@@ -64,7 +64,7 @@ export function ChoreList(): JSX.Element {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct save logic.
   }
 
-  function handleAddChore() {
+  function handleRewardChore() {
     setShowDialog(true);
   }
 
@@ -74,7 +74,7 @@ export function ChoreList(): JSX.Element {
         <p>Loading...</p>
         <CircularProgress />
       </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+    ); // TODO js (11.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
 
   if (error)
     return (
@@ -82,13 +82,13 @@ export function ChoreList(): JSX.Element {
         <ErrorIcon color="secondary" fontSize="large" />
         <p>{`An error has occurred: ${error}`}</p>
       </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
+    ); // TODO js (11.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Box className={classes.container} component={Paper}>
       <List>
-        {chores?.map((chore) => (
-          <ChoreCard key={chore.id} chore={chore} />
+        {rewards?.map((reward) => (
+          <RewardCard key={reward.id} reward={reward} />
         ))}
       </List>
       <Fab
@@ -96,11 +96,11 @@ export function ChoreList(): JSX.Element {
         size="small"
         color="primary"
         aria-label="add"
-        onClick={handleAddChore}
+        onClick={handleRewardChore}
       >
         <AddIcon />
       </Fab>
-      <AddChoreDialog
+      <AddRewardDialog
         open={showDialog}
         onCancel={handleOnCancel}
         onDelete={handleOnDelete}
