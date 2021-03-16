@@ -2,6 +2,7 @@ import { ChoreWithAssignments } from "../../parent/models/ChoreWithAssignments";
 
 export interface ChoreLoadingData {
   isLoading: boolean;
-  error: unknown;
+  isFetching: boolean;
+  isError: boolean;
   chores: ChoreWithAssignments[];
 }

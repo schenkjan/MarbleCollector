@@ -96,7 +96,6 @@ export class AppState {
     key: "queryStateInfo",
     default: {
       open: false,
-      variant: "isLoading",
     },
   });
 }

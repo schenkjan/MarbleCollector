@@ -3,7 +3,6 @@ import Portal from "@material-ui/core/Portal";
 import { CircularProgress } from "@material-ui/core";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
-import ErrorIcon from "@material-ui/icons/Error";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,21 +23,13 @@ export default function PortalOverlay() {
 
   const queryState = useRecoilValue(AppState.queryStateInfo);
 
-  const overlayVariant = (value: string) => {
-    if (value === "error") {
-      return <ErrorIcon color="secondary" fontSize="large" />;
-    } else {
-      return <CircularProgress />;
-    }
-  };
-
   //shows overlayd on top of the actuell screen, a loadingcirle or errorMessage,
   return (
     <div>
       {queryState.open ? (
         <Portal>
           <div className={classes.dropdown}>
-            {overlayVariant(queryState.variant)}
+            <CircularProgress />
           </div>
         </Portal>
       ) : null}

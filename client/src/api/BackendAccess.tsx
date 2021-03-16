@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { AnyNaptrRecord } from "dns";
 import { UseMutateFunction, useMutation, useQuery } from "react-query";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../AppState";
 import { ChoreWithAssignments } from "../parent/models/ChoreWithAssignments";
 import { ChoreLoadingData } from "./models/ChoreLoadingData";
@@ -13,34 +13,46 @@ const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 export function useParentChoreData(): ChoreLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
+  const setSnackState = useSetRecoilState(AppState.snackState);
 
-  const { isLoading, error, data: chores } = useQuery("parentChoreGet", () =>
-    axios
-      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => data?.data)
+  const { isLoading, isFetching, isError, data: chores } = useQuery(
+    "parentChoreGet",
+    () =>
+      axios
+        .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments/`, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        })
+        .then((data) => data?.data)
   );
-  if (isLoading && queryState.open === false) {
+  if ((isLoading || isFetching) && queryState.open === false) {
     setqueryState({
       open: true,
-      variant: "isLoading",
     });
-  } else if (error && queryState.open === false) {
-    setqueryState({
+  } else if (isError) {
+    setSnackState({
       open: true,
-      variant: "error",
+      message: "Abfrage fehlerhaft",
+      severity: "error",
     });
-  } else if (chores && queryState.open === true) {
+  } else if (
+    !isLoading &&
+    !isFetching &&
+    !isError &&
+    queryState.open === true
+  ) {
     setqueryState({
       open: false,
-      variant: "isLoading",
     });
   }
 
-  return { isLoading: isLoading, error: error, chores: chores ?? [] };
+  return {
+    isLoading: isLoading,
+    isFetching: isFetching,
+    isError: isError,
+    chores: chores ?? [],
+  };
 }
 
 // type SingleChorePostData = {
@@ -61,7 +73,7 @@ export function useSingleChorePost(
 
   // const { mutate } = useMutation(() =>
   axios.post(
-    `${apiBaseUrl}/api/Chores`,
+    `${apiBaseUrl}/api/Chores/`,
     {
       data: singleChore,
     },
@@ -82,7 +94,7 @@ export function useSingleChorePost(
 
 //   const { isLoading, error, data } = useQuery("get", () =>
 //     axios
-//       .get(`${apiBaseUrl}${url}${id ? "/" + id : ""}`, {
+//       .get(`${apiBaseUrl}${url}${id ? id : ""}`, {
 //         headers: {
 //           Authorization: `Bearer ${bearerToken}`,
 //         },
@@ -116,7 +128,7 @@ export function useSingleChorePost(
 //   const bearerToken = useRecoilValue(AppState.userBearerToken);
 //   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
 
-//   let addId: string = "/" + id;
+//   let addId: string = id;
 
 //   const { isLoading, error, data } = useQuery("singleGet", () =>
 //     axios
@@ -191,7 +203,7 @@ export function useSingleChorePost(
 //   const bearerToken = useRecoilValue(AppState.userBearerToken);
 //   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
 
-//   let addId: string = "/" + id;
+//   let addId: string = id;
 
 //   const { isLoading, error, data } = useQuery("singlePut", () =>
 //     axios
@@ -232,7 +244,7 @@ export function useSingleChorePost(
 
 //   const { mutate } = useMutation("singleDelete", () =>
 //     axios
-//       .delete(`${apiBaseUrl}${url}${id ? "/" + id : ""}`, {
+//       .delete(`${apiBaseUrl}${url}${id ? id : ""}`, {
 //         headers: {
 //           Authorization: `Bearer ${bearerToken}`,
 //         },
