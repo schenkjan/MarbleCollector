@@ -1,9 +1,9 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { ProfileDetails } from "./profile/ProfileDetails";
-import { RewardsList } from "./rewards/RewardsList";
-import { ChoreList } from "./ChoreList";
+import { ChoreList } from "./chores/ChoreList";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
+import { RewardsList } from "./rewards/RewardsList";
 
 export function ParentScreen() {
   const { path } = useRouteMatch();

@@ -2,7 +2,7 @@ import { TableRow, TableCell, makeStyles } from "@material-ui/core";
 import { AssignmentTableRow } from "./AssignmentTableRow";
 import { ChoreAssignment } from "./ChoreAssignment";
 import { ChoreDetails } from "./ChoreDetails";
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 
 const useStyles = makeStyles({
   row: {

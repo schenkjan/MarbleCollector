@@ -6,7 +6,7 @@ import {
   PropTypes,
   Theme,
 } from "@material-ui/core";
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import EditIcon from "@material-ui/icons/Edit";
 
 type Prop = {

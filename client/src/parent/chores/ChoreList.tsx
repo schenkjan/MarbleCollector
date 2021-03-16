@@ -2,36 +2,29 @@ import {
   Box,
   CircularProgress,
   Paper,
-  TableContainer,
-  Table,
-  TableBody,
   makeStyles,
   createStyles,
   Theme,
+  List,
 } from "@material-ui/core";
-import { ChoreTableRow } from "./ChoreTableRow";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorIcon from "@material-ui/icons/Error";
-import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useQuery } from "react-query";
 import axios from "axios";
-
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { AppState } from "../AppState";
+import { useRecoilValue } from "recoil";
+import { AppState } from "../../AppState";
 import { AddChoreDialog } from "./AddChoreDialog";
-import { useEffect, useState } from "react";
-import { DashboardState } from "../shell/DashboardState";
-import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
-import {
-  useInfoNotification,
-  useSuccessNotification,
-} from "../shell/hooks/SnackbarHooks";
+import { useState } from "react";
+import { ChoreCard } from "./ChoreCard";
+import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       flex: "1 1 auto",
+      padding: "1px",
     },
     fab: {
       position: "absolute",
@@ -43,17 +36,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
-export function ChoreTable(): JSX.Element {
-  const classes = useStyles();
+export function ChoreList(): JSX.Element {
   useDashboardTitle("Ämtli Pinnwand");
+  const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
 
-  const showInfo = useInfoNotification();
-  const showSuccess = useSuccessNotification();
-
   const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const [snack, setSnackState] = useRecoilState(AppState.snackState);
-
   const { isLoading, error, data: chores } = useQuery("parentChoreData", () =>
     axios
       .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
@@ -65,18 +53,14 @@ export function ChoreTable(): JSX.Element {
   );
 
   function handleOnCancel() {
-    showInfo("abgebrochen");
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
   }
 
   function handleOnDelete() {
-    showInfo("Ämtli gelöscht");
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
   }
 
-  function handleOnSave(ChoreObject: object) {
-    alert(JSON.stringify(ChoreObject, null, 2));
-    showSuccess("Ämtli erstellt");
+  function handleOnSave() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct save logic.
   }
 
@@ -101,14 +85,12 @@ export function ChoreTable(): JSX.Element {
     ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
-    <TableContainer className={classes.container} component={Paper}>
-      <Table stickyHeader aria-label="sticky table" size="small">
-        <TableBody>
-          {chores?.map((chore) => (
-            <ChoreTableRow key={chore.id} chore={chore} />
-          ))}
-        </TableBody>
-      </Table>
+    <Box className={classes.container} component={Paper}>
+      <List>
+        {chores?.map((chore) => (
+          <ChoreCard key={chore.id} chore={chore} />
+        ))}
+      </List>
       <Fab
         className={classes.fab}
         size="small"
@@ -124,6 +106,6 @@ export function ChoreTable(): JSX.Element {
         onDelete={handleOnDelete}
         onSave={handleOnSave}
       />
-    </TableContainer>
+    </Box>
   );
 }
