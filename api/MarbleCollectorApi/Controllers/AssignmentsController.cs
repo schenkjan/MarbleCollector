@@ -132,7 +132,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var assignment = _assignmentRepository.GetSingle(id);
             if (assignment == null)
@@ -143,6 +143,10 @@ namespace MarbleCollectorApi.Controllers
             // TODO js (04.03.2021): Can an assignment be deleted if it's already in progress?
             _assignmentRepository.Delete(assignment);
             _assignmentRepository.Commit();
+
+            await _childrenNotificationHubContext.Clients.All.SendAsync("DeletedAssignment", assignment.UserId, assignment.Id);
+
+            await _parentNotificationHubContext.Clients.All.SendAsync("DeletedAssignment", assignment.ChoreId, assignment.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
 
             return Ok();
         }
