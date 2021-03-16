@@ -15,11 +15,12 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import { ChoreValidation } from "../model/ChoreValidation";
+import { AddChoreState } from "../shell/models/AddChoreState";
 
 type Prop = {
   open: boolean;
   onCancel: () => void;
-  onSave: (choreObject: object) => void;
+  onSave: (choreObject: AddChoreState) => void;
 };
 
 function ChoreTextField(props: TextFieldProps) {
@@ -46,12 +47,10 @@ export function AddChoreDialog(props: Prop) {
             // init for the complete Formik-Component --> (GET-method in edit szenario)
 
             initialValues={{
-              choreName: "Rakete bauen (60min)",
-              choreValue: 10,
-              childSelect: true,
-              childSelect2: false,
-              date: new Date(),
-              rememberMe: true,
+              name: "Rakete bauen (60min)",
+              description: "mit Hammer und Nägeln",
+              value: 10,
+              dueDate: new Date(),
             }}
             // validating for the complete Formik-Component
             validate={(ChoreValidation) => {
@@ -86,20 +85,28 @@ export function AddChoreDialog(props: Prop) {
               };
 
               const errors: Partial<ChoreValidation> = {};
-              if (!ChoreValidation.choreName) {
+              if (!ChoreValidation.name) {
                 errors.choreName = "Bitte definieren";
-              } else if (!ChoreValidation.choreValue) {
+              } else if (!ChoreValidation.value) {
                 errors.choreValue = "Bitte definieren";
-              } else if (ChoreValidation.choreValue < 1) {
+              } else if (ChoreValidation.value < 1) {
                 errors.choreValue = "Ein wenig unfair, nicht?";
-              } else if (!validDate(ChoreValidation.date, new Date())) {
+              } else if (!validDate(ChoreValidation.dueDate, new Date())) {
                 errors.date = validDateMessage;
               }
               return errors;
             }}
             // submit-function passes for the complete Formik-Component
             onSubmit={(ChoreValidation) => {
-              props.onSave(ChoreValidation);
+              const ChoreTotal = {
+                id: 0,
+                name: ChoreValidation.name,
+                description: ChoreValidation.description,
+                value: ChoreValidation.value,
+                dueDate: ChoreValidation.dueDate,
+                assignments: [],
+              };
+              props.onSave(ChoreTotal);
             }}
           >
             {({ submitForm }) => (
@@ -117,50 +124,32 @@ export function AddChoreDialog(props: Prop) {
                       <Box margin={2}>
                         <Field
                           component={ChoreTextField}
-                          name="choreName"
+                          name="name"
                           type="text"
-                          label="Ämtlibezeichnung"
+                          label="Ämtliname"
                         />
                       </Box>
                       <Box margin={2}>
                         <Field
                           component={ChoreTextField}
-                          name="choreValue"
-                          type="number"
-                          label="Wert in Murmeln"
+                          name="description"
+                          type="text"
+                          label="Ämtlibeschreibung"
                         />
                       </Box>
-                      <Box margin={3}>
-                        <FormControlLabel
-                          control={<Field type="checkbox" name="childSelect" />}
-                          label="Peter"
-                        />
-                        <br />
-                        <FormControlLabel
-                          control={
-                            <Field type="checkbox" name="childSelect2" />
-                          }
-                          label="Margret"
+                      <Box margin={2}>
+                        <Field
+                          component={ChoreTextField}
+                          name="value"
+                          type="number"
+                          label="Wert in Murmeln"
                         />
                       </Box>
                       <Box margin={2}>
                         <Field
                           component={DatePicker}
-                          name="date"
+                          name="dueDate"
                           label="Erledigt bis:"
-                        />
-                      </Box>
-                      <Box margin={2}>
-                        <FormControlLabel
-                          control={
-                            <Field
-                              component={Switch}
-                              type="checkbox"
-                              color="primary"
-                              name="rememberMe"
-                            />
-                          }
-                          label="Erinnerung?"
                         />
                       </Box>
                     </Grid>

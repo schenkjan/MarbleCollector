@@ -33,7 +33,7 @@ export function useParentChoreData(): ChoreLoadingData {
   } else if (isError) {
     setSnackState({
       open: true,
-      message: "Abfrage fehlerhaft",
+      message: "request failed",
       severity: "error",
     });
   } else if (
@@ -46,7 +46,6 @@ export function useParentChoreData(): ChoreLoadingData {
       open: false,
     });
   }
-
   return {
     isLoading: isLoading,
     isFetching: isFetching,
@@ -55,37 +54,78 @@ export function useParentChoreData(): ChoreLoadingData {
   };
 }
 
-// type SingleChorePostData = {
-//   mutate: {
-//     onError: string,
-//     onSettled: string,
-//     onSuccess: string
-//   }
+// GET Single Chore
+export const GetPost = async (key: any, obj: any) => {
+  const { data } = await axios.get(`http://localhost:5050/posts/${obj.id}`);
+  return data;
+};
+
+// POST Single Chore
+export const UpdatePost = async (body: any) => {
+  const { data } = await axios.put(`${apiBaseUrl}/api/Chores/`, body.body);
+  return data;
+};
+
+// // POST Single Chore
+// export const UpdatePost = async (addSingleChore: any) => {
+//   const bearerToken = useRecoilValue(AppState.userBearerToken);
+//   console.log("url: " + `${apiBaseUrl}/api/Chores/`);
+//   console.log("token: " + `Bearer ${bearerToken}`);
+//   console.log(addSingleChore);
+
+//   const { data } = await axios.put(`${apiBaseUrl}/api/Chores/`, {
+//     headers: {
+//       Authorization: `Bearer ${bearerToken}`,
+//     },
+//     addSingleChore,
+//   });
+//   return data;
+// };
+
+////////////////////////////////////////////
+
+// // POST Single Chore
+// export const UpdatePost = async (body: any) => {
+//   const addSingleChore = useRecoilValue(AppState.addChoreInfo);
+
+//   const { data } = await axios.put(
+//     `http://localhost:5050/posts/`,
+//     addSingleChore
+//   );
+//   return data;
+// };
+
+// POST Single Chore
+// export function UpdatePost(choreObject: any): any | unknown | void | unknown {
+//   const bearerToken = useRecoilValue(AppState.userBearerToken);
+//   const { mutate } = useMutation(() =>
+//     axios.put(`http://localhost:5050/posts/`, choreObject)
+//   );
+//   return mutate;
 // }
 
 // POST Single Chore
-export function useSingleChorePost(
-  singleChore: object
-): any | unknown | void | unknown {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
-  console.log(singleChore);
+// export function useSingleChorePost(
+//   singleChore: object
+// ): any | unknown | void | unknown {
+//   const bearerToken = useRecoilValue(AppState.userBearerToken);
+//   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
+//   console.log(singleChore);
 
-  // const { mutate } = useMutation(() =>
-  axios.post(
-    `${apiBaseUrl}/api/Chores/`,
-    {
-      data: singleChore,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
-    }
-  );
-  // console.log(mutate);
-  // return { mutate: mutate };
-}
+//   // const { mutate } = useMutation(() =>
+//   axios.post(
+//     `${apiBaseUrl}/api/Chores/`,
+//     {
+//       data: singleChore,
+//     },
+//     {
+//       headers: {
+//         Authorization: `Bearer ${bearerToken}`,
+//       },
+//     }
+//   );
+// console.log(mutate);
+// return { mutate: mutate };
 
 // GET function
 // export function GetData(url: string, id?: number): LoadingData {
