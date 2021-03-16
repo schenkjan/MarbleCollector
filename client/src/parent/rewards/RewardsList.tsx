@@ -10,15 +10,11 @@ import {
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorIcon from "@material-ui/icons/Error";
-import { useQuery } from "react-query";
-import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { AppState } from "../../AppState";
 import { AddRewardDialog } from "../AddRewardDialog";
 import { useState } from "react";
 import { RewardCard } from "./RewardCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { RewardWithGrants } from "../models/RewardWithGrants";
+import { useParentRewardData } from "../BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,23 +30,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
-
 export function RewardsList() {
   useDashboardTitle("Belohnungspinnwand");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
-
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data: rewards } = useQuery("parentRewardData", () =>
-    axios
-      .get<RewardWithGrants[]>(`${apiBaseUrl}/api/Rewards/Grants`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => data?.data)
-  );
+  const { isLoading, error, rewards } = useParentRewardData();
 
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
