@@ -64,6 +64,31 @@ export function useAddAssignment(): UseMutationResult<
   return mutation;
 }
 
+export function useDeleteAssignment(): UseMutationResult<
+  AxiosResponse<number>,
+  unknown,
+  number,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (id: number) =>
+      axios.delete<number>(`${apiBaseUrl}/api/Assignments/${id}`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("parentChoreData");
+      },
+    }
+  );
+
+  return mutation;
+}
+
 interface RewardLoadingData {
   isLoading: boolean;
   error: unknown;
