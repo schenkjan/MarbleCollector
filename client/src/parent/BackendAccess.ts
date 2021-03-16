@@ -1,7 +1,13 @@
-import axios from "axios";
-import { useQuery } from "react-query";
+import axios, { AxiosResponse } from "axios";
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 import { useRecoilValue } from "recoil";
 import { AppState, useFamilyMembership } from "../AppState";
+import { AssignmentForCreate } from "./models/AssignmentForCreate";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { RewardWithGrants } from "./models/RewardWithGrants";
 import { User } from "./models/User";
@@ -27,6 +33,35 @@ export function useParentChoreData(): ChoreLoadingData {
   );
 
   return { isLoading: isLoading, error: error, chores: chores ?? [] };
+}
+
+export function useAddAssignment(): UseMutationResult<
+  AxiosResponse<AssignmentForCreate>,
+  unknown,
+  AssignmentForCreate,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (assignment: AssignmentForCreate) =>
+      axios.post<AssignmentForCreate>(
+        `${apiBaseUrl}/api/Assignments`,
+        assignment,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("parentChoreData");
+      },
+    }
+  );
+
+  return mutation;
 }
 
 interface RewardLoadingData {

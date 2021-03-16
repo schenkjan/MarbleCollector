@@ -1,5 +1,5 @@
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
-import { Card, Typography } from "@material-ui/core";
+import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useEffect, useState } from "react";
 import { AssignmentState } from "../models/AssignmentState";
@@ -12,6 +12,8 @@ import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "./AddChildMenu";
+import { useAddAssignment } from "../BackendAccess";
+import ErrorIcon from "@material-ui/icons/Error";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -45,6 +47,7 @@ export function ChoreCard(props: Prop): JSX.Element {
   const showInfo = useInfoNotification();
   const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
   const [cardLocked, setCardLocked] = useState(true);
+  const addAssignmentMutation = useAddAssignment();
 
   useEffect(() => {
     setAllChildrenAssigned(
@@ -67,22 +70,18 @@ export function ChoreCard(props: Prop): JSX.Element {
   function handleAddChildClick(event: React.MouseEvent<HTMLButtonElement>) {
     setShowAddChildAnchor(event.currentTarget);
     setShowAddChild(true);
-
-    showInfo(`Adding child to chore '${props.chore.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleSelectedChild(id: number): void {
     setShowAddChildAnchor(null);
     setShowAddChild(false);
 
-    showInfo(`Adding assignment for child with id ${id}.`); // TODO js (15.03.2021): Replace dummy implementation.
+    addAssignmentMutation.mutate({ choreId: props.chore.id, userId: id });
   }
 
   function handleAddChildClose(): void {
     setShowAddChildAnchor(null);
     setShowAddChild(false);
-
-    showInfo(`Closing without add child.`); // TODO js (15.03.2021): Replace dummy implementation.
   }
 
   function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -142,6 +141,22 @@ export function ChoreCard(props: Prop): JSX.Element {
       </Typography>
     );
   }
+
+  if (addAssignmentMutation.isLoading)
+    return (
+      <Box>
+        <p>In progress...</p>
+        <CircularProgress />
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+
+  if (addAssignmentMutation.isError)
+    return (
+      <Box>
+        <ErrorIcon color="secondary" fontSize="large" />
+        <p>{`An error has occurred: ${addAssignmentMutation.error}`}</p>
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Card elevation={5}>
