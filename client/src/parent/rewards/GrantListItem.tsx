@@ -54,8 +54,12 @@ export function GrantListItem(props: Prop): JSX.Element {
     showInfo(`Removing grant for child '${props.grant.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
-  function handleConfirmClick() {
+  function handleConfirm() {
     showInfo(`Confirming grant for child '${props.grant.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+  }
+
+  function handleReject() {
+    showInfo(`Rejecting grant for child '${props.grant.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   return (
@@ -80,7 +84,12 @@ export function GrantListItem(props: Prop): JSX.Element {
             label={GrantStateNames[props.grant.state]}
           />
           {isDone(props.grant.state) && !isConfirmed(props.grant.state) ? (
-            <ConfirmRejectChip onClick={handleConfirmClick} />
+            <ConfirmRejectChip
+              confirmLabel="bestätigen"
+              rejectLabel="ablehnen"
+              onConfirm={handleConfirm}
+              onReject={handleReject}
+            />
           ) : (
             ""
           )}

@@ -61,8 +61,12 @@ export function AssignmentListItem(props: Prop) {
     deleteAssignmentMutation.mutate(props.assignment.id);
   }
 
-  function handleConfirmClick() {
+  function handleConfirm() {
     showInfo(`Confirming assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+  }
+
+  function handleReject() {
+    showInfo(`Rejecting assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   if (deleteAssignmentMutation.isLoading)
@@ -104,7 +108,12 @@ export function AssignmentListItem(props: Prop) {
           />
           {isDone(props.assignment.state) &&
           !isConfirmed(props.assignment.state) ? (
-            <ConfirmRejectChip onClick={handleConfirmClick} />
+            <ConfirmRejectChip
+              confirmLabel="Erledigt"
+              rejectLabel="Nicht erledigt"
+              onConfirm={handleConfirm}
+              onReject={handleReject}
+            />
           ) : (
             ""
           )}
