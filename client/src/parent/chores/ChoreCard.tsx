@@ -10,6 +10,10 @@ import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
 import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { QueryDelete } from "../../api/BackendAccess";
+import { useMutation } from "react-query";
+import { useRecoilValue } from "recoil";
+import { AppState } from "../../AppState";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -29,12 +33,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function ChoreCard(props: Prop): JSX.Element {
   const classes = useStyles();
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [expanded, setExpanded] = useState(false);
   const [showMoreActions, setShowMoreActions] = useState(false);
   const [showMoreAnchor, setShowMoreAnchor] = useState<null | HTMLElement>(
     null
   );
   const showInfo = useInfoNotification();
+
+  const { mutate } = useMutation(QueryDelete);
 
   function handleExpandClick() {
     setExpanded(!expanded);
@@ -67,8 +74,12 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleDelete() {
     console.log("Deleting...");
-    showInfo("Deleting..."); // TODO js (11.03.2021): Replace dummy implementation.
-    // DeleteSingleData("/api/Chores", 4);
+    mutate({
+      variant: "/api/Chores/",
+      object: props.chore,
+      token: bearerToken,
+    });
+    showInfo("chore deleted"); // TODO js (11.03.2021): Replace dummy implementation.
     handleMoreClose();
   }
 

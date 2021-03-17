@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../AppState";
 import { ChoreWithAssignments } from "../parent/models/ChoreWithAssignments";
+import { useErrorNotification } from "../shell/hooks/SnackbarHooks";
 import { ChoreLoadingData } from "./models/ChoreLoadingData";
 import { QueryObject } from "./models/QueryObject";
 
@@ -12,7 +13,7 @@ const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 export function useParentChoreData(): ChoreLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
-  const setSnackState = useSetRecoilState(AppState.snackState);
+  const showError = useErrorNotification();
 
   const { isLoading, isFetching, isError, data: chores } = useQuery(
     "parentChoreGet",
@@ -30,11 +31,7 @@ export function useParentChoreData(): ChoreLoadingData {
       open: true,
     });
   } else if (isError) {
-    setSnackState({
-      open: true,
-      message: "request failed",
-      severity: "error",
-    });
+    showError("losed Data!");
   } else if (
     !isLoading &&
     !isFetching &&
@@ -53,11 +50,24 @@ export function useParentChoreData(): ChoreLoadingData {
   };
 }
 
-// POST Single Chore
+// POST
 export const QueryPost = async (body: QueryObject) => {
   const { data } = await axios.post(
     `${apiBaseUrl}${body.variant}`,
     body.object,
+    {
+      headers: {
+        Authorization: `Bearer ${body.token}`,
+      },
+    }
+  );
+  return data;
+};
+
+// DELETE
+export const QueryDelete = async (body: QueryObject) => {
+  const { data } = await axios.delete(
+    `${apiBaseUrl}${body.variant + body.object.id}`,
     {
       headers: {
         Authorization: `Bearer ${body.token}`,

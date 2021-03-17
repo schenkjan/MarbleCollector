@@ -17,6 +17,7 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { useMutation, useQuery } from "react-query";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
+import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,6 +39,7 @@ export function ChoreList(): JSX.Element {
 
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [showDialog, setShowDialog] = useState(false);
+  const showInfo = useInfoNotification();
 
   const { chores } = useParentChoreData();
 
@@ -53,6 +55,7 @@ export function ChoreList(): JSX.Element {
       object: choreObject,
       token: bearerToken,
     });
+    showInfo("chore created");
     setShowDialog(false);
   }
 
