@@ -7,6 +7,7 @@ import {
 } from "react-query";
 import { useRecoilValue } from "recoil";
 import { AppState, useFamilyMembership } from "../AppState";
+import { Assignment } from "./models/Assignment";
 import { AssignmentForCreate } from "./models/AssignmentForCreate";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { RewardWithGrants } from "./models/RewardWithGrants";
@@ -47,6 +48,35 @@ export function useAddAssignment(): UseMutationResult<
     (assignment: AssignmentForCreate) =>
       axios.post<AssignmentForCreate>(
         `${apiBaseUrl}/api/Assignments`,
+        assignment,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("parentChoreData");
+      },
+    }
+  );
+
+  return mutation;
+}
+
+export function useUpdateAssignment(): UseMutationResult<
+  AxiosResponse<Assignment>,
+  unknown,
+  Assignment,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (assignment: Assignment) =>
+      axios.put<Assignment>(
+        `${apiBaseUrl}/api/Assignments/${assignment.id}`,
         assignment,
         {
           headers: {

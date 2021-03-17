@@ -14,10 +14,10 @@ import {
   AssignmentStateNames,
 } from "../models/AssignmentState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
-import { useDeleteAssignment } from "../BackendAccess";
+import { useDeleteAssignment, useUpdateAssignment } from "../BackendAccess";
 import ErrorIcon from "@material-ui/icons/Error";
 import { ConfirmRejectChip } from "../ConfirmRejectChip";
+import produce from "immer";
 
 type Prop = {
   assignment: Assignment;
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function AssignmentListItem(props: Prop) {
   const classes = useStyles();
-  const showInfo = useInfoNotification();
   const deleteAssignmentMutation = useDeleteAssignment();
+  const updateAssignmentMutation = useUpdateAssignment();
 
   function isDone(state: AssignmentState): boolean {
     return (
@@ -62,14 +62,20 @@ export function AssignmentListItem(props: Prop) {
   }
 
   function handleConfirm() {
-    showInfo(`Confirming assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+    const updatedAssignment = produce(props.assignment, (draftAssignment) => {
+      draftAssignment.state = AssignmentState.CheckConfirmed;
+    });
+    updateAssignmentMutation.mutate(updatedAssignment);
   }
 
   function handleReject() {
-    showInfo(`Rejecting assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+    const updatedAssignment = produce(props.assignment, (draftAssignment) => {
+      draftAssignment.state = AssignmentState.CheckRefused;
+    });
+    updateAssignmentMutation.mutate(updatedAssignment);
   }
 
-  if (deleteAssignmentMutation.isLoading)
+  if (deleteAssignmentMutation.isLoading || updateAssignmentMutation.isLoading)
     return (
       <Box>
         <p>In progress...</p>
@@ -77,11 +83,16 @@ export function AssignmentListItem(props: Prop) {
       </Box>
     ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
 
-  if (deleteAssignmentMutation.isError)
+  if (deleteAssignmentMutation.isError || updateAssignmentMutation.isError)
     return (
       <Box>
         <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${deleteAssignmentMutation.error}`}</p>
+        {deleteAssignmentMutation.error && (
+          <p>{`An error has occurred: ${deleteAssignmentMutation.error}`}</p>
+        )}
+        {updateAssignmentMutation.error && (
+          <p>{`An error has occurred: ${updateAssignmentMutation.error}`}</p>
+        )}
       </Box>
     ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
