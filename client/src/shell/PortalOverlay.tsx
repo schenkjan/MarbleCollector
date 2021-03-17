@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
     dropdown: {
       position: "fixed",
       width: 60,
-      top: "30%",
+      top: "20%",
       left: "50%",
       transform: "translate(-50%, -50%)",
       padding: theme.spacing(1),

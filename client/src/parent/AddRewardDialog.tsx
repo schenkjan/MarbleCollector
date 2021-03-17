@@ -5,19 +5,18 @@ import {
   Dialog,
   DialogContent,
   DialogContentText,
+  Typography,
 } from "@material-ui/core";
 import * as React from "react";
 import { Formik, Form, Field } from "formik";
 import MuiTextField from "@material-ui/core/TextField";
 import { fieldToTextField, TextFieldProps } from "formik-material-ui";
 import Box from "@material-ui/core/Box";
-
-import { RewardValidation } from "../model/RewardValidation";
+import { AddRewardValidation } from "./models/AddRewardValidation";
 
 type Prop = {
   open: boolean;
   onCancel: () => void;
-  onDelete: () => void;
   onSave: () => void;
 };
 
@@ -47,51 +46,70 @@ export function AddRewardDialog(props: Prop) {
     <Dialog open={props.open}>
       <DialogContent>
         <DialogContentText>
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="center"
-            spacing={1}
+          {/* <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={props.onSave}
+            >
+              Speichern
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={props.onCancel}
+            >
+              Abbrechen
+            </Button>
+          </Grid>
+        </Grid> */}
+
+          <Formik
+            // init for the complete Formik-Component --> (GET-method in edit szenario)
+
+            initialValues={{
+              name: "",
+              value: 100,
+            }}
+            // validating for the complete Formik-Component
+            validate={(RewardValidation) => {
+              const errors: Partial<AddRewardValidation> = {};
+              if (!RewardValidation.name) {
+                errors.name = "Bitte definieren";
+              } else if (!RewardValidation.value) {
+                errors.value = "Bitte definieren";
+              } else if (RewardValidation.value < 1) {
+                errors.value = "Einfach gratis?";
+              }
+              return errors;
+            }}
+            // submit-function for the complete Formik-Component
+            onSubmit={(RewardValidation, { setSubmitting }) => {
+              setSubmitting(false);
+              alert(JSON.stringify(RewardValidation, null, 2));
+              // programming below the POST-method for the backend
+              // (in edit szenario --> PUT-method)
+
+              //
+            }}
           >
-            <Grid item>
-              <Formik
-                // init for the complete Formik-Component --> (GET-method in edit szenario)
-
-                initialValues={{
-                  rewardName: "Disneyland (1d)",
-                  rewardValue: 500,
-                  childSelect: true,
-                  childSelect2: false,
-                }}
-                // validating for the complete Formik-Component
-                validate={(RewardValidation) => {
-                  const errors: Partial<RewardValidation> = {};
-                  if (!RewardValidation.rewardName) {
-                    errors.rewardName = "Bitte definieren";
-                  } else if (!RewardValidation.rewardValue) {
-                    errors.rewardValue = "Bitte definieren";
-                  } else if (RewardValidation.rewardValue < 1) {
-                    errors.rewardValue = "Einfach gratis?";
-                  }
-                  return errors;
-                }}
-                // submit-function for the complete Formik-Component
-                onSubmit={(RewardValidation, { setSubmitting }) => {
-                  setSubmitting(false);
-                  alert(JSON.stringify(RewardValidation, null, 2));
-                  // programming below the POST-method for the backend
-                  // (in edit szenario --> PUT-method)
-
-                  //
-                }}
-              >
-                {({ submitForm, isSubmitting }) => (
-                  <Form>
+            {({ submitForm, isSubmitting }) => (
+              <Form>
+                <Grid
+                  container
+                  direction="column"
+                  justify="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <Grid item>
+                    <Typography>Was gibt es zu kaufen?</Typography>
                     <Box margin={2}>
                       <Field
                         component={RewardTextField}
-                        name="rewardName"
+                        name="name"
                         type="text"
                         label="Belohnungsbezeichnung"
                       />
@@ -99,74 +117,34 @@ export function AddRewardDialog(props: Prop) {
                     <Box margin={2}>
                       <Field
                         component={RewardTextField}
-                        name="rewardValue"
+                        name="value"
                         type="number"
                         label="Wert in Murmeln"
                       />
                     </Box>
-                    <Box margin={3}>
-                      <FormControlLabel
-                        control={<Field type="checkbox" name="childSelect" />}
-                        label="Peter"
-                      />
-                      <br />
-                      <FormControlLabel
-                        control={<Field type="checkbox" name="childSelect2" />}
-                        label="Margret"
-                      />
-                    </Box>
-                    <Box margin={2}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={isSubmitting}
-                        onClick={submitForm}
-                      >
-                        Bestätigen
-                      </Button>
-                    </Box>
-                    <Box margin={2}>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        disabled={isSubmitting}
-                        onClick={cancelForm}
-                      >
-                        Abbrechen
-                      </Button>
-                    </Box>
-                  </Form>
-                )}
-              </Formik>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={props.onSave}
-              >
-                Speichern
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={props.onDelete}
-              >
-                Löschen
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={props.onCancel}
-              >
-                Abbrechen
-              </Button>
-            </Grid>
-          </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={submitForm}
+                    >
+                      Speichern
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={props.onCancel}
+                    >
+                      Abbrechen
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
         </DialogContentText>
       </DialogContent>
     </Dialog>

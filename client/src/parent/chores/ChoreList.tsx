@@ -13,11 +13,7 @@ import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import {
-  useParentChoreData,
-  GetPost,
-  UpdatePost,
-} from "../../api/BackendAccess";
+import { useParentChoreData, UpdatePost } from "../../api/BackendAccess";
 import { queryUrl } from "../../api/models/queryUrl";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
@@ -44,8 +40,8 @@ export function ChoreList(): JSX.Element {
   const classes = useStyles();
 
   const [showDialog, setShowDialog] = useState(false);
-
   const { chores } = useParentChoreData();
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
 
   // const {id} = props.match.params;
   const [addSingleChore, setAddSingleChore] = useRecoilState(
@@ -56,9 +52,9 @@ export function ChoreList(): JSX.Element {
   // });
 
   const { mutate } = useMutation(UpdatePost, {
-    // onSuccess: (data) => {
-    //   refetch();
-    // },
+    //   onSuccess: (data) => {
+    //     refetch();
+    //   },
   });
 
   // const { isLoading, isFetching, data, isError, refetch } = useQuery(
@@ -69,10 +65,7 @@ export function ChoreList(): JSX.Element {
   //     retryDelay: 500,
   //     refetchOnWindowFocus: false,
   //     onSuccess: (data) => {
-  //       setAddSingleChore({
-  //         name: data.name,
-  //         body: data.body,
-  //       });
+  //       setAddSingleChore(addSingleChore);
   //     },
   //   }
   // );
@@ -121,9 +114,13 @@ export function ChoreList(): JSX.Element {
     // try {
     // mutate(chores.push(choreObject));
     // setAddSingleChore(choreObject);
-    mutate(chores.push(choreObject));
-    console.log(chores);
-    console.log(choreObject);
+    // console.log(choreObject);
+    mutate({
+      token: bearerToken,
+      object: choreObject,
+    });
+    chores.push(choreObject);
+
     // } catch (e) {}
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct save logic.
   }

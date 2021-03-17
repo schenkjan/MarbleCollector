@@ -54,17 +54,32 @@ export function useParentChoreData(): ChoreLoadingData {
   };
 }
 
-// GET Single Chore
-export const GetPost = async (key: any, obj: any) => {
-  const { data } = await axios.get(`http://localhost:5050/posts/${obj.id}`);
+// // GET Single Chore
+// export const GetPost = async (key: any, obj: any) => {
+//   const { data } = await axios.get(`http://localhost:5050/posts/${obj.id}`);
+//   return data;
+// };
+
+interface test {
+  token: string;
+  object: any;
+}
+
+// POST Single Chore
+export const UpdatePost = async (body: test) => {
+  console.log(body);
+  console.log(body.token);
+
+  const { data } = await axios.post(`${apiBaseUrl}/api/Chores/`, {
+    headers: {
+      Authorization: `Bearer ${body.token}`,
+    },
+    body.object,
+  });
   return data;
 };
 
-// POST Single Chore
-export const UpdatePost = async (body: any) => {
-  const { data } = await axios.put(`${apiBaseUrl}/api/Chores/`, body.body);
-  return data;
-};
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InBldGVyIiwicm9sZSI6IlBhcmVudCIsIm5iZiI6MTYxNTkyNjgwMiwiZXhwIjoxNjE4NTE4ODAyLCJpYXQiOjE2MTU5MjY4MDIsImlzcyI6Ik1hcmJsZUNvbGxlY3RvckFwaS1ERVYiLCJhdWQiOiJNYXJibGVDb2xsZWN0b3JBcGktREVWLUNsaWVudHMifQ.pv_YXPgNwILlWsKEdMZVsad3gAORkst7Dc8h5bcXjek
 
 // // POST Single Chore
 // export const UpdatePost = async (addSingleChore: any) => {

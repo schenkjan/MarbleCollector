@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogContentText,
+  Typography,
 } from "@material-ui/core";
 import * as React from "react";
 import { Formik, Form, Field } from "formik";
@@ -14,7 +15,7 @@ import { DatePicker } from "formik-material-ui-pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
-import { ChoreValidation } from "../../model/ChoreValidation";
+import { AddChoreValidation } from "../models/AddChoreValidation";
 import { AddChoreState } from "../../shell/models/AddChoreState";
 
 type Prop = {
@@ -47,9 +48,9 @@ export function AddChoreDialog(props: Prop) {
             // init for the complete Formik-Component --> (GET-method in edit szenario)
 
             initialValues={{
-              name: "Rakete bauen (60min)",
-              description: "mit Hammer und Nägeln",
-              value: 10,
+              name: "",
+              description: "",
+              value: 5,
               dueDate: new Date(),
             }}
             // validating for the complete Formik-Component
@@ -84,15 +85,15 @@ export function AddChoreDialog(props: Prop) {
                 }
               };
 
-              const errors: Partial<ChoreValidation> = {};
+              const errors: Partial<AddChoreValidation> = {};
               if (!ChoreValidation.name) {
-                errors.choreName = "Bitte definieren";
+                errors.name = "Bitte definieren";
               } else if (!ChoreValidation.value) {
-                errors.choreValue = "Bitte definieren";
+                errors.value = "Bitte definieren";
               } else if (ChoreValidation.value < 1) {
-                errors.choreValue = "Ein wenig unfair, nicht?";
+                errors.value = "Ein wenig unfair, nicht?";
               } else if (!validDate(ChoreValidation.dueDate, new Date())) {
-                errors.date = validDateMessage;
+                errors.dueDate = validDateMessage;
               }
               return errors;
             }}
@@ -121,6 +122,7 @@ export function AddChoreDialog(props: Prop) {
                     spacing={1}
                   >
                     <Grid item>
+                      <Typography>Was gibt es zu tun?</Typography>
                       <Box margin={2}>
                         <Field
                           component={ChoreTextField}
