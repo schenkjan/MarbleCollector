@@ -17,6 +17,7 @@ import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { useDeleteAssignment } from "../BackendAccess";
 import ErrorIcon from "@material-ui/icons/Error";
+import { ConfirmRejectChip } from "../ConfirmRejectChip";
 
 type Prop = {
   assignment: Assignment;
@@ -103,12 +104,7 @@ export function AssignmentListItem(props: Prop) {
           />
           {isDone(props.assignment.state) &&
           !isConfirmed(props.assignment.state) ? (
-            <Chip
-              className={classes.chip}
-              label="OK"
-              color="primary"
-              onClick={handleConfirmClick}
-            />
+            <ConfirmRejectChip onClick={handleConfirmClick} />
           ) : (
             ""
           )}

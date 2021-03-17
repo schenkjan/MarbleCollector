@@ -11,6 +11,7 @@ import { Grant } from "../models/Grant";
 import { GrantState, GrantStateNames } from "../models/GrantState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { ConfirmRejectChip } from "../ConfirmRejectChip";
 
 type Prop = {
   grant: Grant;
@@ -79,12 +80,7 @@ export function GrantListItem(props: Prop): JSX.Element {
             label={GrantStateNames[props.grant.state]}
           />
           {isDone(props.grant.state) && !isConfirmed(props.grant.state) ? (
-            <Chip
-              className={classes.chip}
-              label="OK"
-              color="primary"
-              onClick={handleConfirmClick}
-            />
+            <ConfirmRejectChip onClick={handleConfirmClick} />
           ) : (
             ""
           )}
