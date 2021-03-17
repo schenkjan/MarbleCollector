@@ -1,7 +1,6 @@
 import {
   Grid,
   Button,
-  FormControlLabel,
   Dialog,
   DialogContent,
   DialogContentText,
@@ -16,12 +15,12 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import { AddChoreValidation } from "../models/AddChoreValidation";
-import { AddChoreState } from "../../shell/models/AddChoreState";
+import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 
 type Prop = {
   open: boolean;
   onCancel: () => void;
-  onSave: (choreObject: AddChoreState) => void;
+  onSave: (choreObject: ChoreWithAssignments) => void;
 };
 
 function ChoreTextField(props: TextFieldProps) {
@@ -48,10 +47,12 @@ export function AddChoreDialog(props: Prop) {
             // init for the complete Formik-Component --> (GET-method in edit szenario)
 
             initialValues={{
+              id: 0,
               name: "",
               description: "",
               value: 5,
               dueDate: new Date(),
+              assignments: [],
             }}
             // validating for the complete Formik-Component
             validate={(ChoreValidation) => {
@@ -92,6 +93,8 @@ export function AddChoreDialog(props: Prop) {
                 errors.value = "Bitte definieren";
               } else if (ChoreValidation.value < 1) {
                 errors.value = "Ein wenig unfair, nicht?";
+              } else if (ChoreValidation.value > 99) {
+                errors.value = "Du riskierst eine Inflation!";
               } else if (!validDate(ChoreValidation.dueDate, new Date())) {
                 errors.dueDate = validDateMessage;
               }
@@ -99,15 +102,7 @@ export function AddChoreDialog(props: Prop) {
             }}
             // submit-function passes for the complete Formik-Component
             onSubmit={(ChoreValidation) => {
-              const ChoreTotal = {
-                id: 0,
-                name: ChoreValidation.name,
-                description: ChoreValidation.description,
-                value: ChoreValidation.value,
-                dueDate: ChoreValidation.dueDate,
-                assignments: [],
-              };
-              props.onSave(ChoreTotal);
+              props.onSave(ChoreValidation);
             }}
           >
             {({ submitForm }) => (

@@ -46,26 +46,6 @@ export function AddRewardDialog(props: Prop) {
     <Dialog open={props.open}>
       <DialogContent>
         <DialogContentText>
-          {/* <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={props.onSave}
-            >
-              Speichern
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={props.onCancel}
-            >
-              Abbrechen
-            </Button>
-          </Grid>
-        </Grid> */}
-
           <Formik
             // init for the complete Formik-Component --> (GET-method in edit szenario)
 
@@ -82,6 +62,8 @@ export function AddRewardDialog(props: Prop) {
                 errors.value = "Bitte definieren";
               } else if (RewardValidation.value < 1) {
                 errors.value = "Einfach gratis?";
+              } else if (RewardValidation.value > 999) {
+                errors.value = "Sei doch gnädig mit den Kindern";
               }
               return errors;
             }}

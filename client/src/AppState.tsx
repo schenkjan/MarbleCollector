@@ -4,7 +4,6 @@ import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 import { SnackState } from "./shell/models/SnackState";
 import { PortalOverlayState } from "./shell/models/PortalOverlayState";
-import { AddChoreState } from "./shell/models/AddChoreState";
 
 /**
  * Class holding the global app state with static properties.
@@ -97,19 +96,6 @@ export class AppState {
     key: "queryStateInfo",
     default: {
       open: false,
-    },
-  });
-
-  /**
-   * Holding the currently Object of the adding chore.
-   */
-  static addChoreInfo = atom<AddChoreState>({
-    key: "AddChoreState",
-    default: {
-      name: "",
-      description: "",
-      value: 0,
-      dueDate: new Date(),
     },
   });
 }
