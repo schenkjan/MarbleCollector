@@ -1,12 +1,12 @@
 import React from "react";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
-import { FiguresOverview } from "./FiguresOverview";
+import { ChildChoreList } from "./chores/ChildChoreList";
 
 export function ChildScreen() {
   return (
     <>
       <ProtectedRouteForRole />
-      <FiguresOverview></FiguresOverview>
+      <ChildChoreList></ChildChoreList>
     </>
   );
 }
