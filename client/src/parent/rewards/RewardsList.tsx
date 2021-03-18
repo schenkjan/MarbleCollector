@@ -10,7 +10,7 @@ import {
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorIcon from "@material-ui/icons/Error";
-import { AddRewardDialog } from "../AddRewardDialog";
+import { AddRewardDialog } from "./AddRewardDialog";
 import { useState } from "react";
 import { RewardCard } from "./RewardCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";

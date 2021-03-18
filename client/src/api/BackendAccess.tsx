@@ -7,6 +7,7 @@ import {
 } from "react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
+import { ChoreWithAssignments } from "../parent/models/ChoreWithAssignments";
 import {
   useErrorNotification,
   useInfoNotification,
@@ -21,27 +22,30 @@ const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 // GET
 // export function QueryGet<T>(key: string, url: queryUrl): T {
 
-export function useQueryGet(key: string, url: queryUrl): ChoreLoadingData {
+export function useGet<T>(
+  key: string,
+  url: queryUrl,
+  errorMessage: string
+): ChoreLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
   const showError = useErrorNotification();
 
-  const { isLoading, isFetching, isError, error, data } = useQuery(key, () =>
+  const { isLoading, isFetching, isError, data } = useQuery(key, () =>
     axios
       .get(`${apiBaseUrl}${url}`, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
       })
-      .then((data) => data?.data)
+      .then((data) => data.data)
   );
   if ((isLoading || isFetching) && queryState.open === false) {
     setqueryState({
       open: true,
     });
   } else if (isError) {
-    console.log(error);
-    showError("losed Data!");
+    showError(errorMessage);
   } else if (
     !isLoading &&
     !isFetching &&
@@ -52,18 +56,19 @@ export function useQueryGet(key: string, url: queryUrl): ChoreLoadingData {
       open: false,
     });
   }
+  // return {};
   return {
     isLoading: isLoading,
     isFetching: isFetching,
     isError: isError,
-    error: error,
-    data: data ?? [],
+    data: data,
   };
 }
 
 // POST
-export function useQueryPost(
-  getKey: string
+export function usePost(
+  invalidateKey: string,
+  successMessage: string
 ): UseMutationResult<
   AxiosResponse<QueryObject>,
   unknown,
@@ -82,8 +87,8 @@ export function useQueryPost(
       }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(getKey);
-        showSuccess("chore created");
+        queryClient.invalidateQueries(invalidateKey);
+        showSuccess(successMessage);
       },
     }
   );
@@ -92,8 +97,9 @@ export function useQueryPost(
 }
 
 // PUT
-export function useQueryPut(
-  getKey: string
+export function usePut(
+  invalidateKey: string,
+  InfoMessage: string
 ): UseMutationResult<
   AxiosResponse<QueryObject>,
   unknown,
@@ -102,6 +108,7 @@ export function useQueryPut(
 > {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
+  const showInfo = useInfoNotification();
   const mutation = useMutation(
     (object: QueryObject) =>
       axios.put<QueryObject>(
@@ -115,7 +122,8 @@ export function useQueryPut(
       ),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(getKey);
+        queryClient.invalidateQueries(invalidateKey);
+        showInfo(InfoMessage);
       },
     }
   );
@@ -124,8 +132,9 @@ export function useQueryPut(
 }
 
 // DELETE
-export function useQueryDelete(
-  getKey: string
+export function useDelete(
+  invalidateKey: string,
+  infoMessage: string
 ): UseMutationResult<
   AxiosResponse<QueryObject>,
   unknown,
@@ -147,8 +156,8 @@ export function useQueryDelete(
       ),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(getKey);
-        showInfo("chore deleted");
+        queryClient.invalidateQueries(invalidateKey);
+        showInfo(infoMessage);
       },
     }
   );

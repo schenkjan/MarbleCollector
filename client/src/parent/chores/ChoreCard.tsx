@@ -13,7 +13,7 @@ import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
-import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
+import { useDelete, usePut } from "../../api/BackendAccess";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -63,8 +63,8 @@ export function ChoreCard(props: Prop): JSX.Element {
     );
   }, [props.chore.assignments]);
 
-  const deleteChoreMutation = useQueryDelete("parentChoreGet");
-  const putChoreMutation = useQueryPut("parentChoreGet");
+  const deleteChoreMutation = useDelete("parentChoreGet", "chore deleted");
+  const putChoreMutation = usePut("parentChoreGet", "chore mutated");
 
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
