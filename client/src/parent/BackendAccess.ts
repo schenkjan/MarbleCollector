@@ -10,6 +10,7 @@ import { AppState, useFamilyMembership } from "../AppState";
 import { Assignment } from "./models/Assignment";
 import { AssignmentForCreate } from "./models/AssignmentForCreate";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { Grant } from "./models/Grant";
 import { GrantForCreate } from "./models/GrantForCreate";
 import { RewardWithGrants } from "./models/RewardWithGrants";
 import { User } from "./models/User";
@@ -152,6 +153,31 @@ export function useAddGrant(): UseMutationResult<
   const mutation = useMutation(
     (assignment: GrantForCreate) =>
       axios.post<GrantForCreate>(`${apiBaseUrl}/api/Grants`, assignment, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("parentRewardData");
+      },
+    }
+  );
+
+  return mutation;
+}
+
+export function useUpdateGrant(): UseMutationResult<
+  AxiosResponse<Grant>,
+  unknown,
+  Grant,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (grant: Grant) =>
+      axios.put<Grant>(`${apiBaseUrl}/api/Grants/${grant.id}`, grant, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
