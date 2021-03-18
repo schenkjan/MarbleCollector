@@ -12,7 +12,7 @@ import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useParentChoreData, QueryPost } from "../../api/BackendAccess";
+import { QueryGet, QueryPost } from "../../api/BackendAccess";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
@@ -38,7 +38,9 @@ export function ChoreList(): JSX.Element {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [showDialog, setShowDialog] = useState(false);
 
-  const { chores } = useParentChoreData();
+  const { data } = QueryGet("parentChoreGet", "/api/Chores/Assignments/");
+  const chores: ChoreWithAssignments[] = data;
+
   const addChoreMutation = QueryPost();
 
   function handleOnCancel() {

@@ -4,5 +4,6 @@ export interface ChoreLoadingData {
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
-  chores: ChoreWithAssignments[];
+  error: unknown;
+  data: ChoreWithAssignments[];
 }

@@ -7,7 +7,6 @@ import {
 } from "react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
-import { ChoreWithAssignments } from "../parent/models/ChoreWithAssignments";
 import {
   useErrorNotification,
   useInfoNotification,
@@ -15,31 +14,31 @@ import {
 } from "../shell/hooks/SnackbarHooks";
 import { ChoreLoadingData } from "./models/ChoreLoadingData";
 import { QueryObject } from "./models/QueryObject";
+import { queryUrl } from "./models/QueryObjectUrl";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
-// GET Parent Chores
-export function useParentChoreData(): ChoreLoadingData {
+// GET
+export function QueryGet(key: string, url: queryUrl): ChoreLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
   const showError = useErrorNotification();
 
-  const { isLoading, isFetching, isError, data: chores } = useQuery(
-    "parentChoreGet",
-    () =>
-      axios
-        .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments/`, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        })
-        .then((data) => data?.data)
+  const { isLoading, isFetching, isError, error, data } = useQuery(key, () =>
+    axios
+      .get(`${apiBaseUrl}${url}`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+      .then((data) => data?.data)
   );
   if ((isLoading || isFetching) && queryState.open === false) {
     setqueryState({
       open: true,
     });
   } else if (isError) {
+    console.log(error);
     showError("losed Data!");
   } else if (
     !isLoading &&
@@ -55,7 +54,8 @@ export function useParentChoreData(): ChoreLoadingData {
     isLoading: isLoading,
     isFetching: isFetching,
     isError: isError,
-    chores: chores ?? [],
+    error: error,
+    data: data ?? [],
   };
 }
 
