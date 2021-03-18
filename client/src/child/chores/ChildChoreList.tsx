@@ -1,5 +1,4 @@
 import { ChildChoreItem } from "./ChildChoreItem";
-import { ChildChoreItemExpand } from "./ChildChoreItemExpand";
 import { useState } from "react";
 import {
   Box,
@@ -105,13 +104,6 @@ export function ChildChoreList(): JSX.Element {
       <List>
         {chores?.map((chore) => (
           <ChildChoreItem
-            key={chore.id}
-            chore={chore}
-            onUpdateState={updateState}
-          />
-        ))}
-        {chores?.map((chore) => (
-          <ChildChoreItemExpand
             key={chore.id}
             chore={chore}
             onUpdateState={updateState}
