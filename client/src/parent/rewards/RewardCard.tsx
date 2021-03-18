@@ -193,15 +193,26 @@ export function RewardCard(props: Prop): JSX.Element {
             onTextChanged={handleTitleEdit}
           />
         }
-        rightAvatarLabel={props.reward.value.toString()}
-        rightAvatarNotifications={
-          props.reward.grants.filter(
-            (grant) =>
-              grant.state === GrantState.RequestConfirmed ||
-              grant.state === GrantState.Archived
-          ).length
+        rightAvatarComponent={
+          <Badge
+            badgeContent={
+              props.reward.grants.filter(
+                (grant) =>
+                  grant.state === GrantState.RequestConfirmed ||
+                  grant.state === GrantState.Archived
+              ).length
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            color="primary"
+          >
+            <Avatar onClick={handleValueEdit}>
+              {props.reward.value.toString()}
+            </Avatar>
+          </Badge>
         }
-        onRightAvatarClick={handleValueEdit}
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"

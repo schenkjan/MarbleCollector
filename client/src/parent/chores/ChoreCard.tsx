@@ -228,15 +228,26 @@ export function ChoreCard(props: Prop): JSX.Element {
             onDateChanged={handleDueDateEdit}
           />
         }
-        rightAvatarLabel={props.chore.value.toString()}
-        rightAvatarNotifications={
-          props.chore.assignments.filter(
-            (assignment) =>
-              assignment.state === AssignmentState.CheckConfirmed ||
-              assignment.state === AssignmentState.Archived
-          ).length
+        rightAvatarComponent={
+          <Badge
+            badgeContent={
+              props.chore.assignments.filter(
+                (assignment) =>
+                  assignment.state === AssignmentState.CheckConfirmed ||
+                  assignment.state === AssignmentState.Archived
+              ).length
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            color="primary"
+          >
+            <Avatar onClick={handleValueEdit}>
+              {props.chore.value.toString()}
+            </Avatar>
+          </Badge>
         }
-        onRightAvatarClick={handleValueEdit}
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"
