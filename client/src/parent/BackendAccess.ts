@@ -166,6 +166,31 @@ export function useAddGrant(): UseMutationResult<
   return mutation;
 }
 
+export function useDeleteGrant(): UseMutationResult<
+  AxiosResponse<number>,
+  unknown,
+  number,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (id: number) =>
+      axios.delete<number>(`${apiBaseUrl}/api/Grants/${id}`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("parentRewardData");
+      },
+    }
+  );
+
+  return mutation;
+}
+
 interface ChildrenLoadingData {
   isLoading: boolean;
   error: unknown;

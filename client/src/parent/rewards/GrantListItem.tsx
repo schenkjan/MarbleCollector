@@ -1,6 +1,7 @@
 import {
   Box,
   Chip,
+  CircularProgress,
   Typography,
   createStyles,
   makeStyles,
@@ -12,6 +13,8 @@ import { GrantState, GrantStateNames } from "../models/GrantState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { ConfirmRejectChip } from "../ConfirmRejectChip";
+import { useDeleteGrant } from "../BackendAccess";
+import ErrorIcon from "@material-ui/icons/Error";
 
 type Prop = {
   grant: Grant;
@@ -27,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function GrantListItem(props: Prop): JSX.Element {
   const classes = useStyles();
+  const deleteGrantMutation = useDeleteGrant();
   const showInfo = useInfoNotification();
 
   function isDone(state: GrantState): boolean {
@@ -51,7 +55,7 @@ export function GrantListItem(props: Prop): JSX.Element {
   }
 
   function handleRemoveClick() {
-    showInfo(`Removing grant for child '${props.grant.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+    deleteGrantMutation.mutate(props.grant.id);
   }
 
   function handleConfirm() {
@@ -61,6 +65,22 @@ export function GrantListItem(props: Prop): JSX.Element {
   function handleReject() {
     showInfo(`Rejecting grant for child '${props.grant.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
+
+  if (deleteGrantMutation.isLoading)
+    return (
+      <Box>
+        <p>In progress...</p>
+        <CircularProgress />
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+
+  if (deleteGrantMutation.isError)
+    return (
+      <Box>
+        <ErrorIcon color="secondary" fontSize="large" />
+        <p>{`An error has occurred: ${deleteGrantMutation.error}`}</p>
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Grid container spacing={1}>
