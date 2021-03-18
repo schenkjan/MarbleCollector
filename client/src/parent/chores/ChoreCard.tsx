@@ -194,6 +194,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         titleComponent={
           <EditableText
             text={props.chore.name}
+            editable={!cardLocked}
             editLabel="Bezeichnung des Ämtlis"
             validationSchema={Yup.object({
               text: Yup.string()
@@ -206,6 +207,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         subtitleComponent={
           <EditableDate
             date={props.chore.dueDate}
+            editable={!cardLocked}
             editLabel="Ablaufdatum"
             validationSchema={Yup.object({
               date: Yup.date().min(
@@ -243,6 +245,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         <EditableText
           text={props.chore.description}
           textColor="textSecondary"
+          editable={!cardLocked}
           editLabel="Beschreibung des Ämtlis"
           validationSchema={Yup.object({
             text: Yup.string().max(250, "Maximum 250 Zeichen"),

@@ -24,6 +24,7 @@ type Prop = {
     | "textPrimary"
     | "error"
     | undefined;
+  editable?: boolean;
   editLabel: string;
   validationSchema: any;
   onTextChanged?: (newText: string) => void;
@@ -91,6 +92,10 @@ export function EditableText(props: Prop): JSX.Element {
     );
   }
 
+  function isOpen(): boolean {
+    return (props.editable ?? false) && Boolean(anchorEl);
+  }
+
   return (
     <Box onClick={handleOnClick}>
       <Typography
@@ -101,7 +106,7 @@ export function EditableText(props: Prop): JSX.Element {
         {text ? text : "Nicht definiert. Text mit Klick hinzufügen."}
       </Typography>
       <Popover
-        open={Boolean(anchorEl)}
+        open={isOpen()}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{

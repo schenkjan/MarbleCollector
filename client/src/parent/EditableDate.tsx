@@ -27,6 +27,7 @@ type Prop = {
     | "textPrimary"
     | "error"
     | undefined;
+  editable?: boolean;
   editLabel: string;
   validationSchema: any;
   onDateChanged?: (newDate: Date) => void;
@@ -96,6 +97,10 @@ export function EditableDate(props: Prop): JSX.Element {
     );
   }
 
+  function isOpen(): boolean {
+    return (props.editable ?? false) && Boolean(anchorEl);
+  }
+
   return (
     <Box onClick={handleOnClick}>
       <Typography
@@ -111,7 +116,7 @@ export function EditableDate(props: Prop): JSX.Element {
         })}
       </Typography>
       <Popover
-        open={Boolean(anchorEl)}
+        open={isOpen()}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
