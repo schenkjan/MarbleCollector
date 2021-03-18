@@ -169,22 +169,6 @@ export function ChoreCard(props: Prop): JSX.Element {
     showInfo("Description edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
-  function getDescription() {
-    if (!props.chore.description) return;
-
-    return (
-      <EditableText
-        text={props.chore.description}
-        textColor="textSecondary"
-        editLabel="Beschreibung des Ämtlis"
-        validationSchema={Yup.object({
-          text: Yup.string().max(250, "Maximum 250 Zeichen"),
-        })}
-        onTextChanged={handleDescriptionEdit}
-      />
-    );
-  }
-
   return (
     <Card elevation={5}>
       <BiAvatarCardHeader
@@ -249,7 +233,15 @@ export function ChoreCard(props: Prop): JSX.Element {
         className={classes.cardContent}
         expanded={expanded}
       >
-        {getDescription()}
+        <EditableText
+          text={props.chore.description}
+          textColor="textSecondary"
+          editLabel="Beschreibung des Ämtlis"
+          validationSchema={Yup.object({
+            text: Yup.string().max(250, "Maximum 250 Zeichen"),
+          })}
+          onTextChanged={handleDescriptionEdit}
+        />
         <AssignmentList assignments={props.chore.assignments} />
         <AddButtonWithLabel
           title="Kind hinzufügen"
