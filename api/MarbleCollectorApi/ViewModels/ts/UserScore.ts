@@ -1,6 +1,11 @@
 ﻿export interface UserScore {
+    id: number;
     familyRank: number;
-    marbleCount: number;
-    choreCount: number;
-    rewardCount: number;
+    marblesEarned: number;
+    marblesSpent: number;
+    marbleBalance: number;
+    choreAssignments: number;
+    choreAssignmentsCompleted: number;
+    rewardGrants: number;
+    rewardsGrantsCompleted: number;
 }

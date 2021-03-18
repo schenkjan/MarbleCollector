@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MarbleCollectorApi.Data.Mapping;
 using MarbleCollectorApi.Data.Repository;
+using MarbleCollectorApi.Services;
 using MarbleCollectorApi.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +18,12 @@ namespace MarbleCollectorApi.Controllers
     public class UsersController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserScoreService _userScoreService;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IUserRepository userRepository, IUserScoreService userScoreService)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _userScoreService = userScoreService;
         }
 
         // TODO js (13.03.2021): Can all users get all users?
@@ -63,11 +66,13 @@ namespace MarbleCollectorApi.Controllers
             }
 
             var usersForFamily = GetUsersForFamily(user.Family);
+            var userIdsForScoreCalculation = usersForFamily.Where(u => u.Role == Const.UserRoleChild).Select(u => u.Id);
+            var familyScores = _userScoreService.GetUserScores(userIdsForScoreCalculation);
             var userProfile = new UserProfile
             {
                 User = user.Map(),
                 Family = usersForFamily.Select(u => u.Map()),
-                Score = new UserScore()
+                Score = familyScores.SingleOrDefault(x => x.Id == user.Id)
             };
 
             return Ok(userProfile);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, Grid } from "@material-ui/core";
 import { useProfileCardStyles } from "./ProfileCardStyles";
 import ImgMarbles from "../../images/Marble.png";
@@ -30,7 +30,7 @@ export function UserScoreCard(props: UserScoreCardProps) {
             </Grid>
             <Grid item xs={12} sm={3}>
               <UserScoreCardItem
-                ammount={userScore?.marbleCount ?? 0}
+                ammount={userScore?.marbleBalance ?? 0}
                 picture={ImgMarbles}
                 imgDescription="marble"
                 text="Kontostand Murmeln"
@@ -38,14 +38,14 @@ export function UserScoreCard(props: UserScoreCardProps) {
             </Grid>
             <Grid item xs={12} sm={3}>
               <UserScoreCardItem
-                ammount={userScore?.choreCount ?? 0}
+                ammount={userScore?.choreAssignmentsCompleted ?? 0}
                 icon={<AssignmentIcon fontSize="large" />}
                 text="Erledigte Ämtli"
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <UserScoreCardItem
-                ammount={userScore?.rewardCount ?? 0}
+                ammount={userScore?.rewardsGrantsCompleted ?? 0}
                 icon={<RedeemIcon fontSize="large" />}
                 text="Verdiente Belohnungen"
               />
