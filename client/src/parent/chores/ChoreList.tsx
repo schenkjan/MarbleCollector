@@ -15,9 +15,7 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { useParentChoreData, QueryPost } from "../../api/BackendAccess";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
-import { useMutation, useQuery } from "react-query";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
-import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,23 +37,20 @@ export function ChoreList(): JSX.Element {
 
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [showDialog, setShowDialog] = useState(false);
-  const showInfo = useInfoNotification();
 
   const { chores } = useParentChoreData();
-
-  const { mutate } = useMutation(QueryPost);
+  const addChoreMutation = QueryPost();
 
   function handleOnCancel() {
     setShowDialog(false);
   }
 
   function handleOnSave(choreObject: ChoreWithAssignments) {
-    mutate({
-      variant: "/api/Chores/",
+    addChoreMutation.mutate({
+      url: "/api/Chores/",
       object: choreObject,
       token: bearerToken,
     });
-    showInfo("chore created");
     setShowDialog(false);
   }
 

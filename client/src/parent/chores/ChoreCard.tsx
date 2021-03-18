@@ -10,7 +10,7 @@ import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
 import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
-import { QueryDelete } from "../../api/BackendAccess";
+import { QueryDelete, QueryPut } from "../../api/BackendAccess";
 import { useMutation } from "react-query";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
@@ -41,13 +41,20 @@ export function ChoreCard(props: Prop): JSX.Element {
   );
   const showInfo = useInfoNotification();
 
-  const { mutate } = useMutation(QueryDelete);
+  const deleteChoreMutation = QueryDelete();
+  const putChoreMutation = QueryPut();
 
   function handleExpandClick() {
     setExpanded(!expanded);
   }
 
   function handleAddChildClick() {
+    console.log("Adding child");
+    putChoreMutation.mutate({
+      url: "/api/Chores/",
+      object: props.chore,
+      token: bearerToken,
+    });
     showInfo(`Adding child to chore '${props.chore.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
@@ -74,27 +81,41 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleDelete() {
     console.log("Deleting...");
-    mutate({
-      variant: "/api/Chores/",
+    deleteChoreMutation.mutate({
+      url: "/api/Chores/",
       object: props.chore,
       token: bearerToken,
     });
-    showInfo("chore deleted"); // TODO js (11.03.2021): Replace dummy implementation.
     handleMoreClose();
   }
 
   function handleTitleEdit() {
     console.log("Editing title...");
+    putChoreMutation.mutate({
+      url: "/api/Chores/",
+      object: props.chore,
+      token: bearerToken,
+    });
     showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleDueDateEdit() {
     console.log("Editing due date...");
+    putChoreMutation.mutate({
+      url: "/api/Chores/",
+      object: props.chore,
+      token: bearerToken,
+    });
     showInfo("Editing due date..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleValueEdit() {
     console.log("Editing amount of marbles...");
+    putChoreMutation.mutate({
+      url: "/api/Chores/",
+      object: props.chore,
+      token: bearerToken,
+    });
     showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 

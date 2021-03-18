@@ -1,9 +1,18 @@
-import axios from "axios";
-import { useQuery } from "react-query";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import axios, { AxiosResponse } from "axios";
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+  useQueryClient,
+} from "react-query";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import { ChoreWithAssignments } from "../parent/models/ChoreWithAssignments";
-import { useErrorNotification } from "../shell/hooks/SnackbarHooks";
+import {
+  useErrorNotification,
+  useInfoNotification,
+  useSuccessNotification,
+} from "../shell/hooks/SnackbarHooks";
 import { ChoreLoadingData } from "./models/ChoreLoadingData";
 import { QueryObject } from "./models/QueryObject";
 
@@ -51,28 +60,91 @@ export function useParentChoreData(): ChoreLoadingData {
 }
 
 // POST
-export const QueryPost = async (body: QueryObject) => {
-  const { data } = await axios.post(
-    `${apiBaseUrl}${body.variant}`,
-    body.object,
+export function QueryPost(): UseMutationResult<
+  AxiosResponse<QueryObject>,
+  unknown,
+  QueryObject,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const showSuccess = useSuccessNotification();
+  const mutation = useMutation(
+    (object: QueryObject) =>
+      axios.post<QueryObject>(`${apiBaseUrl}${object.url}`, object.object, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      }),
     {
-      headers: {
-        Authorization: `Bearer ${body.token}`,
+      onSuccess: () => {
+        queryClient.invalidateQueries("parentChoreGet");
+        showSuccess("chore created");
       },
     }
   );
-  return data;
-};
+
+  return mutation;
+}
+
+// PUT
+export function QueryPut(): UseMutationResult<
+  AxiosResponse<QueryObject>,
+  unknown,
+  QueryObject,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const showInfo = useInfoNotification();
+  const mutation = useMutation(
+    (object: QueryObject) =>
+      axios.put<QueryObject>(
+        `${apiBaseUrl}${object.url + object.object.id}`,
+        object.object,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("parentChoreGet");
+      },
+    }
+  );
+
+  return mutation;
+}
 
 // DELETE
-export const QueryDelete = async (body: QueryObject) => {
-  const { data } = await axios.delete(
-    `${apiBaseUrl}${body.variant + body.object.id}`,
+export function QueryDelete(): UseMutationResult<
+  AxiosResponse<QueryObject>,
+  unknown,
+  QueryObject,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const showInfo = useInfoNotification();
+  const mutation = useMutation(
+    (object: QueryObject) =>
+      axios.delete<QueryObject>(
+        `${apiBaseUrl}${object.url + object.object.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+      ),
     {
-      headers: {
-        Authorization: `Bearer ${body.token}`,
+      onSuccess: () => {
+        queryClient.invalidateQueries("parentChoreGet");
+        showInfo("chore deleted");
       },
     }
   );
-  return data;
-};
+
+  return mutation;
+}
