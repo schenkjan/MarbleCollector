@@ -1,5 +1,5 @@
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
-import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
+import { Card, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { AssignmentState } from "../models/AssignmentState";
@@ -13,10 +13,10 @@ import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
-import ErrorIcon from "@material-ui/icons/Error";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
 import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
+import produce from "immer";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -73,15 +73,6 @@ export function ChoreCard(props: Prop): JSX.Element {
     setExpanded((prevExpanded) => !prevExpanded);
   }
 
-  // function handleAddChildClick() {
-  //   console.log("Adding child");
-  //   putChoreMutation.mutate({
-  //     url: "/api/Chores/",
-  //     object: props.chore,
-  //   });
-  //   showInfo(`Adding child to chore '${props.chore.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
-  // }
-
   function handleAddChildClick(event: React.MouseEvent<HTMLButtonElement>) {
     setShowAddChildAnchor(event.currentTarget);
     setShowAddChild(true);
@@ -129,11 +120,18 @@ export function ChoreCard(props: Prop): JSX.Element {
     handleMoreClose();
   }
 
-  function handleTitleEdit() {
+  function handleTitleEdit(title: string) {
     console.log("Editing title...");
+    var updatedChore = produce(
+      props.chore,
+      (draftChore: ChoreWithAssignments) => {
+        draftChore.name = title;
+      }
+    );
+
     putChoreMutation.mutate({
       url: "/api/Chores/",
-      object: props.chore,
+      object: updatedChore,
     });
     console.log("Title edited.");
     showInfo("Title edited."); // TODO js (11.03.2021): Replace dummy implementation.
