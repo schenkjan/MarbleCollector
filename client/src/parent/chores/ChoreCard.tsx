@@ -18,6 +18,7 @@ import * as Yup from "yup";
 import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
 import produce from "immer";
 import { EditableDate } from "../EditableDate";
+import { EditableTextAvatar } from "../EditableTextAvatar";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -157,13 +158,20 @@ export function ChoreCard(props: Prop): JSX.Element {
     showInfo("Due date edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
-  function handleValueEdit() {
+  function handleValueEdit(value: number) {
     console.log("Editing amount of marbles...");
+    var updatedChore = produce(
+      props.chore,
+      (draftChore: ChoreWithAssignments) => {
+        draftChore.value = value;
+      }
+    );
+
     putChoreMutation.mutate({
       url: "/api/Chores/",
-      object: props.chore,
+      object: updatedChore,
     });
-    showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
+    showInfo("Amount of marbles edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleDescriptionEdit(description: string) {
@@ -229,24 +237,24 @@ export function ChoreCard(props: Prop): JSX.Element {
           />
         }
         rightAvatarComponent={
-          <Badge
-            badgeContent={
+          <EditableTextAvatar
+            value={props.chore.value}
+            editable={!cardLocked}
+            editLabel="Wert in Murmeln"
+            validationSchema={Yup.object({
+              value: Yup.number()
+                .required("Bitte Wert definieren")
+                .min(1, "Wert > 0"),
+            })}
+            notifications={
               props.chore.assignments.filter(
                 (assignment) =>
                   assignment.state === AssignmentState.CheckConfirmed ||
                   assignment.state === AssignmentState.Archived
               ).length
             }
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            color="primary"
-          >
-            <Avatar onClick={handleValueEdit}>
-              {props.chore.value.toString()}
-            </Avatar>
-          </Badge>
+            onValueChanged={handleValueEdit}
+          />
         }
       />
       <AddOptionsExpandCardActions
