@@ -9,10 +9,12 @@ import { AddOptionsExpandCardActions } from "../AddOptionsExpandCardActions";
 import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
 import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
+import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 
 type Prop = {
   reward: RewardWithGrants;
+  children: User[];
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,6 +37,13 @@ export function RewardCard(props: Prop): JSX.Element {
     null
   );
   const showInfo = useInfoNotification();
+  const [allChildrenAssigned] = useState(
+    props.reward.grants.length === props.children.length
+  );
+  const [cardLocked] = useState(
+    props.reward.grants.filter((grant) => grant.state !== GrantState.Assigned)
+      .length > 0
+  );
 
   function handleExpandClick() {
     setExpanded(!expanded);
@@ -127,6 +136,7 @@ export function RewardCard(props: Prop): JSX.Element {
         onMoreClick={handleMoreClick}
         onExpandClick={handleExpandClick}
         hideAddButton
+        disabledAddButton={allChildrenAssigned}
       />
       <CollapsibleCardContent
         className={classes.cardContent}
@@ -137,6 +147,7 @@ export function RewardCard(props: Prop): JSX.Element {
         <AddButtonWithLabel
           title="Kind hinzufügen"
           onClick={handleAddChildClick}
+          disabled={allChildrenAssigned}
         />
       </CollapsibleCardContent>
       <MoreOptionsMenu
@@ -147,6 +158,7 @@ export function RewardCard(props: Prop): JSX.Element {
         onCopy={handleCopy}
         deleteLabel={"Belohnung löschen"}
         onDelete={handleDelete}
+        disableDelete={cardLocked}
       />
     </Card>
   );

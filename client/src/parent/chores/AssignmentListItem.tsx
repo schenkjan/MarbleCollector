@@ -1,6 +1,7 @@
 import {
   Box,
   Chip,
+  CircularProgress,
   Typography,
   createStyles,
   makeStyles,
@@ -14,6 +15,8 @@ import {
 } from "../models/AssignmentState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { useDeleteAssignment } from "../BackendAccess";
+import ErrorIcon from "@material-ui/icons/Error";
 
 type Prop = {
   assignment: Assignment;
@@ -30,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export function AssignmentListItem(props: Prop) {
   const classes = useStyles();
   const showInfo = useInfoNotification();
+  const deleteAssignmentMutation = useDeleteAssignment();
 
   function isDone(state: AssignmentState): boolean {
     return (
@@ -53,12 +57,28 @@ export function AssignmentListItem(props: Prop) {
   }
 
   function handleRemoveClick() {
-    showInfo(`Removing assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+    deleteAssignmentMutation.mutate(props.assignment.id);
   }
 
   function handleConfirmClick() {
     showInfo(`Confirming assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   }
+
+  if (deleteAssignmentMutation.isLoading)
+    return (
+      <Box>
+        <p>In progress...</p>
+        <CircularProgress />
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+
+  if (deleteAssignmentMutation.isError)
+    return (
+      <Box>
+        <ErrorIcon color="secondary" fontSize="large" />
+        <p>{`An error has occurred: ${deleteAssignmentMutation.error}`}</p>
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Grid container spacing={1}>

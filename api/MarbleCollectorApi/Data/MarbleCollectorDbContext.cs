@@ -36,7 +36,7 @@ namespace MarbleCollectorApi.Data
         {
             new ChoreEntityTypeConfiguration().Configure(modelBuilder.Entity<Chore>());
             new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
-            new AssignementEntityTypeConfiguration().Configure(modelBuilder.Entity<Assignment>());
+            new AssignmentEntityTypeConfiguration().Configure(modelBuilder.Entity<Assignment>());
             new GrantEntityTypeConfiguration().Configure(modelBuilder.Entity<Grant>());
             new RewardEntityTypeConfiguration().Configure(modelBuilder.Entity<Reward>());
         }

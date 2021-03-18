@@ -42,6 +42,7 @@ namespace MarbleCollectorApi.Services
             {
                 Id = user.Id,
                 Username = user.Username,
+                Family = user.Family,
                 Role = user.Role,
                 Avatar = user.Avatar,
                 Token = token,

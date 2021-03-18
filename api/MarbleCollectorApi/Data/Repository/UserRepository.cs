@@ -11,30 +11,9 @@ namespace MarbleCollectorApi.Data.Repository
     public class UserRepository : BaseEntityRepository<User>, IUserRepository
     {
         public UserRepository(MarbleCollectorDbContext context) : base(context) { }
-
-        public Task<bool> Login(string username, string password)
+        public User GetUser(string username)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Logout(string username, string password)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> GetUser(string username)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> GetUsersByFamily(string family)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> GetUsersByRoleAndFamily(string family, string role)
-        {
-            throw new NotImplementedException();
+            return GetSingle(user => user.Username.Equals(username));
         }
     }
 }

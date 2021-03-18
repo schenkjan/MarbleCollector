@@ -118,5 +118,18 @@ namespace MarbleCollectorApi.Data.Mapping
                 Value = sourceObject.Value
             };
         }
+
+        public static ViewModels.User Map(this Models.User sourceObject)
+        {
+            return new ViewModels.User
+            {
+                Id = sourceObject.Id,
+                Username = sourceObject.Username,
+                Avatar = sourceObject.Avatar,
+                Family = sourceObject.Family,
+                Email = sourceObject.Email,
+                Role = sourceObject.Role,
+            };
+        }
     }
 }
