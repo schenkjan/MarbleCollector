@@ -88,9 +88,9 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest();
             }
 
-            await _childrenNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", assignment.UserId, assignment.Id);
+            await _childrenNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", entityEntry.Entity.UserId, entityEntry.Entity.Id);
 
-            await _parentNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", assignment.ChoreId, assignment.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
+            await _parentNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", entityEntry.Entity.ChoreId, entityEntry.Entity.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
 
             return Created("Get", entityEntry.Entity.Map());
         }
