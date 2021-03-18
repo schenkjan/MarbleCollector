@@ -56,6 +56,7 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 - `npm install react-query`
 - `npm install xlsx`
 - `npm install immer`
+- `npm install yup`
 
 ## Code formatting
 
