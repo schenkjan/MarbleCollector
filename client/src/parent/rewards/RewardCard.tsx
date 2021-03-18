@@ -172,7 +172,7 @@ export function RewardCard(props: Prop): JSX.Element {
           ).length
         }
         onRightAvatarClick={handleValueEdit}
-        onTitleClick={handleTitleEdit}
+        onTitleChanged={handleTitleEdit}
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"

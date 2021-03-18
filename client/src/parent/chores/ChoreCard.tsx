@@ -113,8 +113,8 @@ export function ChoreCard(props: Prop): JSX.Element {
   }
 
   function handleTitleEdit() {
-    console.log("Editing title...");
-    showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
+    console.log("Title edited.");
+    showInfo("Title edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleDueDateEdit() {
@@ -185,8 +185,8 @@ export function ChoreCard(props: Prop): JSX.Element {
           ).length
         }
         onRightAvatarClick={handleValueEdit}
-        onTitleClick={handleTitleEdit}
-        onSubtitleClick={handleDueDateEdit}
+        onTitleChanged={handleTitleEdit}
+        onSubtitleChanged={handleDueDateEdit}
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"
