@@ -140,5 +140,25 @@ namespace MarbleCollectorApi.Controllers
 
             return Ok(choresWithAssignments.OrderBy(chore => chore.Id));
         }
+
+        [HttpGet("Assignments/Users/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ChoreWithAssignments>> GetChoresAndAssignmentsForUser(int id)
+        {
+            var assignmentsForUser = _assignmentRepository.GetAll().Where(assignments => assignments.UserId == id);
+            
+            var choresWithAssignments = assignmentsForUser.GroupBy(assignmentsForUser => assignmentsForUser.Chore)
+                .Select(group => new ChoreWithAssignments
+                {
+                    Id = group.Key.Id,
+                    Name = group.Key.Name,
+                    Description = group.Key.Description,
+                    Value = group.Key.Value,
+                    DueDate = group.Key.DueDate,
+                    Assignments = group.Select(assignment => assignment.Map())
+                }).ToList();
+
+            return Ok(choresWithAssignments.OrderBy(chore => chore.Id));
+        }
     }
 }

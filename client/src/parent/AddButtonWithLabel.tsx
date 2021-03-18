@@ -6,11 +6,17 @@ import { MouseEventHandler } from "react";
 type Prop = {
   title?: string;
   onClick: MouseEventHandler<HTMLButtonElement> | undefined;
+  disabled?: boolean;
 };
 
 export function AddButtonWithLabel(props: Prop): JSX.Element {
   return (
-    <IconButton size="small" color="primary" onClick={props.onClick}>
+    <IconButton
+      size="small"
+      color="primary"
+      onClick={props.onClick}
+      disabled={props.disabled}
+    >
       <AddCircleIcon />
       <Typography variant="body2" color="textPrimary">
         {props.title}

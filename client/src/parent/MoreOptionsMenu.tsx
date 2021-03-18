@@ -11,6 +11,7 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 type Prop = {
   copyLabel: string;
   deleteLabel: string;
+  disableDelete?: boolean;
   open: boolean;
   anchorEl: HTMLElement | null;
   onMoreClose: () => void;
@@ -34,7 +35,7 @@ export function MoreOptionsMenu(props: Prop): JSX.Element {
           <Typography variant="body2">{props.copyLabel}</Typography>
         </ListItemText>
       </MenuItem>
-      <MenuItem onClick={props.onDelete}>
+      <MenuItem onClick={props.onDelete} disabled={props.disableDelete}>
         <ListItemIcon>
           <DeleteForeverIcon />
         </ListItemIcon>

@@ -1,6 +1,7 @@
 import {
   Box,
   Chip,
+  CircularProgress,
   Typography,
   createStyles,
   makeStyles,
@@ -13,7 +14,10 @@ import {
   AssignmentStateNames,
 } from "../models/AssignmentState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { useDeleteAssignment, useUpdateAssignment } from "../BackendAccess";
+import ErrorIcon from "@material-ui/icons/Error";
+import { ConfirmRejectChip } from "../ConfirmRejectChip";
+import produce from "immer";
 
 type Prop = {
   assignment: Assignment;
@@ -29,7 +33,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function AssignmentListItem(props: Prop) {
   const classes = useStyles();
-  const showInfo = useInfoNotification();
+  const deleteAssignmentMutation = useDeleteAssignment();
+  const updateAssignmentMutation = useUpdateAssignment();
 
   function isDone(state: AssignmentState): boolean {
     return (
@@ -53,12 +58,43 @@ export function AssignmentListItem(props: Prop) {
   }
 
   function handleRemoveClick() {
-    showInfo(`Removing assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+    deleteAssignmentMutation.mutate(props.assignment.id);
   }
 
-  function handleConfirmClick() {
-    showInfo(`Confirming assignment for child '${props.assignment.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+  function handleConfirm() {
+    const updatedAssignment = produce(props.assignment, (draftAssignment) => {
+      draftAssignment.state = AssignmentState.CheckConfirmed;
+    });
+    updateAssignmentMutation.mutate(updatedAssignment);
   }
+
+  function handleReject() {
+    const updatedAssignment = produce(props.assignment, (draftAssignment) => {
+      draftAssignment.state = AssignmentState.CheckRefused;
+    });
+    updateAssignmentMutation.mutate(updatedAssignment);
+  }
+
+  if (deleteAssignmentMutation.isLoading || updateAssignmentMutation.isLoading)
+    return (
+      <Box>
+        <p>In progress...</p>
+        <CircularProgress />
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+
+  if (deleteAssignmentMutation.isError || updateAssignmentMutation.isError)
+    return (
+      <Box>
+        <ErrorIcon color="secondary" fontSize="large" />
+        {deleteAssignmentMutation.error && (
+          <p>{`An error has occurred: ${deleteAssignmentMutation.error}`}</p>
+        )}
+        {updateAssignmentMutation.error && (
+          <p>{`An error has occurred: ${updateAssignmentMutation.error}`}</p>
+        )}
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Grid container spacing={1}>
@@ -83,11 +119,11 @@ export function AssignmentListItem(props: Prop) {
           />
           {isDone(props.assignment.state) &&
           !isConfirmed(props.assignment.state) ? (
-            <Chip
-              className={classes.chip}
-              label="OK"
-              color="primary"
-              onClick={handleConfirmClick}
+            <ConfirmRejectChip
+              confirmLabel="Erledigt"
+              rejectLabel="Nicht erledigt"
+              onConfirm={handleConfirm}
+              onReject={handleReject}
             />
           ) : (
             ""

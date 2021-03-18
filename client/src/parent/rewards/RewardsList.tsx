@@ -14,7 +14,7 @@ import { AddRewardDialog } from "../AddRewardDialog";
 import { useState } from "react";
 import { RewardCard } from "./RewardCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useParentRewardData } from "../BackendAccess";
+import { useChildrenDataForUser, useParentRewardData } from "../BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,6 +34,11 @@ export function RewardsList() {
   useDashboardTitle("Belohnungspinnwand");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
+  const {
+    isLoading: isChildrenLoading,
+    error: childrenError,
+    children,
+  } = useChildrenDataForUser();
   const { isLoading, error, rewards } = useParentRewardData();
 
   function handleOnCancel() {
@@ -48,7 +53,7 @@ export function RewardsList() {
     setShowDialog(true);
   }
 
-  if (isLoading)
+  if (isLoading || isChildrenLoading)
     return (
       <Box>
         <p>Loading...</p>
@@ -56,7 +61,7 @@ export function RewardsList() {
       </Box>
     ); // TODO js (11.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
 
-  if (error)
+  if (error || childrenError)
     return (
       <Box>
         <ErrorIcon color="secondary" fontSize="large" />
@@ -68,7 +73,7 @@ export function RewardsList() {
     <Box className={classes.container} component={Paper}>
       <List>
         {rewards?.map((reward) => (
-          <RewardCard key={reward.id} reward={reward} />
+          <RewardCard key={reward.id} reward={reward} children={children} />
         ))}
       </List>
       <Fab

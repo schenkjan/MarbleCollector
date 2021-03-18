@@ -1,6 +1,7 @@
 import {
   Box,
   Chip,
+  CircularProgress,
   Typography,
   createStyles,
   makeStyles,
@@ -10,7 +11,10 @@ import {
 import { Grant } from "../models/Grant";
 import { GrantState, GrantStateNames } from "../models/GrantState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { ConfirmRejectChip } from "../ConfirmRejectChip";
+import { useDeleteGrant, useUpdateGrant } from "../BackendAccess";
+import ErrorIcon from "@material-ui/icons/Error";
+import produce from "immer";
 
 type Prop = {
   grant: Grant;
@@ -26,7 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function GrantListItem(props: Prop): JSX.Element {
   const classes = useStyles();
-  const showInfo = useInfoNotification();
+  const deleteGrantMutation = useDeleteGrant();
+  const updateGrantMutation = useUpdateGrant();
 
   function isDone(state: GrantState): boolean {
     return (
@@ -50,12 +55,43 @@ export function GrantListItem(props: Prop): JSX.Element {
   }
 
   function handleRemoveClick() {
-    showInfo(`Removing grant for child '${props.grant.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+    deleteGrantMutation.mutate(props.grant.id);
   }
 
-  function handleConfirmClick() {
-    showInfo(`Confirming grant for child '${props.grant.userName}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+  function handleConfirm() {
+    const updatedGrant = produce(props.grant, (draftGrant) => {
+      draftGrant.state = GrantState.RequestConfirmed;
+    });
+    updateGrantMutation.mutate(updatedGrant);
   }
+
+  function handleReject() {
+    const updatedGrant = produce(props.grant, (draftGrant) => {
+      draftGrant.state = GrantState.RequestRefused;
+    });
+    updateGrantMutation.mutate(updatedGrant);
+  }
+
+  if (deleteGrantMutation.isLoading || updateGrantMutation.isLoading)
+    return (
+      <Box>
+        <p>In progress...</p>
+        <CircularProgress />
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+
+  if (deleteGrantMutation.isError || updateGrantMutation.isError)
+    return (
+      <Box>
+        <ErrorIcon color="secondary" fontSize="large" />
+        {deleteGrantMutation.error && (
+          <p>{`An error has occurred: ${deleteGrantMutation.error}`}</p>
+        )}
+        {updateGrantMutation.error && (
+          <p>{`An error has occurred: ${updateGrantMutation.error}`}</p>
+        )}
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Grid container spacing={1}>
@@ -79,11 +115,11 @@ export function GrantListItem(props: Prop): JSX.Element {
             label={GrantStateNames[props.grant.state]}
           />
           {isDone(props.grant.state) && !isConfirmed(props.grant.state) ? (
-            <Chip
-              className={classes.chip}
-              label="OK"
-              color="primary"
-              onClick={handleConfirmClick}
+            <ConfirmRejectChip
+              confirmLabel="bestätigen"
+              rejectLabel="ablehnen"
+              onConfirm={handleConfirm}
+              onReject={handleReject}
             />
           ) : (
             ""

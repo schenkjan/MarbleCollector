@@ -16,6 +16,7 @@ import { QueryGet, QueryPost } from "../../api/BackendAccess";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
+import { useChildrenDataForUser } from "../BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,6 +42,12 @@ export function ChoreList(): JSX.Element {
   const { data } = QueryGet("parentChoreGet", "/api/Chores/Assignments/");
   const chores: ChoreWithAssignments[] = data;
 
+  const {
+    isLoading: isChildrenLoading,
+    error: childrenError,
+    children,
+  } = useChildrenDataForUser();
+
   const addChoreMutation = QueryPost();
 
   function handleOnCancel() {
@@ -64,7 +71,7 @@ export function ChoreList(): JSX.Element {
     <Box className={classes.container} component={Paper}>
       <List>
         {chores?.map((chore) => (
-          <ChoreCard key={chore.id} chore={chore} />
+          <ChoreCard key={chore.id} chore={chore} children={children} />
         ))}
       </List>
       <Fab

@@ -21,14 +21,18 @@ namespace MarbleCollectorApi.Controllers
     public class AssignmentsController : Controller
     {
         private readonly IAssignmentRepository _assignmentRepository;
+        private readonly IChoreRepository _choreRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IHubContext<ParentNotificationHub> _parentNotificationHubContext;
         private readonly IHubContext<ChildrenNotificationHub> _childrenNotificationHubContext;
 
-        public AssignmentsController(IAssignmentRepository assignmentRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
+        public AssignmentsController(IAssignmentRepository assignmentRepository, IChoreRepository choreRepository, IUserRepository userRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
         {
             _assignmentRepository = assignmentRepository ?? throw new ArgumentNullException(nameof(assignmentRepository));
-            _parentNotificationHubContext = parentNotificationHubContext;
-            _childrenNotificationHubContext = childrenNotificationHubContext;
+            _choreRepository = choreRepository ?? throw new ArgumentNullException(nameof(choreRepository));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _parentNotificationHubContext = parentNotificationHubContext ?? throw new ArgumentNullException(nameof(parentNotificationHubContext));
+            _childrenNotificationHubContext = childrenNotificationHubContext ?? throw new ArgumentNullException(nameof(childrenNotificationHubContext));
         }
 
         // TODO js (04.03.2021): Can all users get all assignments?
@@ -58,9 +62,21 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<Assignment> CreateAssignment(Assignment assignment)
+        public async Task<ActionResult<Assignment>> CreateAssignment(Assignment assignment)
         {
-            var entityEntry = _assignmentRepository.Add(assignment.Map());
+            var user = _userRepository.GetSingle(assignment.UserId);
+            var chore = _choreRepository.GetSingle(assignment.ChoreId);
+
+            if (user == null || chore == null)
+            {
+                return NotFound();
+            }
+
+            var assignmentEntity = assignment.Map();
+            assignmentEntity.User = user;
+            assignmentEntity.Chore = chore;
+
+            var entityEntry = _assignmentRepository.Add(assignmentEntity);
 
             try
             {
@@ -69,10 +85,14 @@ namespace MarbleCollectorApi.Controllers
             catch
             {
                 // TODO hs 210307, maybe add some more parameter validation?
-                return BadRequest(); ;
+                return BadRequest();
             }
 
-            return Created("Get", entityEntry.Entity);
+            await _childrenNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", entityEntry.Entity.UserId, entityEntry.Entity.Id);
+
+            await _parentNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", entityEntry.Entity.ChoreId, entityEntry.Entity.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
+
+            return Created("Get", entityEntry.Entity.Map());
         }
 
         [HttpPut("{id}")]
@@ -88,7 +108,7 @@ namespace MarbleCollectorApi.Controllers
 
             var stateChanged = CheckHasStateChanged(assignment.State, id);
 
-            // TODO hs 210307, can a assignment be modified if the state is Archived, which is by defintion the final state
+            // TODO hs 210307, can a assignment be modified if the state is Archived, which is by definition the final state
             EntityEntry entityEntry = _assignmentRepository.Update(assignment.Map());
             _assignmentRepository.Commit();
 
@@ -112,7 +132,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var assignment = _assignmentRepository.GetSingle(id);
             if (assignment == null)
@@ -123,6 +143,10 @@ namespace MarbleCollectorApi.Controllers
             // TODO js (04.03.2021): Can an assignment be deleted if it's already in progress?
             _assignmentRepository.Delete(assignment);
             _assignmentRepository.Commit();
+
+            await _childrenNotificationHubContext.Clients.All.SendAsync("DeletedAssignment", assignment.UserId, assignment.Id);
+
+            await _parentNotificationHubContext.Clients.All.SendAsync("DeletedAssignment", assignment.ChoreId, assignment.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
 
             return Ok();
         }

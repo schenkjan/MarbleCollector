@@ -8,7 +8,7 @@ import { FigureItem } from "./FigureItem";
 import ImgMarbles from "../images/Marble.png";
 import ImgChores from "../images/Chores.png";
 import ImgRewards from "../images/Rewards.png";
-import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
+import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
 const useStyles = makeStyles({
   gridcontainer: {

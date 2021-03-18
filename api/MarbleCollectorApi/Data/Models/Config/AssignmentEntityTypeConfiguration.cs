@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MarbleCollectorApi.Data.Models.Config
 {
-    public class AssignementEntityTypeConfiguration : IEntityTypeConfiguration<Assignment>
+    public class AssignmentEntityTypeConfiguration : IEntityTypeConfiguration<Assignment>
     {
         public void Configure(EntityTypeBuilder<Assignment> builder)
         {
@@ -12,6 +12,7 @@ namespace MarbleCollectorApi.Data.Models.Config
             builder.Property(assignment => assignment.UserId).IsRequired();
             builder.Property(assignment => assignment.ChoreId).IsRequired();
             builder.Property(assignment => assignment.State).IsRequired();
+            builder.HasIndex(assignment => new {assignment.UserId, assignment.ChoreId}).IsUnique();
             baseEntityConfig.ConfigureFields(builder);
         }
     }

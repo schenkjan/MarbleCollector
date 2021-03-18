@@ -52,6 +52,9 @@
 	  <None Update="ViewModels\ts\RewardWithGrants.ts">
 	    <CustomToolNamespace>ViewModels\RewardWithGrants.cs</CustomToolNamespace>
 	  </None>
+	  <None Update="ViewModels\ts\User.ts">
+	    <CustomToolNamespace>ViewModels\User.cs</CustomToolNamespace>
+	  </None>
 	</ItemGroup>
 
 	<ItemGroup>

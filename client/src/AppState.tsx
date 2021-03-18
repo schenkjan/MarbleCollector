@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { atom, selector, useRecoilValue } from "recoil";
 import { persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
@@ -79,6 +79,17 @@ export class AppState {
   });
 
   /**
+   * Convenience selector to retrieve the current users id
+   */
+  static userId = selector<number>({
+    key: "userId",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfo);
+      return userInfo?.id ?? 0;
+    },
+  });
+
+  /**
    * Convenience selector to retrieve the current users role.
    */
   static userRole = selector<string>({
@@ -98,4 +109,22 @@ export class AppState {
       open: false,
     },
   });
+
+  /**
+   * Convenience selector to retrieve the current users family membership.
+   */
+  static family = selector<string>({
+    key: "userFamilyMembership",
+    get: ({ get }) => {
+      const userInfo = get(AppState.userInfo);
+      return userInfo?.family ?? "";
+    },
+  });
+}
+
+// TODO js (13.03.2021): Should we refactor the AppState to expose hooks instead of the AppState class and its methods?
+export function useFamilyMembership(): string {
+  const family = useRecoilValue(AppState.family);
+
+  return family;
 }
