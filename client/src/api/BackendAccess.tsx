@@ -6,8 +6,7 @@ import {
   useQueryClient,
 } from "react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { AppState, useFamilyMembership } from "../AppState";
-import { User } from "../parent/models/User";
+import { AppState } from "../AppState";
 import {
   useErrorNotification,
   useInfoNotification,
@@ -20,7 +19,9 @@ import { queryUrl } from "./models/QueryObjectUrl";
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
 // GET
-export function QueryGet(key: string, url: queryUrl): ChoreLoadingData {
+// export function QueryGet<T>(key: string, url: queryUrl): T {
+
+export function useQueryGet(key: string, url: queryUrl): ChoreLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
   const showError = useErrorNotification();
@@ -61,7 +62,9 @@ export function QueryGet(key: string, url: queryUrl): ChoreLoadingData {
 }
 
 // POST
-export function QueryPost(): UseMutationResult<
+export function useQueryPost(
+  getKey: string
+): UseMutationResult<
   AxiosResponse<QueryObject>,
   unknown,
   QueryObject,
@@ -79,7 +82,7 @@ export function QueryPost(): UseMutationResult<
       }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("parentChoreGet");
+        queryClient.invalidateQueries(getKey);
         showSuccess("chore created");
       },
     }
@@ -89,7 +92,9 @@ export function QueryPost(): UseMutationResult<
 }
 
 // PUT
-export function QueryPut(): UseMutationResult<
+export function useQueryPut(
+  getKey: string
+): UseMutationResult<
   AxiosResponse<QueryObject>,
   unknown,
   QueryObject,
@@ -97,7 +102,6 @@ export function QueryPut(): UseMutationResult<
 > {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
-  const showInfo = useInfoNotification();
   const mutation = useMutation(
     (object: QueryObject) =>
       axios.put<QueryObject>(
@@ -111,7 +115,7 @@ export function QueryPut(): UseMutationResult<
       ),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("parentChoreGet");
+        queryClient.invalidateQueries(getKey);
       },
     }
   );
@@ -120,7 +124,9 @@ export function QueryPut(): UseMutationResult<
 }
 
 // DELETE
-export function QueryDelete(): UseMutationResult<
+export function useQueryDelete(
+  getKey: string
+): UseMutationResult<
   AxiosResponse<QueryObject>,
   unknown,
   QueryObject,
@@ -141,7 +147,7 @@ export function QueryDelete(): UseMutationResult<
       ),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("parentChoreGet");
+        queryClient.invalidateQueries(getKey);
         showInfo("chore deleted");
       },
     }

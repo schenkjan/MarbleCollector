@@ -13,10 +13,7 @@ import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
-import { QueryDelete, QueryPut } from "../../api/BackendAccess";
-import { useMutation } from "react-query";
-import { useRecoilValue } from "recoil";
-import { AppState } from "../../AppState";
+import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -37,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function ChoreCard(props: Prop): JSX.Element {
   const classes = useStyles();
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [expanded, setExpanded] = useState(false);
   const [showMoreActions, setShowMoreActions] = useState(false);
   const [showMoreAnchor, setShowMoreAnchor] = useState<null | HTMLElement>(
@@ -67,8 +63,8 @@ export function ChoreCard(props: Prop): JSX.Element {
     );
   }, [props.chore.assignments]);
 
-  const deleteChoreMutation = QueryDelete();
-  const putChoreMutation = QueryPut();
+  const deleteChoreMutation = useQueryDelete("parentChoreGet");
+  const putChoreMutation = useQueryPut("parentChoreGet");
 
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
@@ -79,7 +75,6 @@ export function ChoreCard(props: Prop): JSX.Element {
   //   putChoreMutation.mutate({
   //     url: "/api/Chores/",
   //     object: props.chore,
-  //     token: bearerToken,
   //   });
   //   showInfo(`Adding child to chore '${props.chore.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
   // }
@@ -127,7 +122,6 @@ export function ChoreCard(props: Prop): JSX.Element {
     deleteChoreMutation.mutate({
       url: "/api/Chores/",
       object: props.chore,
-      token: bearerToken,
     });
     handleMoreClose();
   }
@@ -137,7 +131,6 @@ export function ChoreCard(props: Prop): JSX.Element {
     putChoreMutation.mutate({
       url: "/api/Chores/",
       object: props.chore,
-      token: bearerToken,
     });
     showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
@@ -147,7 +140,6 @@ export function ChoreCard(props: Prop): JSX.Element {
     putChoreMutation.mutate({
       url: "/api/Chores/",
       object: props.chore,
-      token: bearerToken,
     });
     showInfo("Editing due date..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
@@ -157,7 +149,6 @@ export function ChoreCard(props: Prop): JSX.Element {
     putChoreMutation.mutate({
       url: "/api/Chores/",
       object: props.chore,
-      token: bearerToken,
     });
     showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
   }

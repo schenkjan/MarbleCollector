@@ -12,9 +12,7 @@ import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { QueryGet, QueryPost } from "../../api/BackendAccess";
-import { useRecoilValue } from "recoil";
-import { AppState } from "../../AppState";
+import { useQueryGet, useQueryPost } from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useChildrenDataForUser } from "../BackendAccess";
 
@@ -36,10 +34,13 @@ export function ChoreList(): JSX.Element {
   useDashboardTitle("Ämtli Pinnwand");
   const classes = useStyles();
 
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [showDialog, setShowDialog] = useState(false);
 
-  const { data } = QueryGet("parentChoreGet", "/api/Chores/Assignments/");
+  // const { data } = useQueryGet<ChoreLoadingData>(
+  //   "parentChoreGet",
+  //   "/api/Chores/Assignments/"
+  // );
+  const { data } = useQueryGet("parentChoreGet", "/api/Chores/Assignments/");
   const chores: ChoreWithAssignments[] = data;
 
   const {
@@ -48,7 +49,7 @@ export function ChoreList(): JSX.Element {
     children,
   } = useChildrenDataForUser();
 
-  const addChoreMutation = QueryPost();
+  const addChoreMutation = useQueryPost("parentChoreGet");
 
   function handleOnCancel() {
     setShowDialog(false);
@@ -58,7 +59,6 @@ export function ChoreList(): JSX.Element {
     addChoreMutation.mutate({
       url: "/api/Chores/",
       object: choreObject,
-      token: bearerToken,
     });
     setShowDialog(false);
   }
