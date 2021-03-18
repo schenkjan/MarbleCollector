@@ -13,9 +13,6 @@ import {
 } from "@material-ui/core";
 import ImgMarbles from "../../images/Marble.png";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
-import { RewardWithGrants } from "../../model/RewardWithGrants";
-import { AssignmentState } from "../../parent/models/AssignmentState";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { ChildListItem } from "../types/ChildListItem";
 import { StepperControl } from "../types/StepperControl";
@@ -117,43 +114,6 @@ export function ChildChoreItem(props: Props) {
     props.onNextStepClick();
   }
 
-  function assignmentStateToStepper(chore: ChoreWithAssignments): number {
-    let steperState = 0;
-    switch (chore.assignments[0].state) {
-      case AssignmentState.Assigned: {
-        steperState = 0;
-        buttonText = "Start";
-        break;
-      }
-      case AssignmentState.Active: {
-        steperState = 1;
-        buttonText = "Prüfen";
-        break;
-      }
-      case AssignmentState.RequestedToCheck: {
-        steperState = 2;
-        buttonText = "Warten";
-        break;
-      }
-      case AssignmentState.CheckRefused: {
-        steperState = 1;
-        buttonText = "Prüfen";
-        break;
-      }
-      case AssignmentState.CheckConfirmed: {
-        steperState = 3;
-        buttonText = "Archiv";
-        break;
-      }
-      case AssignmentState.Archived: {
-        steperState = 4;
-        buttonText = "Fertig";
-        break;
-      }
-    }
-    return steperState;
-  }
-
   function disableButton(): boolean {
     let disable = false;
     props.stepper.disableButtonState.forEach(function (disableState) {
@@ -170,7 +130,7 @@ export function ChildChoreItem(props: Props) {
       <CardHeader
         className={classes.header}
         title={props.item.name}
-        subheader={props.item.dueDate ? "subHeader" : null}
+        subheader={props.item.dueDate ? subHeader : null}
         avatar={
           <Avatar aria-label="Chore">{props.item.name[0].toUpperCase()}</Avatar>
         }
