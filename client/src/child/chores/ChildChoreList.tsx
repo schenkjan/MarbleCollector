@@ -2,6 +2,7 @@ import { ChildChoreItem } from "./ChildChoreItem";
 import { useState } from "react";
 import {
   Box,
+  Container,
   CircularProgress,
   Paper,
   makeStyles,
@@ -20,14 +21,9 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {
+    box: {
       flex: "1 1 auto",
       padding: "1px",
-    },
-    fab: {
-      position: "absolute",
-      bottom: theme.spacing(6),
-      right: theme.spacing(2),
     },
   })
 );
@@ -102,16 +98,18 @@ export function ChildChoreList(): JSX.Element {
     ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
-    <Box className={classes.container} component={Paper}>
-      <List>
-        {chores?.map((chore) => (
-          <ChildChoreItem
-            key={chore.id}
-            chore={chore}
-            onUpdateState={updateState}
-          />
-        ))}
-      </List>
-    </Box>
+    <Container fixed>
+      <Box className={classes.box} component={Paper}>
+        <List>
+          {chores?.map((chore) => (
+            <ChildChoreItem
+              key={chore.id}
+              chore={chore}
+              onUpdateState={updateState}
+            />
+          ))}
+        </List>
+      </Box>
+    </Container>
   );
 }
