@@ -11,7 +11,7 @@ import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
-import { AddChildMenu } from "./AddChildMenu";
+import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
 import ErrorIcon from "@material-ui/icons/Error";
 

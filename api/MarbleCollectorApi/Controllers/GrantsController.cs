@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MarbleCollectorApi.Data.Mapping;
 using MarbleCollectorApi.Data.Repository;
 using MarbleCollectorApi.ViewModels;
@@ -20,12 +21,16 @@ namespace MarbleCollectorApi.Controllers
     public class GrantsController : Controller
     {
         private readonly IGrantRepository _grantRepository;
+        private readonly IRewardRepository _rewardRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IHubContext<ParentNotificationHub> _parentNotificationHubContext;
         private readonly IHubContext<ChildrenNotificationHub> _childrenNotificationHubContext;
 
-        public GrantsController(IGrantRepository grantRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
+        public GrantsController(IGrantRepository grantRepository, IRewardRepository rewardRepository, IUserRepository userRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
         {
             _grantRepository = grantRepository ?? throw new ArgumentNullException(nameof(grantRepository));
+            _rewardRepository = rewardRepository ?? throw new ArgumentNullException(nameof(rewardRepository));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _parentNotificationHubContext = parentNotificationHubContext;
             _childrenNotificationHubContext = childrenNotificationHubContext;
         }
@@ -56,9 +61,21 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<Grant> CreateGrant(Grant grant)
+        public async Task<ActionResult<Grant>> CreateGrant(Grant grant)
         {
-            var entityEntry = _grantRepository.Add(grant.Map());
+            var user = _userRepository.GetSingle(grant.UserId);
+            var reward = _rewardRepository.GetSingle(grant.RewardId);
+
+            if (user == null || reward == null)
+            {
+                return NotFound();
+            }
+
+            var grantEntity = grant.Map();
+            grantEntity.User = user;
+            grantEntity.Reward = reward;
+
+            var entityEntry = _grantRepository.Add(grantEntity);
 
             try
             {
@@ -69,7 +86,11 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest(); ;
             }
 
-            return Created("Get", entityEntry.Entity);
+            await _childrenNotificationHubContext.Clients.All.SendAsync("CreatedGrant", grant.UserId, grant.Id);
+
+            await _parentNotificationHubContext.Clients.All.SendAsync("CreatedGrant", grant.RewardId, grant.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
+
+            return Created("Get", entityEntry.Entity.Map());
         }
 
         [HttpPut("{id}")]

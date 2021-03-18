@@ -12,6 +12,7 @@ namespace MarbleCollectorApi.Data.Models.Config
             builder.Property(grant => grant.UserId).IsRequired();
             builder.Property(grant => grant.RewardId).IsRequired();
             builder.Property(grant => grant.State).IsRequired();
+            builder.HasIndex(grant => new { grant.UserId, grant.RewardId }).IsUnique();
             baseEntityConfig.ConfigureFields(builder);
         }
     }
