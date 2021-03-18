@@ -16,6 +16,7 @@ import axios from "axios";
 import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { AssignmentState } from "../../parent/models/AssignmentState";
+import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,6 +38,7 @@ export function ChildChoreList(): JSX.Element {
   const userId = useRecoilValue(AppState.userId);
   const classes = useStyles();
   const [chores, setChores] = useState<ChoreWithAssignments[]>([]);
+  useDashboardTitle("Ämtli Pinnwand");
 
   function updateState(chore: ChoreWithAssignments): void {
     setNextAssignmentState(chore);
