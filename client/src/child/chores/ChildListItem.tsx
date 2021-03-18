@@ -14,17 +14,12 @@ import {
 import ImgMarbles from "../../images/Marble.png";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
-import { RewardWithGrants } from "../../model/RewardWithGrants";
 import { AssignmentState } from "../../parent/models/AssignmentState";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { ChildListItem } from "../types/ChildListItem";
-import { StepperControl } from "../types/StepperControl";
 
-type Props = {
-  item: ChildListItem;
-  stepper: StepperControl;
-  //onNextStepClick: (id: number) => void;
-  onNextStepClick: () => void;
+type ChildChoreItemprops = {
+  chore: ChoreWithAssignments;
+  onUpdateState: (chore: ChoreWithAssignments) => void;
 };
 
 const theme = createMuiTheme({
@@ -103,24 +98,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export function ChildChoreItem(props: Props) {
+function getSteps() {
+  return ["Neu", "Aktiv", "Prüfen", "Erledigt"];
+}
+
+export function Childtem({
+  chore,
+  onUpdateState,
+}: ChildChoreItemprops): JSX.Element {
   const classes = useStyles();
+  const steps = getSteps();
   let buttonText = "Start";
 
-  const subHeader = new Date(props.item.dueDate).toLocaleDateString("de-DE", {
+  const subHeader = new Date(chore.dueDate).toLocaleDateString("de-DE", {
     weekday: "short",
     year: "2-digit",
     month: "short",
     day: "numeric",
   });
-
-  // function onNextStepClick(id: number) {
-  //   props.onNextStepClick(id);
-  // }
-
-  function onNextStepClick() {
-    props.onNextStepClick();
-  }
 
   function assignmentStateToStepper(chore: ChoreWithAssignments): number {
     let steperState = 0;
@@ -160,24 +155,23 @@ export function ChildChoreItem(props: Props) {
   }
 
   function disableButton(): boolean {
-    let disable = false;
-    props.stepper.disableButtonState.forEach(function (disableState) {
-      if (props.item.state === disableState) {
-        disable = true;
-      }
-    });
-
-    return disable;
+    if (
+      chore.assignments[0].state === AssignmentState.RequestedToCheck ||
+      chore.assignments[0].state === AssignmentState.Archived
+    ) {
+      return true;
+    }
+    return false;
   }
 
   return (
     <Card elevation={5}>
       <CardHeader
         className={classes.header}
-        title={props.item.name}
-        subheader={props.item.dueDate ? "subHeader" : null}
+        title={chore.name}
+        subheader={chore.dueDate ? "subHeader" : null}
         avatar={
-          <Avatar aria-label="Chore">{props.item.name[0].toUpperCase()}</Avatar>
+          <Avatar aria-label="Chore">{chore.name[0].toUpperCase()}</Avatar>
         }
         action={
           <ThemeProvider theme={theme}>
@@ -188,7 +182,7 @@ export function ChildChoreItem(props: Props) {
                 vertical: "bottom",
                 horizontal: "right",
               }}
-              badgeContent={props.item.value}
+              badgeContent={chore.value}
             >
               <Avatar src={ImgMarbles}></Avatar>
             </Badge>
@@ -202,23 +196,23 @@ export function ChildChoreItem(props: Props) {
           color="textSecondary"
           component="p"
         >
-          {props.item.description}
+          {chore.description}
         </Typography>
       </CardContent>
       <CardActions className={classes.actions}>
         <Stepper
           className={classes.root}
-          activeStep={props.item.state}
+          activeStep={assignmentStateToStepper(chore)}
           alternativeLabel
         >
-          {props.stepper.stepsText.map((label) => (
+          {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
         </Stepper>
         <Button
-          onClick={() => onNextStepClick(props.item.id)}
+          onClick={() => onUpdateState(chore)}
           disabled={disableButton()}
           className={classes.stepButton}
           variant="contained"

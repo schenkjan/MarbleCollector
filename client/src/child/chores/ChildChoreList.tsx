@@ -1,4 +1,7 @@
 import { ChildChoreItem } from "./ChildChoreItem";
+import { ChildListItem } from "../types/ChildListItem";
+import { StepperControl } from "../types/StepperControl";
+import { AssignmentState } from "../../parent/models/AssignmentState";
 import { useState } from "react";
 import {
   Box,
@@ -16,7 +19,6 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
-import { AssignmentState } from "../../parent/models/AssignmentState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,12 +38,12 @@ export function ChildChoreList(): JSX.Element {
   const [chores, setChores] = useState<ChoreWithAssignments[]>([]);
   useDashboardTitle("Ämtli Pinnwand");
 
-  function updateState(chore: ChoreWithAssignments): void {
-    setNextAssignmentState(chore);
+  function updateState(id: number): void {
+    setNextAssignmentState(id);
 
     //Optimisitic UI :-)
     // TODO hs (210314): Do we want an optimistic or pessimistic UI?
-    const updatedChores = chores.map((t) => (t.id !== chore.id ? t : chore));
+    const updatedChores = chores.map((t) => (t.id !== id ? t : chore));
     setChores(updatedChores);
 
     // TODO hs (210313): Implement Error handling and reset state in case of error
@@ -66,6 +68,29 @@ export function ChildChoreList(): JSX.Element {
     else {
       chore.assignments[0].state++;
     }
+  }
+
+  function choreToListItem(chore: ChoreWithAssignments): ChildListItem {
+    return {
+      id: chore.id,
+      name: chore.name,
+      description: chore.description,
+      value: chore.value,
+      dueDate: chore.dueDate,
+      state: chore.assignments[0].state,
+    };
+  }
+
+  function itemStepperControl(chore: ChoreWithAssignments): StepperControl {
+    return {
+      activeStep: chore.assignments[0].state,
+      stepsText: ["Neu", "Aktiv", "Prüfen", "Erledigt"],
+      buttonText: ["Start", "Püfen", "Warten", "Prüfen", "Archiv", "Fertig"],
+      disableButtonState: [
+        AssignmentState.RequestedToCheck,
+        AssignmentState.Archived,
+      ],
+    };
   }
 
   const { isLoading, error } = useQuery("childChoreData", () =>
@@ -101,11 +126,19 @@ export function ChildChoreList(): JSX.Element {
     <Container maxWidth="md">
       <Box className={classes.box} component={Paper}>
         <List>
-          {chores?.map((chore) => (
+          {/* {chores?.map((chore) => (
             <ChildChoreItem
               key={chore.id}
               chore={chore}
               onUpdateState={updateState}
+            />
+          ))} */}
+          {chores?.map((chore) => (
+            <ChildChoreItem
+              key={chore.id}
+              item={choreToListItem(chore)}
+              stepper={itemStepperControl(chore)}
+              onNextStepClick={updateState(chore)}
             />
           ))}
         </List>
