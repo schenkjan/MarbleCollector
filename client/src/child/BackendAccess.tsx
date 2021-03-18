@@ -2,14 +2,14 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
-import { User } from "../parent/models/User";
+import { UserProfile } from "./models/UserProfile";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
 interface ProfileData {
   isLoading: boolean;
   error: unknown;
-  profile: User | undefined;
+  profile: UserProfile | undefined;
 }
 
 export function useProfileData(userId?: number): ProfileData {
@@ -17,13 +17,16 @@ export function useProfileData(userId?: number): ProfileData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryProfileUserId = userId ? userId : userInfo?.id;
 
-  const { isLoading, error, data: profile } = useQuery("childProfile", () =>
+  const { isLoading, error, data: profile } = useQuery("userProfile", () =>
     axios
-      .get<User>(`${apiBaseUrl}/api/Users/${queryProfileUserId}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
+      .get<UserProfile>(
+        `${apiBaseUrl}/api/Users/${queryProfileUserId}/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+      )
       .then((data) => data?.data)
   );
 

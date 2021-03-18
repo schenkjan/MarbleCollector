@@ -48,6 +48,31 @@ namespace MarbleCollectorApi.Controllers
             return Ok(user);
         }
 
+        // TODO js (13.03.2021): Can all users get all users?
+        [HttpGet("{id}/profile")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<UserProfile> GetUserProfile(int id)
+        {
+            var user = _userRepository.GetSingle(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var usersForFamily = GetUsersForFamily(user.Family);
+            var userProfile = new UserProfile
+            {
+                User = user.Map(),
+                Family = usersForFamily.Select(u => u.Map()),
+                Score = new UserScore()
+            };
+
+            return Ok(userProfile);
+        }
+
         // TODO js (13.03.2021): Can all users get all families?
         [HttpGet("families")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -64,10 +89,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<User>> GetUsers(string family, [FromQuery] string role)
         {
-            var users = _userRepository.GetAll()
-                .Where(user => user.Family.Equals(family))
-                .ToArray();
-
+            var users = GetUsersForFamily(family);
             if (!string.IsNullOrEmpty(role))
             {
                 users = users.Where(user => user.Role.Equals(role)).ToArray();
@@ -79,6 +101,13 @@ namespace MarbleCollectorApi.Controllers
             }
 
             return Ok(users.Select(user => user.Map()));
+        }
+
+        protected IEnumerable<Data.Models.User> GetUsersForFamily(string family)
+        {
+            return _userRepository.GetAll()
+                .Where(user => user.Family.Equals(family))
+                .ToArray();
         }
     }
 }

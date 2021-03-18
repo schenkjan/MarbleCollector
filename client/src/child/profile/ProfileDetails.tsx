@@ -20,9 +20,9 @@ export function ProfileDetails() {
 
   return (
     <>
-      <UserProfileCard user={profile} />
-      <UserScoreCard />
-      <UserFamilyCard family={{ children: [], parents: [] }} />
+      <UserProfileCard user={profile?.user} />
+      <UserScoreCard userScore={profile?.score} />
+      <UserFamilyCard family={profile?.family ?? []} />
     </>
   );
 }

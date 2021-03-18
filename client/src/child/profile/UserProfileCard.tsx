@@ -10,7 +10,10 @@ import { CardActions, Collapse, Grid, IconButton } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import MessageIcon from "@material-ui/icons/Message";
-import { useProfileCardStyles } from "./ProfileCardStyles";
+import {
+  useProfileCardStyles,
+  getUsernameUppercase,
+} from "./ProfileCardStyles";
 
 const useStyles = makeStyles(({ transitions, spacing, palette }) => ({
   avatar: {
@@ -72,9 +75,7 @@ export function UserProfileCard(props: UserProfileCardProps) {
             </Grid>
             <Grid item xs={6}>
               <h3 className={profileCardStyles.heading}>
-                {user &&
-                  user.username.charAt(0).toUpperCase() +
-                    user.username.slice(1)}
+                {getUsernameUppercase(user?.username ?? "")}
               </h3>
               <span className={profileCardStyles.subheader}>
                 {user?.family}

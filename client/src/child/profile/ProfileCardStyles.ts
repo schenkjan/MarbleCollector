@@ -1,5 +1,12 @@
 import { makeStyles } from "@material-ui/core";
 
+export function getUsernameUppercase(username: string) {
+  if (username) {
+    return username.charAt(0).toUpperCase() + username.slice(1);
+  }
+  return username;
+}
+
 export const useProfileCardStyles = makeStyles(({ palette }) => ({
   root: {
     flexGrow: 1,

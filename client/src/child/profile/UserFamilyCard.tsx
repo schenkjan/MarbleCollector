@@ -11,9 +11,12 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { useProfileCardStyles } from "./ProfileCardStyles";
+import {
+  useProfileCardStyles,
+  getUsernameUppercase,
+} from "./ProfileCardStyles";
 import { Link } from "react-router-dom";
-import { Family } from "../models/Family";
+import { User } from "../../parent/models/User";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,62 +24,62 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "36ch",
     backgroundColor: theme.palette.background.paper,
   },
-  inline: {
-    display: "inline",
+  inline: {},
+  userName: {
+    fontWeight: "bold",
   },
+  userRole: { display: "inline" },
 }));
 
 type UserFamilyCardProps = {
-  family: Family;
+  family: User[];
 };
 
 export function UserFamilyCard(props: UserFamilyCardProps) {
+  const { family } = props;
   const classes = useStyles();
   const profileCardStyles = useProfileCardStyles();
-  const allFamilyMembers = [...props.family.parents, ...props.family.children];
 
   return (
     <>
       <Card className={profileCardStyles.card}>
-        {/* <CardHeader
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-      /> */}
         <CardContent>
           <List className={classes.root}>
-            {allFamilyMembers.map((user) => {
+            {family.map((user: User) => {
               return (
                 <>
                   <ListItem
                     alignItems="flex-start"
                     component={Link}
-                    to={`${"/app/child/profile"}/${"name"}`}
+                    to={`${"/app/child/profile"}/${user.username}`}
                   >
                     <ListItemAvatar>
-                      <Avatar
-                        alt="Remy Sharp"
-                        src="/static/images/avatar/1.jpg"
-                      />
+                      <Avatar alt={user.username} src={user.avatar} />
                     </ListItemAvatar>
                     <ListItemText
-                      primary="Brunch this weekend?"
-                      secondary={
-                        <React.Fragment>
+                      primary={
+                        <>
                           <Typography
                             component="span"
                             variant="body2"
-                            className={classes.inline}
                             color="textPrimary"
+                            className={classes.userName}
                           >
-                            Ali Connors
+                            {getUsernameUppercase(user.username)}
                           </Typography>
-                          {
-                            " — I'll be in your neighborhood doing errands this…"
-                          }
-                        </React.Fragment>
+                        </>
+                      }
+                      secondary={
+                        <>
+                          <Typography
+                            component="span"
+                            variant="body2"
+                            className={classes.userRole}
+                            color="textSecondary"
+                          >
+                            {user.role}
+                          </Typography>
+                        </>
                       }
                     />
                   </ListItem>

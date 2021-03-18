@@ -2,21 +2,20 @@ import React, { useState } from "react";
 import { Card, CardContent, Grid } from "@material-ui/core";
 import { useProfileCardStyles } from "./ProfileCardStyles";
 import ImgMarbles from "../../images/Marble.png";
-import ImgChores from "../../images/Chores.png";
-import ImgRewards from "../../images/Rewards.png";
 
 import { UserScoreCardItem } from "./UserScoreCardItem";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import RedeemIcon from "@material-ui/icons/Redeem";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
+import { UserScore } from "../models/UserScore";
 
-export function UserScoreCard() {
+type UserScoreCardProps = {
+  userScore: UserScore | undefined;
+};
+
+export function UserScoreCard(props: UserScoreCardProps) {
   const styles = useProfileCardStyles();
-  const [marbles, setMarbles] = useState(0);
-  const [chores, setChores] = useState(0);
-  const [rewards, setRewards] = useState(0);
-
+  const { userScore } = props;
   return (
     <>
       <Card className={styles.card}>
@@ -24,14 +23,14 @@ export function UserScoreCard() {
           <Grid container>
             <Grid item xs={12} sm={3}>
               <UserScoreCardItem
-                ammount={marbles}
+                ammount={userScore?.familyRank ?? 0}
                 icon={<TrendingUpIcon fontSize="large" />}
                 text="Familienranking"
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <UserScoreCardItem
-                ammount={marbles}
+                ammount={userScore?.marbleCount ?? 0}
                 picture={ImgMarbles}
                 imgDescription="marble"
                 text="Kontostand Murmeln"
@@ -39,14 +38,14 @@ export function UserScoreCard() {
             </Grid>
             <Grid item xs={12} sm={3}>
               <UserScoreCardItem
-                ammount={chores}
+                ammount={userScore?.choreCount ?? 0}
                 icon={<AssignmentIcon fontSize="large" />}
                 text="Erledigte Ämtli"
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <UserScoreCardItem
-                ammount={rewards}
+                ammount={userScore?.rewardCount ?? 0}
                 icon={<RedeemIcon fontSize="large" />}
                 text="Verdiente Belohnungen"
               />
