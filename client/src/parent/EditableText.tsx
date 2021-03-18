@@ -7,12 +7,23 @@ import {
   Theme,
   Typography,
 } from "@material-ui/core";
+import { Variant } from "@material-ui/core/styles/createTypography";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { TextField } from "./TextField";
 
 type Prop = {
   text: string;
+  textVariant?: "inherit" | Variant | undefined;
+  textColor?:
+    | "inherit"
+    | "initial"
+    | "textSecondary"
+    | "primary"
+    | "secondary"
+    | "textPrimary"
+    | "error"
+    | undefined;
   editLabel: string;
   validationSchema: any;
   onTextChanged?: (newText: string) => void;
@@ -22,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     form: {
       padding: theme.spacing(2),
+    },
+    text: {
+      textAlign: "left",
     },
   })
 );
@@ -80,7 +94,13 @@ export function EditableText(props: Prop): JSX.Element {
 
   return (
     <Box onClick={handleOnClick}>
-      <Typography variant="body2">{text}</Typography>
+      <Typography
+        variant={props.textVariant ?? "body2"}
+        color={props.textColor ?? "initial"}
+        className={classes.text}
+      >
+        {text}
+      </Typography>
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}

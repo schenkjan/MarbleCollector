@@ -1,5 +1,5 @@
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
-import { Card, Typography } from "@material-ui/core";
+import { Card } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { AssignmentState } from "../models/AssignmentState";
@@ -25,9 +25,6 @@ type Prop = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    description: {
-      textAlign: "left",
-    },
     cardContent: {
       paddingTop: "0px",
       paddingBottom: "8px",
@@ -155,18 +152,36 @@ export function ChoreCard(props: Prop): JSX.Element {
     showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
+  function handleDescriptionEdit(description: string) {
+    console.log("Editing description...");
+    var updatedChore = produce(
+      props.chore,
+      (draftChore: ChoreWithAssignments) => {
+        draftChore.description = description;
+      }
+    );
+
+    putChoreMutation.mutate({
+      url: "/api/Chores/",
+      object: updatedChore,
+    });
+    console.log("Description edited.");
+    showInfo("Description edited."); // TODO js (11.03.2021): Replace dummy implementation.
+  }
+
   function getDescription() {
     if (!props.chore.description) return;
 
     return (
-      <Typography
-        className={classes.description}
-        variant="body2"
-        color="textSecondary"
-        component="p"
-      >
-        {props.chore.description}
-      </Typography>
+      <EditableText
+        text={props.chore.description}
+        textColor="textSecondary"
+        editLabel="Beschreibung des Ämtlis"
+        validationSchema={Yup.object({
+          text: Yup.string().max(250, "Maximum 250 Zeichen"),
+        })}
+        onTextChanged={handleDescriptionEdit}
+      />
     );
   }
 
