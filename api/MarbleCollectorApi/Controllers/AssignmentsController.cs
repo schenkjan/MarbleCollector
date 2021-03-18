@@ -108,7 +108,7 @@ namespace MarbleCollectorApi.Controllers
 
             var stateChanged = CheckHasStateChanged(assignment.State, id);
 
-            // TODO hs 210307, can a assignment be modified if the state is Archived, which is by defintion the final state
+            // TODO hs 210307, can a assignment be modified if the state is Archived, which is by definition the final state
             EntityEntry entityEntry = _assignmentRepository.Update(assignment.Map());
             _assignmentRepository.Commit();
 
