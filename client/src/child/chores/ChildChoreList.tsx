@@ -21,6 +21,9 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    container: {
+      padding: "0px",
+    },
     box: {
       flex: "1 1 auto",
       padding: "1px",
@@ -98,7 +101,7 @@ export function ChildChoreList(): JSX.Element {
     ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
-    <Container fixed>
+    <Container fixed className={classes.container}>
       <Box className={classes.box} component={Paper}>
         <List>
           {chores?.map((chore) => (
