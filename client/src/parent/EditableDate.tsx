@@ -9,11 +9,14 @@ import {
 } from "@material-ui/core";
 import { Variant } from "@material-ui/core/styles/createTypography";
 import { Field, Form, Formik } from "formik";
+import { DatePicker } from "formik-material-ui-pickers";
 import { useEffect, useState } from "react";
-import { TextField } from "./TextField";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import { de } from "date-fns/locale";
 
 type Prop = {
-  text: string;
+  date: Date;
   textVariant?: "inherit" | Variant | undefined;
   textColor?:
     | "inherit"
@@ -26,7 +29,7 @@ type Prop = {
     | undefined;
   editLabel: string;
   validationSchema: any;
-  onTextChanged?: (newText: string) => void;
+  onDateChanged?: (newDate: Date) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,14 +43,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export function EditableText(props: Prop): JSX.Element {
+export function EditableDate(props: Prop): JSX.Element {
   const classes = useStyles();
-  const [text, setText] = useState("");
+  const [date, setDate] = useState(new Date(Date.now()));
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    setText(props.text);
-  }, [props.text]);
+    setDate(props.date);
+  }, [props.date]);
 
   function handleOnClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
@@ -57,36 +60,38 @@ export function EditableText(props: Prop): JSX.Element {
     setAnchorEl(null);
   }
 
-  function handleSubmit(value: string) {
-    setText(value);
+  function handleSubmit(value: Date) {
+    setDate(value);
     handleClose();
-    props.onTextChanged && props.onTextChanged(value);
+    props.onDateChanged && props.onDateChanged(value);
   }
 
   function getForm(): JSX.Element {
     return (
       <Formik
-        initialValues={{ text: text }}
+        initialValues={{ date: date }}
         validationSchema={props.validationSchema}
-        onSubmit={(values) => handleSubmit(values.text)}
+        onSubmit={(values) => handleSubmit(values.date)}
         onReset={handleClose}
       >
-        <Form className={classes.form}>
-          <Box display="flex" flexDirection="column">
-            <Field
-              component={TextField}
-              name="text"
-              type="text"
-              label={props.editLabel}
-            />
-            <Button type="submit" variant="contained" color="primary">
-              Speichern
-            </Button>
-            <Button type="reset" variant="outlined" color="primary">
-              Abbruch
-            </Button>
-          </Box>
-        </Form>
+        <MuiPickersUtilsProvider locale={de} utils={DateFnsUtils}>
+          <Form className={classes.form}>
+            <Box display="flex" flexDirection="column">
+              <Field
+                component={DatePicker}
+                name="date"
+                label={props.editLabel}
+                format="dd.MMMM yy"
+              />
+              <Button type="submit" variant="contained" color="primary">
+                Speichern
+              </Button>
+              <Button type="reset" variant="outlined" color="primary">
+                Abbruch
+              </Button>
+            </Box>
+          </Form>
+        </MuiPickersUtilsProvider>
       </Formik>
     );
   }
@@ -98,7 +103,12 @@ export function EditableText(props: Prop): JSX.Element {
         color={props.textColor ?? "initial"}
         className={classes.text}
       >
-        {text ? text : "Nicht definiert. Text mit Klick hinzufügen."}
+        {new Date(date).toLocaleDateString("de-DE", {
+          weekday: "short",
+          year: "2-digit",
+          month: "short",
+          day: "numeric",
+        })}
       </Typography>
       <Popover
         open={Boolean(anchorEl)}

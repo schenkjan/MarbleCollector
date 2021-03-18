@@ -17,6 +17,7 @@ import { EditableText } from "../EditableText";
 import * as Yup from "yup";
 import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
 import produce from "immer";
+import { EditableDate } from "../EditableDate";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -31,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
+const yesterday = new Date(Date.now());
+yesterday.setDate(yesterday.getDate() - 1);
 
 export function ChoreCard(props: Prop): JSX.Element {
   const classes = useStyles();
@@ -134,13 +138,20 @@ export function ChoreCard(props: Prop): JSX.Element {
     showInfo("Title edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
-  function handleDueDateEdit() {
+  function handleDueDateEdit(date: Date) {
     console.log("Editing due date...");
+    var updatedChore = produce(
+      props.chore,
+      (draftChore: ChoreWithAssignments) => {
+        draftChore.dueDate = date;
+      }
+    );
+
     putChoreMutation.mutate({
       url: "/api/Chores/",
-      object: props.chore,
+      object: updatedChore,
     });
-    showInfo("Editing due date..."); // TODO js (11.03.2021): Replace dummy implementation.
+    showInfo("Due date edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleValueEdit() {
@@ -193,20 +204,16 @@ export function ChoreCard(props: Prop): JSX.Element {
           />
         }
         subtitleComponent={
-          <EditableText
-            text={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
-              weekday: "short",
-              year: "2-digit",
-              month: "short",
-              day: "numeric",
-            })}
+          <EditableDate
+            date={props.chore.dueDate}
             editLabel="Ablaufdatum"
             validationSchema={Yup.object({
-              text: Yup.string()
-                .required("Bitte definieren")
-                .max(50, "Maximum 50 Zeichen"),
+              date: Yup.date().min(
+                yesterday,
+                "Ausgewählter Tag liegt in der Vergangenheit"
+              ),
             })}
-            onTextChanged={handleDueDateEdit}
+            onDateChanged={handleDueDateEdit}
           />
         }
         rightAvatarLabel={props.chore.value.toString()}
