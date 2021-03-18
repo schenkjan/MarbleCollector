@@ -1,5 +1,12 @@
 import { RewardWithGrants } from "../models/RewardWithGrants";
-import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Card,
+  CircularProgress,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { GrantState } from "../models/GrantState";
@@ -30,6 +37,9 @@ const useStyles = makeStyles((theme: Theme) =>
     cardContent: {
       paddingTop: "0px",
       paddingBottom: "8px",
+    },
+    avatar: {
+      backgroundColor: theme.palette.primary.main,
     },
   })
 );
@@ -157,13 +167,20 @@ export function RewardCard(props: Prop): JSX.Element {
   return (
     <Card elevation={5}>
       <BiAvatarCardHeader
-        leftAvatarLabel={props.reward.grants.length.toString()}
-        leftAvatarNotifications={
-          props.reward.grants.filter(
-            (grant) => grant.state === GrantState.Requested
-          ).length
+        leftAvatarComponent={
+          <Badge
+            badgeContent={
+              props.reward.grants.filter(
+                (grant) => grant.state === GrantState.Requested
+              ).length
+            }
+            color="secondary"
+          >
+            <Avatar className={classes.avatar} onClick={handleExpandClick}>
+              {props.reward.grants.length.toString()}
+            </Avatar>
+          </Badge>
         }
-        onLeftAvatarClick={handleExpandClick}
         titleComponent={
           <EditableText
             text={props.reward.name}

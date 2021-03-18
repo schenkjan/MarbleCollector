@@ -1,5 +1,5 @@
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
-import { Card } from "@material-ui/core";
+import { Avatar, Badge, Card } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { AssignmentState } from "../models/AssignmentState";
@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
     cardContent: {
       paddingTop: "0px",
       paddingBottom: "8px",
+    },
+    avatar: {
+      backgroundColor: theme.palette.primary.main,
     },
   })
 );
@@ -183,14 +186,21 @@ export function ChoreCard(props: Prop): JSX.Element {
   return (
     <Card elevation={5}>
       <BiAvatarCardHeader
-        leftAvatarLabel={props.chore.assignments.length.toString()}
-        leftAvatarNotifications={
-          props.chore.assignments.filter(
-            (assignment) =>
-              assignment.state === AssignmentState.RequestedToCheck
-          ).length
+        leftAvatarComponent={
+          <Badge
+            badgeContent={
+              props.chore.assignments.filter(
+                (assignment) =>
+                  assignment.state === AssignmentState.RequestedToCheck
+              ).length
+            }
+            color="secondary"
+          >
+            <Avatar className={classes.avatar} onClick={handleExpandClick}>
+              {props.chore.assignments.length.toString()}
+            </Avatar>
+          </Badge>
         }
-        onLeftAvatarClick={handleExpandClick}
         titleComponent={
           <EditableText
             text={props.chore.name}

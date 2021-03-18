@@ -3,9 +3,7 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { MouseEventHandler } from "react";
 
 type Prop = {
-  leftAvatarLabel: string;
-  leftAvatarNotifications: number;
-  onLeftAvatarClick?: MouseEventHandler<HTMLDivElement>;
+  leftAvatarComponent: JSX.Element;
   rightAvatarLabel: string;
   rightAvatarNotifications: number;
   onRightAvatarClick?: MouseEventHandler<HTMLDivElement>;
@@ -30,13 +28,7 @@ export function BiAvatarCardHeader(props: Prop): JSX.Element {
   return (
     <CardHeader
       className={classes.header}
-      avatar={
-        <Badge badgeContent={props.leftAvatarNotifications} color="secondary">
-          <Avatar className={classes.avatar} onClick={props.onLeftAvatarClick}>
-            {props.leftAvatarLabel}
-          </Avatar>
-        </Badge>
-      }
+      avatar={props.leftAvatarComponent}
       title={props.titleComponent}
       action={
         <Badge
