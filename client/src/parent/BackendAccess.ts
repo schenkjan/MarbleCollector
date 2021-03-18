@@ -10,6 +10,7 @@ import { AppState, useFamilyMembership } from "../AppState";
 import { Assignment } from "./models/Assignment";
 import { AssignmentForCreate } from "./models/AssignmentForCreate";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
+import { GrantForCreate } from "./models/GrantForCreate";
 import { RewardWithGrants } from "./models/RewardWithGrants";
 import { User } from "./models/User";
 
@@ -138,6 +139,31 @@ export function useParentRewardData(): RewardLoadingData {
   );
 
   return { isLoading: isLoading, error: error, rewards: rewards ?? [] };
+}
+
+export function useAddGrant(): UseMutationResult<
+  AxiosResponse<GrantForCreate>,
+  unknown,
+  GrantForCreate,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (assignment: GrantForCreate) =>
+      axios.post<GrantForCreate>(`${apiBaseUrl}/api/Grants`, assignment, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("parentRewardData");
+      },
+    }
+  );
+
+  return mutation;
 }
 
 interface ChildrenLoadingData {

@@ -5,7 +5,7 @@ import {
   MenuItem,
   Typography,
 } from "@material-ui/core";
-import { User } from "../models/User";
+import { User } from "./models/User";
 import AddIcon from "@material-ui/icons/Add";
 
 type Prop = {

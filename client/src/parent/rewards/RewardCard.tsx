@@ -1,7 +1,7 @@
 import { RewardWithGrants } from "../models/RewardWithGrants";
-import { Card, Typography } from "@material-ui/core";
+import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GrantState } from "../models/GrantState";
 import { GrantList } from "./GrantList";
 import { MoreOptionsMenu } from "../MoreOptionsMenu";
@@ -11,6 +11,9 @@ import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { AddChildMenu } from "../AddChildMenu";
+import { useAddGrant } from "../BackendAccess";
+import ErrorIcon from "@material-ui/icons/Error";
 
 type Prop = {
   reward: RewardWithGrants;
@@ -36,21 +39,48 @@ export function RewardCard(props: Prop): JSX.Element {
   const [showMoreAnchor, setShowMoreAnchor] = useState<null | HTMLElement>(
     null
   );
+  const [showAddChild, setShowAddChild] = useState(false);
+  const [
+    showAddChildAnchor,
+    setShowAddChildAnchor,
+  ] = useState<null | HTMLElement>(null);
   const showInfo = useInfoNotification();
-  const [allChildrenAssigned] = useState(
-    props.reward.grants.length === props.children.length
-  );
-  const [cardLocked] = useState(
-    props.reward.grants.filter((grant) => grant.state !== GrantState.Assigned)
-      .length > 0
-  );
+  const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
+  const [cardLocked, setCardLocked] = useState(true);
+  const addGrantMutation = useAddGrant();
+
+  useEffect(() => {
+    setAllChildrenAssigned(
+      props.reward.grants.length === props.children.length
+    );
+  }, [props.children.length, props.reward.grants.length]);
+
+  useEffect(() => {
+    setCardLocked(
+      props.reward.grants.filter((grant) => grant.state !== GrantState.Assigned)
+        .length > 0
+    );
+  }, [props.reward.grants]);
 
   function handleExpandClick() {
     setExpanded(!expanded);
   }
 
-  function handleAddChildClick() {
-    showInfo(`Adding child to reward '${props.reward.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+  function handleAddChildClick(event: React.MouseEvent<HTMLButtonElement>) {
+    setShowAddChildAnchor(event.currentTarget);
+    setShowAddChild(true);
+  }
+
+  function handleSelectedChild(id: number): void {
+    setShowAddChildAnchor(null);
+    setShowAddChild(false);
+
+    addGrantMutation.mutate({ rewardId: props.reward.id, userId: id });
+  }
+
+  function handleAddChildClose(): void {
+    setShowAddChildAnchor(null);
+    setShowAddChild(false);
   }
 
   function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -106,6 +136,22 @@ export function RewardCard(props: Prop): JSX.Element {
     );
   }
 
+  if (addGrantMutation.isLoading)
+    return (
+      <Box>
+        <p>In progress...</p>
+        <CircularProgress />
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+
+  if (addGrantMutation.isError)
+    return (
+      <Box>
+        <ErrorIcon color="secondary" fontSize="large" />
+        <p>{`An error has occurred: ${addGrantMutation.error}`}</p>
+      </Box>
+    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
+
   return (
     <Card elevation={5}>
       <BiAvatarCardHeader
@@ -159,6 +205,16 @@ export function RewardCard(props: Prop): JSX.Element {
         deleteLabel={"Belohnung löschen"}
         onDelete={handleDelete}
         disableDelete={cardLocked}
+      />
+      <AddChildMenu
+        open={showAddChild}
+        anchorEl={showAddChildAnchor}
+        onClose={handleAddChildClose}
+        children={props.children.filter(
+          (child) =>
+            !props.reward.grants.some((grant) => grant.userId === child.id)
+        )}
+        onChildSelected={handleSelectedChild}
       />
     </Card>
   );
