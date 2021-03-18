@@ -3,6 +3,7 @@ import { persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 import { SnackState } from "./shell/models/SnackState";
+import { PortalOverlayState } from "./shell/models/PortalOverlayState";
 
 /**
  * Class holding the global app state with static properties.
@@ -96,6 +97,16 @@ export class AppState {
     get: ({ get }) => {
       const userInfo = get(AppState.userInfo);
       return userInfo?.role ?? "";
+    },
+  });
+
+  /**
+   * Holding the currently State of react-query requests.
+   */
+  static queryStateInfo = atom<PortalOverlayState>({
+    key: "queryStateInfo",
+    default: {
+      open: false,
     },
   });
 

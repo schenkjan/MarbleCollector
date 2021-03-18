@@ -13,7 +13,7 @@ import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
-import ErrorIcon from "@material-ui/icons/Error";
+import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -63,9 +63,21 @@ export function ChoreCard(props: Prop): JSX.Element {
     );
   }, [props.chore.assignments]);
 
+  const deleteChoreMutation = useQueryDelete("parentChoreGet");
+  const putChoreMutation = useQueryPut("parentChoreGet");
+
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
   }
+
+  // function handleAddChildClick() {
+  //   console.log("Adding child");
+  //   putChoreMutation.mutate({
+  //     url: "/api/Chores/",
+  //     object: props.chore,
+  //   });
+  //   showInfo(`Adding child to chore '${props.chore.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
+  // }
 
   function handleAddChildClick(event: React.MouseEvent<HTMLButtonElement>) {
     setShowAddChildAnchor(event.currentTarget);
@@ -107,23 +119,37 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleDelete() {
     console.log("Deleting...");
-    showInfo("Deleting..."); // TODO js (11.03.2021): Replace dummy implementation.
-
+    deleteChoreMutation.mutate({
+      url: "/api/Chores/",
+      object: props.chore,
+    });
     handleMoreClose();
   }
 
   function handleTitleEdit() {
     console.log("Editing title...");
+    putChoreMutation.mutate({
+      url: "/api/Chores/",
+      object: props.chore,
+    });
     showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleDueDateEdit() {
     console.log("Editing due date...");
+    putChoreMutation.mutate({
+      url: "/api/Chores/",
+      object: props.chore,
+    });
     showInfo("Editing due date..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleValueEdit() {
     console.log("Editing amount of marbles...");
+    putChoreMutation.mutate({
+      url: "/api/Chores/",
+      object: props.chore,
+    });
     showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
@@ -141,22 +167,6 @@ export function ChoreCard(props: Prop): JSX.Element {
       </Typography>
     );
   }
-
-  if (addAssignmentMutation.isLoading)
-    return (
-      <Box>
-        <p>In progress...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
-
-  if (addAssignmentMutation.isError)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${addAssignmentMutation.error}`}</p>
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Card elevation={5}>
