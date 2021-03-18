@@ -1,7 +1,6 @@
 import { Avatar, Badge, CardHeader } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { MouseEventHandler } from "react";
-import { EditableText } from "./EditableText";
 
 type Prop = {
   leftAvatarLabel: string;
@@ -10,10 +9,8 @@ type Prop = {
   rightAvatarLabel: string;
   rightAvatarNotifications: number;
   onRightAvatarClick?: MouseEventHandler<HTMLDivElement>;
-  title: string;
-  onTitleChanged?: (newText: string) => void;
-  subtitle?: string;
-  onSubtitleChanged?: (newText: string) => void;
+  titleComponent: JSX.Element;
+  subtitleComponent?: JSX.Element;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,9 +37,7 @@ export function BiAvatarCardHeader(props: Prop): JSX.Element {
           </Avatar>
         </Badge>
       }
-      title={
-        <EditableText text={props.title} onTextChanged={props.onTitleChanged} />
-      }
+      title={props.titleComponent}
       action={
         <Badge
           badgeContent={props.rightAvatarNotifications}
@@ -57,14 +52,7 @@ export function BiAvatarCardHeader(props: Prop): JSX.Element {
           </Avatar>
         </Badge>
       }
-      subheader={
-        props.subtitle ? (
-          <EditableText
-            text={props.subtitle}
-            onTextChanged={props.onSubtitleChanged}
-          />
-        ) : null
-      }
+      subheader={props.subtitleComponent ? props.subtitleComponent : null}
     />
   );
 }

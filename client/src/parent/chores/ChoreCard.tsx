@@ -1,7 +1,7 @@
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AssignmentState } from "../models/AssignmentState";
 import { AssignmentList } from "./AssignmentList";
 import { MoreOptionsMenu } from "../MoreOptionsMenu";
@@ -14,6 +14,8 @@ import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
 import ErrorIcon from "@material-ui/icons/Error";
+import { EditableText } from "../EditableText";
+import * as Yup from "yup";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -169,13 +171,35 @@ export function ChoreCard(props: Prop): JSX.Element {
           ).length
         }
         onLeftAvatarClick={handleExpandClick}
-        title={props.chore.name}
-        subtitle={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
-          weekday: "short",
-          year: "2-digit",
-          month: "short",
-          day: "numeric",
-        })}
+        titleComponent={
+          <EditableText
+            text={props.chore.name}
+            editLabel="Bezeichnung des Ämtlis"
+            validationSchema={Yup.object({
+              text: Yup.string()
+                .required("Bitte definieren")
+                .max(50, "Maximum 50 Zeichen"),
+            })}
+            onTextChanged={handleTitleEdit}
+          />
+        }
+        subtitleComponent={
+          <EditableText
+            text={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
+              weekday: "short",
+              year: "2-digit",
+              month: "short",
+              day: "numeric",
+            })}
+            editLabel="Ablaufdatum"
+            validationSchema={Yup.object({
+              text: Yup.string()
+                .required("Bitte definieren")
+                .max(50, "Maximum 50 Zeichen"),
+            })}
+            onTextChanged={handleDueDateEdit}
+          />
+        }
         rightAvatarLabel={props.chore.value.toString()}
         rightAvatarNotifications={
           props.chore.assignments.filter(
@@ -185,8 +209,6 @@ export function ChoreCard(props: Prop): JSX.Element {
           ).length
         }
         onRightAvatarClick={handleValueEdit}
-        onTitleChanged={handleTitleEdit}
-        onSubtitleChanged={handleDueDateEdit}
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"

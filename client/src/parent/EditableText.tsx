@@ -9,11 +9,12 @@ import {
 } from "@material-ui/core";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import * as Yup from "yup";
 import { TextField } from "./TextField";
 
 type Prop = {
   text: string;
+  editLabel: string;
+  validationSchema: any;
   onTextChanged?: (newText: string) => void;
 };
 
@@ -52,11 +53,7 @@ export function EditableText(props: Prop): JSX.Element {
     return (
       <Formik
         initialValues={{ text: text }}
-        validationSchema={Yup.object({
-          text: Yup.string()
-            .required("Bitte definieren") // TODO js (17.03.2021): Use parameter.
-            .max(50, "Maximum 50 Zeichen"), // TODO js (17.03.2021): Use parameter.
-        })}
+        validationSchema={props.validationSchema}
         onSubmit={(values) => handleSubmit(values.text)}
         onReset={handleClose}
       >
@@ -66,7 +63,7 @@ export function EditableText(props: Prop): JSX.Element {
               component={TextField}
               name="text"
               type="text"
-              label="Label"
+              label={props.editLabel}
             />
             <ErrorMessage name="text" />
             <Button type="submit" variant="contained" color="primary">

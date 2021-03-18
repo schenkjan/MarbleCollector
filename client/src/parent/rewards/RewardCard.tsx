@@ -1,7 +1,7 @@
 import { RewardWithGrants } from "../models/RewardWithGrants";
 import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GrantState } from "../models/GrantState";
 import { GrantList } from "./GrantList";
 import { MoreOptionsMenu } from "../MoreOptionsMenu";
@@ -14,6 +14,8 @@ import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddGrant } from "../BackendAccess";
 import ErrorIcon from "@material-ui/icons/Error";
+import { EditableText } from "../EditableText";
+import * as Yup from "yup";
 
 type Prop = {
   reward: RewardWithGrants;
@@ -162,7 +164,18 @@ export function RewardCard(props: Prop): JSX.Element {
           ).length
         }
         onLeftAvatarClick={handleExpandClick}
-        title={props.reward.name}
+        titleComponent={
+          <EditableText
+            text={props.reward.name}
+            editLabel="Bezeichnung der Belohnung"
+            validationSchema={Yup.object({
+              text: Yup.string()
+                .required("Bitte definieren") // TODO js (17.03.2021): Use parameter.
+                .max(50, "Maximum 50 Zeichen"), // TODO js (17.03.2021): Use parameter.
+            })}
+            onTextChanged={handleTitleEdit}
+          />
+        }
         rightAvatarLabel={props.reward.value.toString()}
         rightAvatarNotifications={
           props.reward.grants.filter(
@@ -172,7 +185,6 @@ export function RewardCard(props: Prop): JSX.Element {
           ).length
         }
         onRightAvatarClick={handleValueEdit}
-        onTitleChanged={handleTitleEdit}
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"
