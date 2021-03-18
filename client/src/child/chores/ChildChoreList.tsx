@@ -39,8 +39,11 @@ export function ChildChoreList(): JSX.Element {
   useDashboardTitle("Ämtli Pinnwand");
 
   function updateState(id: number): void {
-    setNextAssignmentState(id);
+    const chore: ChoreWithAssignments | any = chores.find(
+      (chore) => chore.id === id
+    );
 
+    setNextAssignmentState(chore);
     //Optimisitic UI :-)
     // TODO hs (210314): Do we want an optimistic or pessimistic UI?
     const updatedChores = chores.map((t) => (t.id !== id ? t : chore));
@@ -60,7 +63,7 @@ export function ChildChoreList(): JSX.Element {
       .then((data) => console.log("update succesfull: ", data?.data));
   }
 
-  function setNextAssignmentState(chore: ChoreWithAssignments) {
+  function setNextAssignmentState(chore: ChoreWithAssignments | any) {
     if (chore.assignments[0].state === AssignmentState.CheckConfirmed) {
       chore.assignments[0].state = chore.assignments[0].state + 2;
     } else if (chore.assignments[0].state === AssignmentState.CheckRefused)
@@ -138,7 +141,7 @@ export function ChildChoreList(): JSX.Element {
               key={chore.id}
               item={choreToListItem(chore)}
               stepper={itemStepperControl(chore)}
-              onNextStepClick={updateState(chore)}
+              onNextStepClick={() => updateState(chore.id)}
             />
           ))}
         </List>

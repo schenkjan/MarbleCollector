@@ -23,7 +23,6 @@ import { StepperControl } from "../types/StepperControl";
 type Props = {
   item: ChildListItem;
   stepper: StepperControl;
-  //onNextStepClick: (id: number) => void;
   onNextStepClick: () => void;
 };
 
@@ -113,10 +112,6 @@ export function ChildChoreItem(props: Props) {
     month: "short",
     day: "numeric",
   });
-
-  // function onNextStepClick(id: number) {
-  //   props.onNextStepClick(id);
-  // }
 
   function onNextStepClick() {
     props.onNextStepClick();
@@ -218,7 +213,7 @@ export function ChildChoreItem(props: Props) {
           ))}
         </Stepper>
         <Button
-          onClick={() => onNextStepClick(props.item.id)}
+          onClick={() => onNextStepClick()}
           disabled={disableButton()}
           className={classes.stepButton}
           variant="contained"
