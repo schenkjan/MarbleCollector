@@ -1,6 +1,5 @@
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
-import { loadChores } from "../../api/BackendAccess";
 import { useState, useEffect } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import Grid from "@material-ui/core/Grid";
@@ -47,12 +46,6 @@ export function FiguresOverview() {
   const hubTestUrl = `${apiBaseUrl}/hubs/children`;
 
   useEffect(() => {
-    loadChores().then(function (response) {
-      setMarbles(response.data.length);
-      setChores(response.data.length + 1);
-      setRewards(response.data.length + 2);
-    });
-
     const createHubConnection = async () => {
       if (hubConnection == null) {
         console.log("SignalR >>> Connecting", hubTestUrl);
