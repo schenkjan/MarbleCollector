@@ -18,6 +18,7 @@ import { ChildListItem } from "./types/ChildListItem";
 import { StepperControl } from "./types/StepperControl";
 
 type Props = {
+  showBadge: number;
   item: ChildListItem;
   stepper: StepperControl;
   onNextStepClick: () => void;
@@ -131,7 +132,19 @@ export function ListItemComponent(props: Props) {
         title={props.item.name}
         subheader={props.item.dueDate ? subHeader : null}
         avatar={
-          <Avatar aria-label="Chore">{props.item.name[0].toUpperCase()}</Avatar>
+          <Badge
+            variant="dot"
+            badgeContent={props.showBadge}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            color="secondary"
+          >
+            <Avatar aria-label="Chore">
+              {props.item.name[0].toUpperCase()}
+            </Avatar>
+          </Badge>
         }
         action={
           <ThemeProvider theme={theme}>

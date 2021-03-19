@@ -141,6 +141,8 @@ export function ChildChoreList(): JSX.Element {
           {chores?.map((chore) => (
             <ListItemComponent
               key={chore.id}
+              // TODO hs (210319): Add show badge function
+              showBadge={0}
               item={mapToListItem(chore)}
               stepper={itemStepperControl(chore)}
               onNextStepClick={() => updateState(chore.id)}
