@@ -1,4 +1,4 @@
-import { ChildChoreItem } from "./ChildChoreItem";
+import { ListItemComponent } from "../ListItemComponent";
 import { ChildListItem } from "../types/ChildListItem";
 import { StepperControl } from "../types/StepperControl";
 import { AssignmentState } from "../../parent/models/AssignmentState";
@@ -73,7 +73,7 @@ export function ChildChoreList(): JSX.Element {
     }
   }
 
-  function choreToListItem(chore: ChoreWithAssignments): ChildListItem {
+  function mapToListItem(chore: ChoreWithAssignments): ChildListItem {
     return {
       id: chore.id,
       name: chore.name,
@@ -85,10 +85,19 @@ export function ChildChoreList(): JSX.Element {
   }
 
   function itemStepperControl(chore: ChoreWithAssignments): StepperControl {
+    let activeStep = 0;
+    if (chore.assignments[0].state === AssignmentState.CheckRefused) {
+      activeStep = 1;
+    } else if (chore.assignments[0].state === AssignmentState.Archived) {
+      activeStep = 4;
+    } else {
+      activeStep = chore.assignments[0].state;
+    }
+
     return {
-      activeStep: chore.assignments[0].state,
+      activeStep: activeStep,
       stepsText: ["Neu", "Aktiv", "Prüfen", "Erledigt"],
-      buttonText: ["Start", "Püfen", "Warten", "Prüfen", "Archiv", "Fertig"],
+      buttonText: ["Start", "Prüfen", "Warten", "Murmel", "Prüfen", "Fertig"],
       disableButtonState: [
         AssignmentState.RequestedToCheck,
         AssignmentState.Archived,
@@ -129,17 +138,10 @@ export function ChildChoreList(): JSX.Element {
     <Container maxWidth="md">
       <Box className={classes.box} component={Paper}>
         <List>
-          {/* {chores?.map((chore) => (
-            <ChildChoreItem
-              key={chore.id}
-              chore={chore}
-              onUpdateState={updateState}
-            />
-          ))} */}
           {chores?.map((chore) => (
-            <ChildChoreItem
+            <ListItemComponent
               key={chore.id}
-              item={choreToListItem(chore)}
+              item={mapToListItem(chore)}
               stepper={itemStepperControl(chore)}
               onNextStepClick={() => updateState(chore.id)}
             />

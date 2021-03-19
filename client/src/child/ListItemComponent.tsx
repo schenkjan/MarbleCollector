@@ -11,15 +11,16 @@ import {
   StepLabel,
   Button,
 } from "@material-ui/core";
-import ImgMarbles from "../../images/Marble.png";
+import ImgMarbles from "../images/Marble.png";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
-import { AssignmentState } from "../../parent/models/AssignmentState";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { ChildListItem } from "./types/ChildListItem";
+import { StepperControl } from "./types/StepperControl";
 
-type ChildChoreItemprops = {
-  chore: ChoreWithAssignments;
-  onUpdateState: (chore: ChoreWithAssignments) => void;
+type Props = {
+  item: ChildListItem;
+  stepper: StepperControl;
+  onNextStepClick: () => void;
 };
 
 const theme = createMuiTheme({
@@ -98,80 +99,39 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function getSteps() {
-  return ["Neu", "Aktiv", "Prüfen", "Erledigt"];
-}
-
-export function Childtem({
-  chore,
-  onUpdateState,
-}: ChildChoreItemprops): JSX.Element {
+export function ListItemComponent(props: Props) {
   const classes = useStyles();
-  const steps = getSteps();
-  let buttonText = "Start";
 
-  const subHeader = new Date(chore.dueDate).toLocaleDateString("de-DE", {
+  const subHeader = new Date(props.item.dueDate).toLocaleDateString("de-DE", {
     weekday: "short",
     year: "2-digit",
     month: "short",
     day: "numeric",
   });
 
-  function assignmentStateToStepper(chore: ChoreWithAssignments): number {
-    let steperState = 0;
-    switch (chore.assignments[0].state) {
-      case AssignmentState.Assigned: {
-        steperState = 0;
-        buttonText = "Start";
-        break;
-      }
-      case AssignmentState.Active: {
-        steperState = 1;
-        buttonText = "Prüfen";
-        break;
-      }
-      case AssignmentState.RequestedToCheck: {
-        steperState = 2;
-        buttonText = "Warten";
-        break;
-      }
-      case AssignmentState.CheckRefused: {
-        steperState = 1;
-        buttonText = "Prüfen";
-        break;
-      }
-      case AssignmentState.CheckConfirmed: {
-        steperState = 3;
-        buttonText = "Archiv";
-        break;
-      }
-      case AssignmentState.Archived: {
-        steperState = 4;
-        buttonText = "Fertig";
-        break;
-      }
-    }
-    return steperState;
+  function onNextStepClick() {
+    props.onNextStepClick();
   }
 
   function disableButton(): boolean {
-    if (
-      chore.assignments[0].state === AssignmentState.RequestedToCheck ||
-      chore.assignments[0].state === AssignmentState.Archived
-    ) {
-      return true;
-    }
-    return false;
+    let disable = false;
+    props.stepper.disableButtonState.forEach(function (disableState) {
+      if (props.item.state === disableState) {
+        disable = true;
+      }
+    });
+
+    return disable;
   }
 
   return (
     <Card elevation={5}>
       <CardHeader
         className={classes.header}
-        title={chore.name}
-        subheader={chore.dueDate ? "subHeader" : null}
+        title={props.item.name}
+        subheader={props.item.dueDate ? subHeader : null}
         avatar={
-          <Avatar aria-label="Chore">{chore.name[0].toUpperCase()}</Avatar>
+          <Avatar aria-label="Chore">{props.item.name[0].toUpperCase()}</Avatar>
         }
         action={
           <ThemeProvider theme={theme}>
@@ -182,7 +142,7 @@ export function Childtem({
                 vertical: "bottom",
                 horizontal: "right",
               }}
-              badgeContent={chore.value}
+              badgeContent={props.item.value}
             >
               <Avatar src={ImgMarbles}></Avatar>
             </Badge>
@@ -196,30 +156,30 @@ export function Childtem({
           color="textSecondary"
           component="p"
         >
-          {chore.description}
+          {props.item.description}
         </Typography>
       </CardContent>
       <CardActions className={classes.actions}>
         <Stepper
           className={classes.root}
-          activeStep={assignmentStateToStepper(chore)}
+          activeStep={props.stepper.activeStep}
           alternativeLabel
         >
-          {steps.map((label) => (
+          {props.stepper.stepsText.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
         </Stepper>
         <Button
-          onClick={() => onUpdateState(chore)}
+          onClick={() => onNextStepClick()}
           disabled={disableButton()}
           className={classes.stepButton}
           variant="contained"
           size="small"
           color="primary"
         >
-          {buttonText}
+          {props.stepper.buttonText[props.item.state]}
         </Button>
       </CardActions>
     </Card>
