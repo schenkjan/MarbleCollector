@@ -13,7 +13,11 @@ import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
-import { useDelete, usePut } from "../../api/BackendAccess";
+import {
+  mutateChore,
+  useParentChoreDelete,
+  useParentChorePut,
+} from "../../api/BackendAccess";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -63,14 +67,8 @@ export function ChoreCard(props: Prop): JSX.Element {
     );
   }, [props.chore.assignments]);
 
-  const deleteChoreMutation = useDelete<ChoreWithAssignments>(
-    "parentChoreGet",
-    "chore deleted"
-  );
-  const putChoreMutation = usePut<ChoreWithAssignments>(
-    "parentChoreGet",
-    "chore mutated"
-  );
+  const deleteChoreMutation = useParentChoreDelete();
+  const changeChoreMutation = useParentChorePut();
 
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
@@ -116,38 +114,23 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleDelete() {
     console.log("Deleting...");
-    deleteChoreMutation.mutate({
-      url: "/api/Chores/",
-      object: props.chore,
-    });
+    deleteChoreMutation.mutate(mutateChore(props.chore));
     handleMoreClose();
   }
 
   function handleTitleEdit() {
     console.log("Editing title...");
-    putChoreMutation.mutate({
-      url: "/api/Chores/",
-      object: props.chore,
-    });
-    showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeChoreMutation.mutate(mutateChore(props.chore));
   }
 
   function handleDueDateEdit() {
     console.log("Editing due date...");
-    putChoreMutation.mutate({
-      url: "/api/Chores/",
-      object: props.chore,
-    });
-    showInfo("Editing due date..."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeChoreMutation.mutate(mutateChore(props.chore));
   }
 
   function handleValueEdit() {
     console.log("Editing amount of marbles...");
-    putChoreMutation.mutate({
-      url: "/api/Chores/",
-      object: props.chore,
-    });
-    showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeChoreMutation.mutate(mutateChore(props.chore));
   }
 
   function getDescription() {
