@@ -99,7 +99,7 @@ export function LoginScreen() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Login - Entdecke die App
+              Login - Nutze die App
             </Typography>
             <LoginForm username={userInfo?.username ?? ""} login={login} />
           </div>
