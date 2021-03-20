@@ -7,31 +7,27 @@ import {
 } from "react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
-import { ChoreWithAssignments } from "../parent/models/ChoreWithAssignments";
 import {
   useErrorNotification,
   useInfoNotification,
   useSuccessNotification,
 } from "../shell/hooks/SnackbarHooks";
-import { ChoreLoadingData } from "./models/ChoreLoadingData";
 import { QueryObject } from "./models/QueryObject";
-import { queryUrl } from "./models/QueryObjectUrl";
+import { QueryObjectUrl } from "./models/QueryObjectUrl";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
 // GET
-// export function QueryGet<T>(key: string, url: queryUrl): T {
-
 export function useGet<T>(
   key: string,
-  url: queryUrl,
+  url: QueryObjectUrl,
   errorMessage: string
-): ChoreLoadingData {
+) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
   const showError = useErrorNotification();
 
-  const { isLoading, isFetching, isError, data } = useQuery(key, () =>
+  const { isLoading, isFetching, isError, data } = useQuery<T>(key, () =>
     axios
       .get(`${apiBaseUrl}${url}`, {
         headers: {
@@ -66,21 +62,13 @@ export function useGet<T>(
 }
 
 // POST
-export function usePost(
-  invalidateKey: string,
-  successMessage: string
-): UseMutationResult<
-  AxiosResponse<QueryObject>,
-  unknown,
-  QueryObject,
-  unknown
-> {
+export function usePost<T>(invalidateKey: string, successMessage: string) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
   const showSuccess = useSuccessNotification();
   const mutation = useMutation(
     (object: QueryObject) =>
-      axios.post<QueryObject>(`${apiBaseUrl}${object.url}`, object.object, {
+      axios.post<T>(`${apiBaseUrl}${object.url}`, object.object, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
@@ -97,21 +85,13 @@ export function usePost(
 }
 
 // PUT
-export function usePut(
-  invalidateKey: string,
-  InfoMessage: string
-): UseMutationResult<
-  AxiosResponse<QueryObject>,
-  unknown,
-  QueryObject,
-  unknown
-> {
+export function usePut<T>(invalidateKey: string, InfoMessage: string) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
   const showInfo = useInfoNotification();
   const mutation = useMutation(
     (object: QueryObject) =>
-      axios.put<QueryObject>(
+      axios.put<T>(
         `${apiBaseUrl}${object.url + object.object.id}`,
         object.object,
         {
@@ -132,28 +112,17 @@ export function usePut(
 }
 
 // DELETE
-export function useDelete(
-  invalidateKey: string,
-  infoMessage: string
-): UseMutationResult<
-  AxiosResponse<QueryObject>,
-  unknown,
-  QueryObject,
-  unknown
-> {
+export function useDelete<T>(invalidateKey: string, infoMessage: string) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
   const showInfo = useInfoNotification();
   const mutation = useMutation(
     (object: QueryObject) =>
-      axios.delete<QueryObject>(
-        `${apiBaseUrl}${object.url + object.object.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      ),
+      axios.delete<T>(`${apiBaseUrl}${object.url + object.object.id}`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(invalidateKey);

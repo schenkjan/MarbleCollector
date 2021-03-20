@@ -1,4 +1,4 @@
-export type queryUrl =
+export type QueryObjectUrl =
   | "/api/Assignments/"
   | "/api/Assignments/Users/"
   | "/api/Auth/login/"

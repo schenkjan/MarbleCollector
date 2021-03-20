@@ -15,7 +15,6 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { useGet, usePost } from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useChildrenDataForUser } from "../BackendAccess";
-import { ChoreLoadingData } from "../../api/models/ChoreLoadingData";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,16 +36,11 @@ export function ChoreList(): JSX.Element {
 
   const [showDialog, setShowDialog] = useState(false);
 
-  // const { data } = useGet<ChoreLoadingData>(
-  //   "parentChoreGet",
-  //   "/api/Chores/Assignments/"
-  // );
-  const { data } = useGet<ChoreLoadingData>(
+  const { data: chores } = useGet<ChoreWithAssignments[]>(
     "parentChoreGet",
     "/api/Chores/Assignments/",
     "losed Data!"
   );
-  const chores = data;
 
   const {
     isLoading: isChildrenLoading,
@@ -54,7 +48,10 @@ export function ChoreList(): JSX.Element {
     children,
   } = useChildrenDataForUser();
 
-  const addChoreMutation = usePost("parentChoreGet", "chore created");
+  const addChoreMutation = usePost<ChoreWithAssignments>(
+    "parentChoreGet",
+    "chore created"
+  );
 
   function handleOnCancel() {
     setShowDialog(false);

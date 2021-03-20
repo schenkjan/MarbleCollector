@@ -1,5 +1,5 @@
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
-import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
+import { Card, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useEffect, useState } from "react";
 import { AssignmentState } from "../models/AssignmentState";
@@ -63,21 +63,18 @@ export function ChoreCard(props: Prop): JSX.Element {
     );
   }, [props.chore.assignments]);
 
-  const deleteChoreMutation = useDelete("parentChoreGet", "chore deleted");
-  const putChoreMutation = usePut("parentChoreGet", "chore mutated");
+  const deleteChoreMutation = useDelete<ChoreWithAssignments>(
+    "parentChoreGet",
+    "chore deleted"
+  );
+  const putChoreMutation = usePut<ChoreWithAssignments>(
+    "parentChoreGet",
+    "chore mutated"
+  );
 
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
   }
-
-  // function handleAddChildClick() {
-  //   console.log("Adding child");
-  //   putChoreMutation.mutate({
-  //     url: "/api/Chores/",
-  //     object: props.chore,
-  //   });
-  //   showInfo(`Adding child to chore '${props.chore.name}'.`); // TODO js (11.03.2021): Replace dummy implementation.
-  // }
 
   function handleAddChildClick(event: React.MouseEvent<HTMLButtonElement>) {
     setShowAddChildAnchor(event.currentTarget);
