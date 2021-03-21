@@ -20,6 +20,7 @@ import axios from "axios";
 import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
+import { ChoreItem } from "./ChoreItem";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,73 +38,6 @@ export function ChildChoreList(): JSX.Element {
   const classes = useStyles();
   const [chores, setChores] = useState<ChoreWithAssignments[]>([]);
   useDashboardTitle("Ämtli Pinnwand");
-
-  function updateState(id: number): void {
-    const chore: ChoreWithAssignments | any = chores.find(
-      (chore) => chore.id === id
-    );
-
-    setNextAssignmentState(chore);
-    //Optimisitic UI :-)
-    // TODO hs (210314): Do we want an optimistic or pessimistic UI?
-    const updatedChores = chores.map((t) => (t.id !== id ? t : chore));
-    setChores(updatedChores);
-
-    // TODO hs (210313): Implement Error handling and reset state in case of error
-    axios
-      .put<ChoreWithAssignments>(
-        `${apiBaseUrl}/api/Assignments/` + chore.id,
-        chore.assignments[0],
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      )
-      .then((data) => console.log("update succesfull: ", data?.data));
-  }
-
-  function setNextAssignmentState(chore: ChoreWithAssignments | any) {
-    if (chore.assignments[0].state === AssignmentState.CheckConfirmed) {
-      chore.assignments[0].state = chore.assignments[0].state + 2;
-    } else if (chore.assignments[0].state === AssignmentState.CheckRefused)
-      chore.assignments[0].state = AssignmentState.RequestedToCheck;
-    else {
-      chore.assignments[0].state++;
-    }
-  }
-
-  function mapToListItem(chore: ChoreWithAssignments): ChildListItem {
-    return {
-      id: chore.id,
-      name: chore.name,
-      description: chore.description,
-      value: chore.value,
-      dueDate: chore.dueDate,
-      state: chore.assignments[0].state,
-    };
-  }
-
-  function itemStepperControl(chore: ChoreWithAssignments): StepperControl {
-    let activeStep = 0;
-    if (chore.assignments[0].state === AssignmentState.CheckRefused) {
-      activeStep = 1;
-    } else if (chore.assignments[0].state === AssignmentState.Archived) {
-      activeStep = 4;
-    } else {
-      activeStep = chore.assignments[0].state;
-    }
-
-    return {
-      activeStep: activeStep,
-      stepsText: ["Neu", "Aktiv", "Prüfen", "Erledigt"],
-      buttonText: ["Start", "Prüfen", "Warten", "Murmel", "Prüfen", "Fertig"],
-      disableButtonState: [
-        AssignmentState.RequestedToCheck,
-        AssignmentState.Archived,
-      ],
-    };
-  }
 
   const { isLoading, error } = useQuery("childChoreData", () =>
     axios
@@ -139,14 +73,7 @@ export function ChildChoreList(): JSX.Element {
       <Box className={classes.box} component={Paper}>
         <List>
           {chores?.map((chore) => (
-            <ListItemComponent
-              key={chore.id}
-              // TODO hs (210319): Add show badge function
-              showBadge={0}
-              item={mapToListItem(chore)}
-              stepper={itemStepperControl(chore)}
-              onNextStepClick={() => updateState(chore.id)}
-            />
+            <ChoreItem key={chore.id} chore={chore} />
           ))}
         </List>
       </Box>
