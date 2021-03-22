@@ -3,6 +3,6 @@ export type ChildListItem = {
   name: string;
   description: string;
   value: number;
-  dueDate: Date;
+  dueDate: Date | any;
   state: number;
 };

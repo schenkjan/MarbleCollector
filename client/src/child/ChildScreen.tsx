@@ -1,6 +1,7 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { ChildChoreList } from "./chores/ChildChoreList";
+import { ChildRewardList } from "./rewards/ChildRewardList";
 import { FiguresOverview } from "./figures/FiguresOverview";
 
 export function ChildScreen() {
@@ -10,7 +11,9 @@ export function ChildScreen() {
     <>
       <ProtectedRouteForRole />
       <Switch>
-        <Route path={`${path}/rewards`}>Not implemented yet</Route>
+        <Route path={`${path}/rewards`}>
+          <ChildRewardList/>
+        </Route>
         <Route path={`${path}/profile`}>
           <FiguresOverview />
         </Route>

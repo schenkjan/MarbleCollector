@@ -139,7 +139,7 @@ namespace MarbleCollectorApi.Controllers
             return Ok(rewardsWithGrants.OrderBy(reward => reward.Id));
         }
 
-        [HttpGet("Rewards/Users/{id}")]
+        [HttpGet("Users/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<RewardWithGrants>> GetRewardsAndGrantsForUser(int id)
         {

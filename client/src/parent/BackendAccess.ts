@@ -287,3 +287,47 @@ export function useUpdateChoreState(): UseMutationResult<
 
   return mutation;
 }
+
+export function useChildRewardData(id: number): RewardLoadingData {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const { isLoading, error, data: rewards } = useQuery("childRewardData", () =>
+    axios
+      .get<RewardWithGrants[]>(`${apiBaseUrl}/api/Rewards/Users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+      .then((data) => data?.data)
+  );
+
+  return { isLoading: isLoading, error: error, rewards: rewards ?? [] };
+}
+
+export function useUpdateRewardState(): UseMutationResult<
+  AxiosResponse<Grant>,
+  unknown,
+  Grant,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (grant: Grant) =>
+      axios.put<Grant>(
+        `${apiBaseUrl}/api/Grants/${grant.id}`,
+        grant,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("childRewardData");
+      },
+    }
+  );
+
+  return mutation;
+}
