@@ -3,6 +3,7 @@ import { ChildListItem } from "../types/ChildListItem";
 import { StepperControl } from "../types/StepperControl";
 import { AssignmentState } from "../../parent/models/AssignmentState";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
+import { Card } from "@material-ui/core";
 //todo, 210322 hs move backendaccess to common folder
 import { useUpdateChoreState} from "../../parent/BackendAccess"; 
 import produce from "immer";
@@ -64,6 +65,21 @@ export function ChoreItem(props: Props): JSX.Element {
       ],
     };
   }
+
+  if (updateAssignmentMutation.isLoading)
+  return (
+    <Card elevation={5}>
+      <p>Updating...</p>
+    </Card>
+  ); // TODO hs (210322): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+
+  if (updateAssignmentMutation.error)
+  return (
+    <Card elevation={5}>
+       <p>{`An error has occurred: ${updateAssignmentMutation.error}`}</p>
+    </Card>
+    
+  ); // TODO hs (210322): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <ListItemComponent
