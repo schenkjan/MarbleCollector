@@ -10,38 +10,68 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
+//todo, 210322 hs move backendaccess to common folder
+import { useUpdateChoreState} from "../../parent/BackendAccess"; 
+import produce from "immer";
 
 type Props = {
   chore: ChoreWithAssignments;
 };
 
 export function ChoreItem(props: Props): JSX.Element {
-  const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const [chore, setChore] = useState(props.chore);
+  const updateAssignmentMutation = useUpdateChoreState();
 
-  function updateState(chore: ChoreWithAssignments): void {
-    const updatedChore = setNextAssignmentState(chore);
-    console.log(updatedChore);
-    setChore(updatedChore);
-    //Optimisitic UI :-)
-    //TODO hs (210314): Do we want an optimistic or pessimistic UI?
-    // const updatedChores = chores.map((t) => (t.id !== id ? t : chore));
-    // setChores(updatedChores);
+  //console.log(props.chore);
 
-    // TODO hs (210313): Implement Error handling and reset state in case of error
-    axios
-      .put<ChoreWithAssignments>(
-        `${apiBaseUrl}/api/Assignments/` + updatedChore.assignments[0].id,
-        updatedChore.assignments[0],
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      )
-      .then((data) => console.log("update succesfull: ", data?.data));
+  function updateState(chore: ChoreWithAssignments) {
+    console.log('updateState');
+    console.log(props.chore.assignments[0].state);
+
+    let nextState: number;
+    if (chore.assignments[0].state === AssignmentState.CheckConfirmed) {
+      nextState = chore.assignments[0].state + 2;
+      console.log('if');
+    } else if (chore.assignments[0].state === AssignmentState.CheckRefused){
+      nextState = AssignmentState.RequestedToCheck;
+      console.log('else if');
+    }
+    else {
+      nextState = chore.assignments[0].state + 1;
+      console.log('else');
+    }
+
+    console.log(nextState);
+
+    const updatedAssignment = produce(chore.assignments[0], (draftAssignment) => {
+      draftAssignment.state =  nextState;
+    });
+
+    
+    updateAssignmentMutation.mutate(updatedAssignment);
   }
+
+  // function updateState(chore: ChoreWithAssignments): void {
+  //   const updatedChore = setNextAssignmentState(chore);
+  //   console.log(updatedChore);
+  //   setChore(updatedChore);
+  //   //Optimisitic UI :-)
+  //   //TODO hs (210314): Do we want an optimistic or pessimistic UI?
+  //   // const updatedChores = chores.map((t) => (t.id !== id ? t : chore));
+  //   // setChores(updatedChores);
+
+  //   // TODO hs (210313): Implement Error handling and reset state in case of error
+  //   axios
+  //     .put<ChoreWithAssignments>(
+  //       `${apiBaseUrl}/api/Assignments/` + updatedChore.assignments[0].id,
+  //       updatedChore.assignments[0],
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${bearerToken}`,
+  //         },
+  //       }
+  //     )
+  //     .then((data) => console.log("update succesfull: ", data?.data));
+  // }
 
   function setNextAssignmentState(
     chore: ChoreWithAssignments
@@ -58,6 +88,7 @@ export function ChoreItem(props: Props): JSX.Element {
   }
 
   function mapToListItem(chore: ChoreWithAssignments): ChildListItem {
+  //function mapToListItem(): ChildListItem {
     return {
       id: chore.id,
       name: chore.name,
@@ -69,6 +100,7 @@ export function ChoreItem(props: Props): JSX.Element {
   }
 
   function itemStepperControl(chore: ChoreWithAssignments): StepperControl {
+  //function itemStepperControl(): StepperControl {
     let activeStep = 0;
     if (chore.assignments[0].state === AssignmentState.CheckRefused) {
       activeStep = 1;
@@ -91,12 +123,12 @@ export function ChoreItem(props: Props): JSX.Element {
 
   return (
     <ListItemComponent
-      key={chore.id}
+      key={props.chore.id}
       // TODO hs (210319): Add show badge function
       showBadge={0}
-      item={mapToListItem(chore)}
-      stepper={itemStepperControl(chore)}
-      onNextStepClick={() => updateState(chore)}
+      item={mapToListItem(props.chore)}
+      stepper={itemStepperControl(props.chore)}
+      onNextStepClick={() => updateState(props.chore)}
     />
   );
 }

@@ -21,6 +21,8 @@ import ErrorIcon from "@material-ui/icons/Error";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
+//todo, 210322 hs move backendaccess to common folder
+import { useChildChoreData } from "../../parent/BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,21 +38,23 @@ export function ChildChoreList(): JSX.Element {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const userId = useRecoilValue(AppState.userId);
   const classes = useStyles();
-  const [chores, setChores] = useState<ChoreWithAssignments[]>([]);
+  // const [chores, setChores] = useState<ChoreWithAssignments[]>([]);
   useDashboardTitle("Ämtli Pinnwand");
 
-  const { isLoading, error } = useQuery("childChoreData", () =>
-    axios
-      .get<ChoreWithAssignments[]>(
-        `${apiBaseUrl}/api/Chores/Assignments/Users/` + userId,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      )
-      .then((data) => setChores(data?.data))
-  );
+  const { isLoading, error, chores } = useChildChoreData(userId);
+
+  // const { isLoading, error } = useQuery("childChoreData", () =>
+  //   axios
+  //     .get<ChoreWithAssignments[]>(
+  //       `${apiBaseUrl}/api/Chores/Assignments/Users/` + userId,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${bearerToken}`,
+  //         },
+  //       }
+  //     )
+  //     .then((data) => setChores(data?.data))
+  // );
 
   if (isLoading)
     return (

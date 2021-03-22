@@ -243,3 +243,47 @@ export function useChildrenDataForUser(): ChildrenLoadingData {
 
   return useChildrenData(family);
 }
+
+export function useChildChoreData(id: number): ChoreLoadingData {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const { isLoading, error, data: chores } = useQuery("childChoreData", () =>
+    axios
+      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments/Users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+      .then((data) => data?.data)
+  );
+
+  return { isLoading: isLoading, error: error, chores: chores ?? [] };
+}
+
+export function useUpdateChoreState(): UseMutationResult<
+  AxiosResponse<Assignment>,
+  unknown,
+  Assignment,
+  unknown
+> {
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (assignment: Assignment) =>
+      axios.put<Assignment>(
+        `${apiBaseUrl}/api/Assignments/${assignment.id}`,
+        assignment,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("childChoreData");
+      },
+    }
+  );
+
+  return mutation;
+}
