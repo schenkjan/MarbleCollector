@@ -1,8 +1,3 @@
-import { ListItemComponent } from "../ListItemComponent";
-import { ChildListItem } from "../types/ChildListItem";
-import { StepperControl } from "../types/StepperControl";
-import { AssignmentState } from "../../parent/models/AssignmentState";
-import { useState } from "react";
 import {
   Box,
   Container,
@@ -15,10 +10,7 @@ import {
 } from "@material-ui/core";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
-import { useQuery } from "react-query";
-import axios from "axios";
 import ErrorIcon from "@material-ui/icons/Error";
-import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
 //todo, 210322 hs move backendaccess to common folder
@@ -34,27 +26,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function ChildChoreList(): JSX.Element {
-  const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
   const userId = useRecoilValue(AppState.userId);
   const classes = useStyles();
-  // const [chores, setChores] = useState<ChoreWithAssignments[]>([]);
   useDashboardTitle("Ämtli Pinnwand");
 
   const { isLoading, error, chores } = useChildChoreData(userId);
-
-  // const { isLoading, error } = useQuery("childChoreData", () =>
-  //   axios
-  //     .get<ChoreWithAssignments[]>(
-  //       `${apiBaseUrl}/api/Chores/Assignments/Users/` + userId,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${bearerToken}`,
-  //         },
-  //       }
-  //     )
-  //     .then((data) => setChores(data?.data))
-  // );
 
   if (isLoading)
     return (
