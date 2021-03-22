@@ -266,6 +266,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         onExpandClick={handleExpandClick}
         hideAddButton
         disabledAddButton={allChildrenAssigned}
+        locked={cardLocked}
       />
       <CollapsibleCardContent
         className={classes.cardContent}

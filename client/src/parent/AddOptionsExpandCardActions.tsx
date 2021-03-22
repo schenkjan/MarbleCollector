@@ -6,6 +6,8 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { MouseEventHandler } from "react";
 import { AddButtonWithLabel } from "./AddButtonWithLabel";
+import LockIcon from "@material-ui/icons/Lock";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
 
 type Prop = {
   hideAddButton?: boolean;
@@ -13,6 +15,7 @@ type Prop = {
   disabledAddButton?: boolean;
   moreOpen: boolean;
   expandOpen: boolean;
+  locked?: boolean;
   onAddClick?: MouseEventHandler<HTMLButtonElement> | undefined;
   onMoreClick?: MouseEventHandler<HTMLButtonElement> | undefined;
   onExpandClick?: MouseEventHandler<HTMLButtonElement> | undefined;
@@ -40,6 +43,11 @@ export function AddOptionsExpandCardActions(props: Prop): JSX.Element {
 
   return (
     <CardActions>
+      {props.locked !== undefined && (
+        <IconButton disabled={true}>
+          {props.locked ? <LockIcon /> : <LockOpenIcon />}
+        </IconButton>
+      )}
       {props.hideAddButton ? undefined : (
         <AddButtonWithLabel
           title={props.addLabel}
