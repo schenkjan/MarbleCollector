@@ -138,5 +138,24 @@ namespace MarbleCollectorApi.Controllers
 
             return Ok(rewardsWithGrants.OrderBy(reward => reward.Id));
         }
+
+        [HttpGet("Rewards/Users/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<RewardWithGrants>> GetRewardsAndGrantsForUser(int id)
+        {
+            var grantsForUser = _grantRepository.GetAll().Where(grant => grant.UserId == id);
+
+            var rewardsWithGrants = grantsForUser.GroupBy(grant => grant.Reward)
+                .Select(group => new RewardWithGrants
+                {
+                    Id = group.Key.Id,
+                    Name = group.Key.Name,
+                    Description = group.Key.Description,
+                    Value = group.Key.Value,
+                    Grants = group.Select(grant => grant.Map())
+                }).ToList();
+
+            return Ok(rewardsWithGrants.OrderBy(reward => reward.Id));
+        }
     }
 }
