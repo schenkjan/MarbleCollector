@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { de } from "date-fns/locale";
+import { toDeLocaleDateString } from "../helper/DateHelper";
 
 type Prop = {
   date: Date;
@@ -108,12 +109,7 @@ export function EditableDate(props: Prop): JSX.Element {
         color={props.textColor ?? "initial"}
         className={classes.text}
       >
-        {new Date(date).toLocaleDateString("de-DE", {
-          weekday: "short",
-          year: "2-digit",
-          month: "short",
-          day: "numeric",
-        })}
+        {toDeLocaleDateString(date)}
       </Typography>
       <Popover
         open={isOpen()}
