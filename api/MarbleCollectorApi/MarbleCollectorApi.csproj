@@ -55,6 +55,12 @@
 	  <None Update="ViewModels\ts\User.ts">
 	    <CustomToolNamespace>ViewModels\User.cs</CustomToolNamespace>
 	  </None>
+	  <None Update="ViewModels\ts\UserProfile.ts">
+	    <CustomToolNamespace>ViewModels\UserProfile.cs</CustomToolNamespace>
+	  </None>
+	  <None Update="ViewModels\ts\UserScore.ts">
+	    <CustomToolNamespace>ViewModels\UserScore.cs</CustomToolNamespace>
+	  </None>
 	</ItemGroup>
 
 	<ItemGroup>
