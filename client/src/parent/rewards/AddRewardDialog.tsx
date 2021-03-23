@@ -12,7 +12,7 @@ import { Formik, Form, Field } from "formik";
 import MuiTextField from "@material-ui/core/TextField";
 import { fieldToTextField, TextFieldProps } from "formik-material-ui";
 import Box from "@material-ui/core/Box";
-import { AddRewardValidation } from "./models/AddRewardValidation";
+import { AddRewardValidation } from "../models/AddRewardValidation";
 
 type Prop = {
   open: boolean;

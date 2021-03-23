@@ -15,7 +15,7 @@ import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
-import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
+import { useDelete, usePut } from "../../api/BackendAccess";
 import produce from "immer";
 import { EditableDate } from "../EditableDate";
 import { EditableTextAvatar } from "../EditableTextAvatar";
@@ -71,8 +71,14 @@ export function ChoreCard(props: Prop): JSX.Element {
     );
   }, [props.chore.assignments]);
 
-  const deleteChoreMutation = useQueryDelete("parentChoreGet");
-  const putChoreMutation = useQueryPut("parentChoreGet");
+  const deleteChoreMutation = useDelete<ChoreWithAssignments>(
+    "parentChoreGet",
+    "chore deleted"
+  );
+  const putChoreMutation = usePut<ChoreWithAssignments>(
+    "parentChoreGet",
+    "chore mutated"
+  );
 
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);

@@ -1,7 +1,6 @@
-import { queryUrl } from "./QueryObjectUrl";
-import { ChoreWithAssignments } from "../../parent/models/ChoreWithAssignments";
+import { QueryObjectUrl } from "./QueryObjectUrl";
 
 export interface QueryObject {
-  url: queryUrl;
-  object: ChoreWithAssignments;
+  url: QueryObjectUrl;
+  object: any;
 }
