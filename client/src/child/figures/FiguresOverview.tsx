@@ -4,11 +4,17 @@ import { useState, useEffect } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import { FigureItem } from "./FigureItem";
+
+// import { FigureItem } from "./FigureItem";
 import ImgMarbles from "../images/Marble.png";
 import ImgChores from "../images/Chores.png";
 import ImgRewards from "../images/Rewards.png";
+
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
+
+/**
+ * TODO -> Delete after merge -> conflict
+ */
 
 const useStyles = makeStyles({
   gridcontainer: {
@@ -80,32 +86,32 @@ export function FiguresOverview() {
         <Grid container spacing={6}>
           <Grid item xs={12} sm={4}>
             <Paper elevation={3}>
-              <FigureItem
+              {/* <FigureItem
                 ammount={marbles}
                 picture={ImgMarbles}
                 imgDescription="marble"
                 text="Kontostand Murmeln"
-              ></FigureItem>
+              ></FigureItem> */}
             </Paper>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Paper elevation={3}>
-              <FigureItem
+              {/* <FigureItem
                 ammount={chores}
                 picture={ImgChores}
                 imgDescription="chores"
                 text="Erledigte Ämtli"
-              ></FigureItem>
+              ></FigureItem> */}
             </Paper>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Paper elevation={3}>
-              <FigureItem
+              {/* <FigureItem
                 ammount={rewards}
                 picture={ImgRewards}
                 imgDescription="rewards"
                 text="Verdiente Belohnungen"
-              ></FigureItem>
+              ></FigureItem> */}
             </Paper>
           </Grid>
         </Grid>

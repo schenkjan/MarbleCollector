@@ -19,6 +19,31 @@ namespace MarbleCollectorApi.Data.Repository
                 .Include(grant => grant.Reward); // ensure loading of Reward object
         }
 
+        public IEnumerable<Grant> GetGrants(int userId)
+        {
+            return GetAll().Where(a => a.UserId == userId);
+        }
+
+        public IEnumerable<Grant> GetCompletedGrants(int userId, IEnumerable<Grant> grants = null)
+        {
+            if (grants == null)
+            {
+                grants = GetGrants(userId);
+            }
+            return grants.Where(grant => grant.State == GrantState.Archived);
+        }
+
+        public int GetMarblesSpent(int userId, IEnumerable<Grant> grants = null)
+        {
+            if (grants == null)
+            {
+                grants = GetCompletedGrants(userId);
+            }
+
+            var marbleCount = grants.Sum(a => a.Reward.Value);
+            return marbleCount;
+        }
+
         public override Grant GetSingle(int id)
         {
             return GetSingle(grant => grant.Id == id);
