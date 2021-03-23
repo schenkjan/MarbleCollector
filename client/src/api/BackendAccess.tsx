@@ -1,157 +1,44 @@
-import axios, { AxiosResponse } from "axios";
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "react-query";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
-import {
-  useErrorNotification,
-  useInfoNotification,
-  useSuccessNotification,
-} from "../shell/hooks/SnackbarHooks";
-import { ChoreLoadingData } from "./models/ChoreLoadingData";
+import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
 import { QueryObject } from "./models/QueryObject";
-import { queryUrl } from "./models/QueryObjectUrl";
+import { QueryProps } from "./models/QueryProps";
+import { useGet, usePost, usePut, useDelete } from "./Queries";
 
-const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
+// Settings for Chores on Parent-Dashboard
+const choreProps: QueryProps = {
+  getKey: "parentChoreGet", // Choose a unique keyname
+  getUrl: "/api/Chores/Assignments/", // GET-Url from Swagger UI
+  getMessage: "losed Data!", // GET-Message to Snack
+  postMessage: "chore created", // POST-Message to Snack
+  putMessage: "chore updated", // PUT-Message to Snack
+  deleteMessage: "chore deleted", // DELETE-Mesage to Snack
+  mutateUrl: "/api/Chores/", // POST/PUT/DELETE-Url from Swagger UI
+};
 
-// GET
-// export function QueryGet<T>(key: string, url: queryUrl): T {
-
-export function useQueryGet(key: string, url: queryUrl): ChoreLoadingData {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
-  const showError = useErrorNotification();
-
-  const { isLoading, isFetching, isError, error, data } = useQuery(key, () =>
-    axios
-      .get(`${apiBaseUrl}${url}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => data?.data)
-  );
-  if ((isLoading || isFetching) && queryState.open === false) {
-    setqueryState({
-      open: true,
-    });
-  } else if (isError) {
-    console.log(error);
-    showError("losed Data!");
-  } else if (
-    !isLoading &&
-    !isFetching &&
-    !isError &&
-    queryState.open === true
-  ) {
-    setqueryState({
-      open: false,
-    });
-  }
-  return {
-    isLoading: isLoading,
-    isFetching: isFetching,
-    isError: isError,
-    error: error,
-    data: data ?? [],
-  };
-}
-
-// POST
-export function useQueryPost(
-  getKey: string
-): UseMutationResult<
-  AxiosResponse<QueryObject>,
-  unknown,
-  QueryObject,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const showSuccess = useSuccessNotification();
-  const mutation = useMutation(
-    (object: QueryObject) =>
-      axios.post<QueryObject>(`${apiBaseUrl}${object.url}`, object.object, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(getKey);
-        showSuccess("chore created");
-      },
-    }
+// GET - load all Chores on Parent-Dashboard
+export const useParentChoreGet = () =>
+  useGet<ChoreWithAssignments[]>(
+    choreProps.getKey,
+    choreProps.getUrl,
+    choreProps.getMessage
   );
 
-  return mutation;
-}
+// POST - create one Chore on Parent-Dashboard
+export const useParentChorePost = () =>
+  usePost<ChoreWithAssignments>(choreProps.getKey, choreProps.postMessage);
 
-// PUT
-export function useQueryPut(
-  getKey: string
-): UseMutationResult<
-  AxiosResponse<QueryObject>,
-  unknown,
-  QueryObject,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    (object: QueryObject) =>
-      axios.put<QueryObject>(
-        `${apiBaseUrl}${object.url + object.object.id}`,
-        object.object,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      ),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(getKey);
-      },
-    }
-  );
+// PUT - change one Chore on Parent-Dashboard
+export const useParentChorePut = () =>
+  usePut<ChoreWithAssignments>(choreProps.getKey, choreProps.putMessage);
 
-  return mutation;
-}
+// DELETE - delete one Chore on Parent-Dashboard
+export const useParentChoreDelete = () =>
+  useDelete<ChoreWithAssignments>(choreProps.getKey, choreProps.deleteMessage);
 
-// DELETE
-export function useQueryDelete(
-  getKey: string
-): UseMutationResult<
-  AxiosResponse<QueryObject>,
-  unknown,
-  QueryObject,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const showInfo = useInfoNotification();
-  const mutation = useMutation(
-    (object: QueryObject) =>
-      axios.delete<QueryObject>(
-        `${apiBaseUrl}${object.url + object.object.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      ),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(getKey);
-        showInfo("chore deleted");
-      },
-    }
-  );
+// MUTATE - mutate the POST/PUT/DELETE object on Parent-Dashboard
+export const mutateChore = (object: any) =>
+  ({
+    url: choreProps.mutateUrl,
+    object: object,
+  } as QueryObject);
 
-  return mutation;
-}
+// for Rewards and Users copy the part above this comment --> ....

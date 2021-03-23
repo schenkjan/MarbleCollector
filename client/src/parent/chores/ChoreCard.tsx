@@ -15,10 +15,14 @@ import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
-import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
 import produce from "immer";
 import { EditableDate } from "../EditableDate";
 import { EditableTextAvatar } from "../EditableTextAvatar";
+import {
+  mutateChore,
+  useParentChoreDelete,
+  useParentChorePut,
+} from "../../api/BackendAccess";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -71,8 +75,8 @@ export function ChoreCard(props: Prop): JSX.Element {
     );
   }, [props.chore.assignments]);
 
-  const deleteChoreMutation = useQueryDelete("parentChoreGet");
-  const putChoreMutation = useQueryPut("parentChoreGet");
+  const deleteChoreMutation = useParentChoreDelete();
+  const changeChoreMutation = useParentChorePut();
 
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
@@ -118,10 +122,7 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleDelete() {
     console.log("Deleting...");
-    deleteChoreMutation.mutate({
-      url: "/api/Chores/",
-      object: props.chore,
-    });
+    deleteChoreMutation.mutate(mutateChore(props.chore));
     handleMoreClose();
   }
 
@@ -133,13 +134,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         draftChore.name = title;
       }
     );
-
-    putChoreMutation.mutate({
-      url: "/api/Chores/",
-      object: updatedChore,
-    });
-    console.log("Title edited.");
-    showInfo("Title edited."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeChoreMutation.mutate(mutateChore(updatedChore));
   }
 
   function handleDueDateEdit(date: Date) {
@@ -150,12 +145,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         draftChore.dueDate = date;
       }
     );
-
-    putChoreMutation.mutate({
-      url: "/api/Chores/",
-      object: updatedChore,
-    });
-    showInfo("Due date edited."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeChoreMutation.mutate(mutateChore(updatedChore));
   }
 
   function handleValueEdit(value: number) {
@@ -166,12 +156,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         draftChore.value = value;
       }
     );
-
-    putChoreMutation.mutate({
-      url: "/api/Chores/",
-      object: updatedChore,
-    });
-    showInfo("Amount of marbles edited."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeChoreMutation.mutate(mutateChore(updatedChore));
   }
 
   function handleDescriptionEdit(description: string) {
@@ -182,13 +167,7 @@ export function ChoreCard(props: Prop): JSX.Element {
         draftChore.description = description;
       }
     );
-
-    putChoreMutation.mutate({
-      url: "/api/Chores/",
-      object: updatedChore,
-    });
-    console.log("Description edited.");
-    showInfo("Description edited."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeChoreMutation.mutate(mutateChore(updatedChore));
   }
 
   function getTextColor(): "textSecondary" | "textPrimary" {

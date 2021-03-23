@@ -12,7 +12,7 @@ import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useQueryGet, useQueryPost } from "../../api/BackendAccess";
+import { useParentChoreGet, useParentChorePost } from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useChildrenDataForUser } from "../BackendAccess";
 
@@ -36,12 +36,8 @@ export function ChoreList(): JSX.Element {
 
   const [showDialog, setShowDialog] = useState(false);
 
-  // const { data } = useQueryGet<ChoreLoadingData>(
-  //   "parentChoreGet",
-  //   "/api/Chores/Assignments/"
-  // );
-  const { data } = useQueryGet("parentChoreGet", "/api/Chores/Assignments/");
-  const chores: ChoreWithAssignments[] = data;
+  const { chores } = useParentChoreGet();
+  const addChore = useParentChorePost();
 
   const {
     isLoading: isChildrenLoading,
@@ -49,14 +45,12 @@ export function ChoreList(): JSX.Element {
     children,
   } = useChildrenDataForUser();
 
-  const addChoreMutation = useQueryPost("parentChoreGet");
-
   function handleOnCancel() {
     setShowDialog(false);
   }
 
   function handleOnSave(choreObject: ChoreWithAssignments) {
-    addChoreMutation.mutate({
+    addChore.mutate({
       url: "/api/Chores/",
       object: choreObject,
     });
