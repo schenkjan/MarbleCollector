@@ -191,6 +191,10 @@ export function ChoreCard(props: Prop): JSX.Element {
     showInfo("Description edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
+  function getTextColor(): "textSecondary" | "textPrimary" {
+    return cardLocked ? "textSecondary" : "textPrimary";
+  }
+
   return (
     <Card elevation={5}>
       <BiAvatarCardHeader
@@ -220,6 +224,7 @@ export function ChoreCard(props: Prop): JSX.Element {
                 .max(50, "Maximum 50 Zeichen"),
             })}
             onTextChanged={handleTitleEdit}
+            textColor={getTextColor()}
           />
         }
         subtitleComponent={
@@ -234,6 +239,7 @@ export function ChoreCard(props: Prop): JSX.Element {
               ),
             })}
             onDateChanged={handleDueDateEdit}
+            textColor={getTextColor()}
           />
         }
         rightAvatarComponent={
@@ -267,8 +273,8 @@ export function ChoreCard(props: Prop): JSX.Element {
         hideAddButton
         disabledAddButton={allChildrenAssigned}
         locked={cardLocked}
-        lockMessage="Ämtli gesperrt, da bereits durch Kinder in Arbeit."
-        unlockMessage="Ämtli Titel, Zeitpunkt und Beschreibung anpassbar."
+        lockMessage="Ämtli gesperrt, da bereits durch Kinder in Bearbeitung."
+        unlockMessage="Ämtli Titel, Zeitpunkt, Murmelwert und Beschreibung anpassbar."
       />
       <CollapsibleCardContent
         className={classes.cardContent}
@@ -276,13 +282,13 @@ export function ChoreCard(props: Prop): JSX.Element {
       >
         <EditableText
           text={props.chore.description}
-          textColor="textSecondary"
           editable={!cardLocked}
           editLabel="Beschreibung des Ämtlis"
           validationSchema={Yup.object({
             text: Yup.string().max(250, "Maximum 250 Zeichen"),
           })}
           onTextChanged={handleDescriptionEdit}
+          textColor={getTextColor()}
         />
         <AssignmentList assignments={props.chore.assignments} />
         <AddButtonWithLabel
