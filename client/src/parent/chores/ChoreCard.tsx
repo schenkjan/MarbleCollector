@@ -15,19 +15,14 @@ import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
-import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
 import produce from "immer";
 import { EditableDate } from "../EditableDate";
 import { EditableTextAvatar } from "../EditableTextAvatar";
-=========
 import {
   mutateChore,
   useParentChoreDelete,
   useParentChorePut,
 } from "../../api/BackendAccess";
-import produce from "immer";
-import { EditableDate } from "../EditableDate";
-import { EditableTextAvatar } from "../EditableTextAvatar";
 
 type Prop = {
   chore: ChoreWithAssignments;
