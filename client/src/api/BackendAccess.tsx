@@ -1,10 +1,5 @@
-import axios, { AxiosResponse } from "axios";
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "react-query";
+import axios from "axios";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import {

@@ -1,6 +1,5 @@
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { Avatar, Badge, Card } from "@material-ui/core";
-import { Card, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { AssignmentState } from "../models/AssignmentState";
@@ -16,7 +15,6 @@ import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
-import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
 import { useDelete, usePut } from "../../api/BackendAccess";
 import produce from "immer";
 import { EditableDate } from "../EditableDate";
