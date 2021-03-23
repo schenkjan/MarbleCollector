@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MarbleCollectorApi.Data.Mapping;
 using MarbleCollectorApi.Data.Repository;
+using MarbleCollectorApi.Services;
 using MarbleCollectorApi.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +18,12 @@ namespace MarbleCollectorApi.Controllers
     public class UsersController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserScoreService _userScoreService;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IUserRepository userRepository, IUserScoreService userScoreService)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _userScoreService = userScoreService;
         }
 
         // TODO js (13.03.2021): Can all users get all users?
@@ -48,6 +51,33 @@ namespace MarbleCollectorApi.Controllers
             return Ok(user);
         }
 
+        // TODO js (13.03.2021): Can all users get all users?
+        [HttpGet("{id}/profile")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<UserProfile> GetUserProfile(int id)
+        {
+            var user = _userRepository.GetSingle(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var usersForFamily = GetUsersForFamily(user.Family);
+            var userIdsForScoreCalculation = usersForFamily.Where(u => u.Role == Const.UserRoleChild).Select(u => u.Id);
+            var familyScores = _userScoreService.GetUserScores(userIdsForScoreCalculation);
+            var userProfile = new UserProfile
+            {
+                User = user.Map(),
+                Family = usersForFamily.Select(u => u.Map()),
+                Score = familyScores.SingleOrDefault(x => x.Id == user.Id)
+            };
+
+            return Ok(userProfile);
+        }
+
         // TODO js (13.03.2021): Can all users get all families?
         [HttpGet("families")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -64,10 +94,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<User>> GetUsers(string family, [FromQuery] string role)
         {
-            var users = _userRepository.GetAll()
-                .Where(user => user.Family.Equals(family))
-                .ToArray();
-
+            var users = GetUsersForFamily(family);
             if (!string.IsNullOrEmpty(role))
             {
                 users = users.Where(user => user.Role.Equals(role)).ToArray();
@@ -79,6 +106,13 @@ namespace MarbleCollectorApi.Controllers
             }
 
             return Ok(users.Select(user => user.Map()));
+        }
+
+        protected IEnumerable<Data.Models.User> GetUsersForFamily(string family)
+        {
+            return _userRepository.GetAll()
+                .Where(user => user.Family.Equals(family))
+                .ToArray();
         }
     }
 }

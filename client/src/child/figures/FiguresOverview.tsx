@@ -1,15 +1,20 @@
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
-import { loadChores } from "../../api/BackendAccess";
 import { useState, useEffect } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import { FigureItem } from "./FigureItem";
-import ImgMarbles from "../../images/Marble.png";
-import ImgChores from "../../images/Chores.png";
-import ImgRewards from "../../images/Rewards.png";
+
+// import { FigureItem } from "./FigureItem";
+import ImgMarbles from "../images/Marble.png";
+import ImgChores from "../images/Chores.png";
+import ImgRewards from "../images/Rewards.png";
+
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
+
+/**
+ * TODO -> Delete after merge -> conflict
+ */
 
 const useStyles = makeStyles({
   gridcontainer: {
@@ -47,12 +52,6 @@ export function FiguresOverview() {
   const hubTestUrl = `${apiBaseUrl}/hubs/children`;
 
   useEffect(() => {
-    loadChores().then(function (response) {
-      setMarbles(response.data.length);
-      setChores(response.data.length + 1);
-      setRewards(response.data.length + 2);
-    });
-
     const createHubConnection = async () => {
       if (hubConnection == null) {
         console.log("SignalR >>> Connecting", hubTestUrl);
@@ -87,32 +86,32 @@ export function FiguresOverview() {
         <Grid container spacing={6}>
           <Grid item xs={12} sm={4}>
             <Paper elevation={3}>
-              <FigureItem
+              {/* <FigureItem
                 ammount={marbles}
                 picture={ImgMarbles}
                 imgDescription="marble"
                 text="Kontostand Murmeln"
-              ></FigureItem>
+              ></FigureItem> */}
             </Paper>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Paper elevation={3}>
-              <FigureItem
+              {/* <FigureItem
                 ammount={chores}
                 picture={ImgChores}
                 imgDescription="chores"
                 text="Erledigte Ämtli"
-              ></FigureItem>
+              ></FigureItem> */}
             </Paper>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Paper elevation={3}>
-              <FigureItem
+              {/* <FigureItem
                 ammount={rewards}
                 picture={ImgRewards}
                 imgDescription="rewards"
                 text="Verdiente Belohnungen"
-              ></FigureItem>
+              ></FigureItem> */}
             </Paper>
           </Grid>
         </Grid>

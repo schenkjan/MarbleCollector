@@ -45,10 +45,6 @@ export function RewardsList() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
   }
 
-  function handleOnDelete() {
-    setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
-  }
-
   function handleOnSave() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct save logic.
   }
@@ -92,7 +88,6 @@ export function RewardsList() {
       <AddRewardDialog
         open={showDialog}
         onCancel={handleOnCancel}
-        onDelete={handleOnDelete}
         onSave={handleOnSave}
       />
     </Box>

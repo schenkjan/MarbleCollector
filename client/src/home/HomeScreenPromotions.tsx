@@ -1,39 +1,51 @@
-export const promotions = [
+export type PromotionTier = {
+  title: string;
+  subheader?: string;
+  price: string;
+  description: string[];
+  buttonText: string;
+  showStar?: boolean;
+  buttonVariant: "text" | "outlined" | "contained" | undefined;
+};
+
+export const promotions: PromotionTier[] = [
   {
-    title: "Free",
+    title: "Familie",
     price: "0",
     description: [
-      "10 users included",
-      "2 GB of storage",
-      "Help center access",
-      "Email support",
+      "Unlimitierte Anzahl Hausarbeiten",
+      "Unlimitierte Anzahl Belohnungen",
+      "Limite von 2 Eltern und 6 Kindern",
     ],
-    buttonText: "Sign up for free",
+    buttonText: "Jetzt loslegen",
     buttonVariant: "outlined",
   },
   {
-    title: "Pro",
-    subheader: "Most popular",
-    price: "15",
+    title: "Familie Plus",
+    subheader: "Am meisten gekauft",
+    showStar: true,
+    price: "20",
     description: [
-      "20 users included",
-      "10 GB of storage",
-      "Help center access",
-      "Priority email support",
+      "Unlimitierte Anzahl Hausarbeiten",
+      "Unlimitierte Anzahl Belohnungen",
+      "Limite von 5 Eltern und 20 Kindern",
+      "Exklusive Features*",
     ],
-    buttonText: "Get started",
+    buttonText: "Jetzt kaufen",
     buttonVariant: "contained",
   },
   {
-    title: "Enterprise",
-    price: "30",
+    title: "Geschäft",
+    subheader: "Ideal für Schulen/Institutionen",
+    price: "50+",
     description: [
-      "50 users included",
-      "30 GB of storage",
-      "Help center access",
-      "Phone & email support",
+      "Unlimitierte Anzahl Hausarbeiten",
+      "Unlimitierte Anzahl Belohnungen",
+      "Unlimitierte Anzahl Bezugspersonen",
+      "Unlimitierte Anzahl Kinder",
+      "Exklusive Features*",
     ],
-    buttonText: "Contact us",
+    buttonText: "Kontaktieren Sie uns",
     buttonVariant: "outlined",
   },
 ];

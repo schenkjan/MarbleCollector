@@ -1,7 +1,9 @@
+import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { ChildChoreList } from "./chores/ChildChoreList";
-import { FiguresOverview } from "./figures/FiguresOverview";
+import { ProfileDetails } from "./profile/ProfileDetails";
+import PortalOverlay from "../shell/PortalOverlay";
 
 export function ChildScreen() {
   const { path } = useRouteMatch();
@@ -10,14 +12,17 @@ export function ChildScreen() {
     <>
       <ProtectedRouteForRole />
       <Switch>
-        <Route path={`${path}/rewards`}>Not implemented yet</Route>
+        <Route path={`${path}/rewards`}>
+          <p>Child Rewards</p>
+        </Route>
         <Route path={`${path}/profile`}>
-          <FiguresOverview />
+          <ProfileDetails />
         </Route>
         <Route path={[`${path}/chores`, path]} exact>
-          <ChildChoreList />
+          <ChildChoreList></ChildChoreList>
         </Route>
       </Switch>
+      <PortalOverlay />
     </>
   );
 }
