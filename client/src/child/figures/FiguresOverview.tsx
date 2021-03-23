@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+
 // import { FigureItem } from "./FigureItem";
 import ImgMarbles from "../images/Marble.png";
 import ImgChores from "../images/Chores.png";
 import ImgRewards from "../images/Rewards.png";
+
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
 /**
