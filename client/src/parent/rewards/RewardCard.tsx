@@ -1,5 +1,5 @@
 import { RewardWithGrants } from "../models/RewardWithGrants";
-import { Avatar, Badge, Box, Card, CircularProgress } from "@material-ui/core";
+import { Avatar, Badge, Card } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { GrantState } from "../models/GrantState";
@@ -13,10 +13,11 @@ import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddGrant } from "../BackendAccess";
-import ErrorIcon from "@material-ui/icons/Error";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
 import { EditableTextAvatar } from "../EditableTextAvatar";
+import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
+import produce from "immer";
 
 type Prop = {
   reward: RewardWithGrants;
@@ -68,6 +69,9 @@ export function RewardCard(props: Prop): JSX.Element {
     );
   }, [props.reward.grants]);
 
+  const deleteRewardMutation = useQueryDelete("parentRewardData");
+  const putRewardMutation = useQueryPut("parentRewardData");
+
   function handleExpandClick() {
     setExpanded(!expanded);
   }
@@ -112,41 +116,62 @@ export function RewardCard(props: Prop): JSX.Element {
 
   function handleDelete() {
     console.log("Deleting...");
-    showInfo("Deleting..."); // TODO js (11.03.2021): Replace dummy implementation.
-
+    deleteRewardMutation.mutate({
+      url: "/api/Rewards/",
+      object: props.reward,
+    });
     handleMoreClose();
   }
 
-  function handleTitleEdit() {
+  function handleTitleEdit(title: string) {
     console.log("Editing title...");
-    showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
+    var updatedReward = produce(
+      props.reward,
+      (draftReward: RewardWithGrants) => {
+        draftReward.name = title;
+      }
+    );
+
+    putRewardMutation.mutate({
+      url: "/api/Rewards/",
+      object: updatedReward,
+    });
+    console.log("Title edited.");
+    showInfo("Title edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
-  function handleValueEdit() {
+  function handleValueEdit(value: number) {
     console.log("Editing amount of marbles...");
-    showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
+    var updatedReward = produce(
+      props.reward,
+      (draftReward: RewardWithGrants) => {
+        draftReward.value = value;
+      }
+    );
+
+    putRewardMutation.mutate({
+      url: "/api/Rewards/",
+      object: updatedReward,
+    });
+    showInfo("Amount of marbles edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
 
   function handleDescriptionEdit(description: string) {
     console.log("Editing description...");
-    showInfo("Editing description..."); // TODO js (23.03.2021): Replace dummy implementation.
+    var updatedReward = produce(
+      props.reward,
+      (draftReward: RewardWithGrants) => {
+        draftReward.description = description;
+      }
+    );
+
+    putRewardMutation.mutate({
+      url: "/api/Rewards/",
+      object: updatedReward,
+    });
+    console.log("Description edited.");
+    showInfo("Description edited."); // TODO js (11.03.2021): Replace dummy implementation.
   }
-
-  if (addGrantMutation.isLoading)
-    return (
-      <Box>
-        <p>In progress...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
-
-  if (addGrantMutation.isError)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${addGrantMutation.error}`}</p>
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   function getTextColor(): "textSecondary" | "textPrimary" {
     return cardLocked ? "textSecondary" : "textPrimary";
