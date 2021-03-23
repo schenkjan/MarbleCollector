@@ -81,6 +81,9 @@ namespace MarbleCollectorApi
             services.AddScoped<IGrantRepository, GrantRepository>();
             services.AddScoped<IRewardRepository, RewardRepository>();
 
+            // Services
+            services.AddScoped<IUserScoreService, UserScoreService>();
+
             // Database Context
             services.AddDbContext<MarbleCollectorDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("MarbleCollectorSQLite")));

@@ -19,6 +19,31 @@ namespace MarbleCollectorApi.Data.Repository
                 .Include(assignment => assignment.User); // ensure loading of User object
         }
 
+        public IEnumerable<Assignment> GetAssignments(int userId)
+        {
+            return GetAll().Where(a => a.UserId == userId);
+        }
+
+        public IEnumerable<Assignment> GetCompletedAssignments(int userId, IEnumerable<Assignment> assignments = null)
+        {
+            if (assignments == null)
+            {
+                assignments = GetAssignments(userId);
+            }
+            return assignments.Where(assignment => assignment.State == AssignmentState.Archived);
+        }
+
+        public int GetMarblesEarned(int userId, IEnumerable<Assignment> assignments = null)
+        {
+            if (assignments == null)
+            {
+                assignments = GetCompletedAssignments(userId);
+            }
+
+            var marbleCount = assignments.Sum(a => a.Chore.Value);
+            return marbleCount;
+        }
+
         public override Assignment GetSingle(int id)
         {
             return GetSingle(assignment => assignment.Id == id);
