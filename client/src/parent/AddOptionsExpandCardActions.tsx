@@ -6,8 +6,12 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { MouseEventHandler } from "react";
 import { AddButtonWithLabel } from "./AddButtonWithLabel";
-import LockIcon from "@material-ui/icons/Lock";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
+import {
+  useErrorNotification,
+  useSuccessNotification,
+} from "../shell/hooks/SnackbarHooks";
 
 type Prop = {
   hideAddButton?: boolean;
@@ -16,6 +20,8 @@ type Prop = {
   moreOpen: boolean;
   expandOpen: boolean;
   locked?: boolean;
+  lockMessage?: string;
+  unlockMessage?: string;
   onAddClick?: MouseEventHandler<HTMLButtonElement> | undefined;
   onMoreClick?: MouseEventHandler<HTMLButtonElement> | undefined;
   onExpandClick?: MouseEventHandler<HTMLButtonElement> | undefined;
@@ -35,17 +41,34 @@ const useStyles = makeStyles((theme: Theme) =>
     moreOpen: {
       transform: "rotate(90deg)",
     },
+    locked: {
+      color: theme.palette.error.main,
+    },
+    unlocked: {
+      color: theme.palette.success.main,
+    },
   })
 );
 
 export function AddOptionsExpandCardActions(props: Prop): JSX.Element {
   const classes = useStyles();
+  const notifySuccess = useSuccessNotification();
+  const notifyError = useErrorNotification();
+
+  function handleLockClick(): void {
+    props.locked
+      ? props.lockMessage && notifyError(props.lockMessage)
+      : props.unlockMessage && notifySuccess(props.unlockMessage);
+  }
 
   return (
     <CardActions>
       {props.locked !== undefined && (
-        <IconButton disabled={true}>
-          {props.locked ? <LockIcon /> : <LockOpenIcon />}
+        <IconButton
+          className={props.locked ? classes.locked : classes.unlocked}
+          onClick={handleLockClick}
+        >
+          {props.locked ? <LockOutlinedIcon /> : <LockOpenIcon />}
         </IconButton>
       )}
       {props.hideAddButton ? undefined : (

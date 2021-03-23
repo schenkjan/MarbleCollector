@@ -267,6 +267,8 @@ export function ChoreCard(props: Prop): JSX.Element {
         hideAddButton
         disabledAddButton={allChildrenAssigned}
         locked={cardLocked}
+        lockMessage="Ämtli gesperrt, da bereits durch Kinder in Arbeit."
+        unlockMessage="Ämtli Titel, Zeitpunkt und Beschreibung anpassbar."
       />
       <CollapsibleCardContent
         className={classes.cardContent}
