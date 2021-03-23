@@ -16,7 +16,11 @@ import { useAddGrant } from "../BackendAccess";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
 import { EditableTextAvatar } from "../EditableTextAvatar";
-import { useQueryDelete, useQueryPut } from "../../api/BackendAccess";
+import {
+  mutateReward,
+  useParentRewardDelete,
+  useParentRewardPut,
+} from "../../api/BackendAccess";
 import produce from "immer";
 
 type Prop = {
@@ -69,8 +73,8 @@ export function RewardCard(props: Prop): JSX.Element {
     );
   }, [props.reward.grants]);
 
-  const deleteRewardMutation = useQueryDelete("parentRewardData");
-  const putRewardMutation = useQueryPut("parentRewardData");
+  const deleteRewardMutation = useParentRewardDelete();
+  const changeRewardMutation = useParentRewardPut();
 
   function handleExpandClick() {
     setExpanded(!expanded);
@@ -116,10 +120,7 @@ export function RewardCard(props: Prop): JSX.Element {
 
   function handleDelete() {
     console.log("Deleting...");
-    deleteRewardMutation.mutate({
-      url: "/api/Rewards/",
-      object: props.reward,
-    });
+    deleteRewardMutation.mutate(mutateReward(props.reward));
     handleMoreClose();
   }
 
@@ -131,13 +132,7 @@ export function RewardCard(props: Prop): JSX.Element {
         draftReward.name = title;
       }
     );
-
-    putRewardMutation.mutate({
-      url: "/api/Rewards/",
-      object: updatedReward,
-    });
-    console.log("Title edited.");
-    showInfo("Title edited."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeRewardMutation.mutate(mutateReward(updatedReward));
   }
 
   function handleValueEdit(value: number) {
@@ -148,12 +143,7 @@ export function RewardCard(props: Prop): JSX.Element {
         draftReward.value = value;
       }
     );
-
-    putRewardMutation.mutate({
-      url: "/api/Rewards/",
-      object: updatedReward,
-    });
-    showInfo("Amount of marbles edited."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeRewardMutation.mutate(mutateReward(updatedReward));
   }
 
   function handleDescriptionEdit(description: string) {
@@ -164,13 +154,7 @@ export function RewardCard(props: Prop): JSX.Element {
         draftReward.description = description;
       }
     );
-
-    putRewardMutation.mutate({
-      url: "/api/Rewards/",
-      object: updatedReward,
-    });
-    console.log("Description edited.");
-    showInfo("Description edited."); // TODO js (11.03.2021): Replace dummy implementation.
+    changeRewardMutation.mutate(mutateReward(updatedReward));
   }
 
   function getTextColor(): "textSecondary" | "textPrimary" {

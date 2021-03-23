@@ -129,7 +129,7 @@ interface RewardLoadingData {
 
 export function useParentRewardData(): RewardLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data: rewards } = useQuery("parentRewardData", () =>
+  const { isLoading, error, data: rewards } = useQuery("parentRewardGet", () =>
     axios
       .get<RewardWithGrants[]>(`${apiBaseUrl}/api/Rewards/Grants`, {
         headers: {
@@ -159,7 +159,7 @@ export function useAddGrant(): UseMutationResult<
       }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("parentRewardData");
+        queryClient.invalidateQueries("parentRewardGet");
       },
     }
   );
