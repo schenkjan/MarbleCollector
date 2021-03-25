@@ -1,12 +1,5 @@
 import { RewardWithGrants } from "../models/RewardWithGrants";
-import {
-  Avatar,
-  Badge,
-  Box,
-  Card,
-  CircularProgress,
-  Typography,
-} from "@material-ui/core";
+import { Avatar, Badge, Card } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { GrantState } from "../models/GrantState";
@@ -20,9 +13,15 @@ import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddGrant } from "../BackendAccess";
-import ErrorIcon from "@material-ui/icons/Error";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
+import { EditableTextAvatar } from "../EditableTextAvatar";
+import {
+  mutateReward,
+  useParentRewardDelete,
+  useParentRewardPut,
+} from "../../api/BackendAccess";
+import produce from "immer";
 
 type Prop = {
   reward: RewardWithGrants;
@@ -74,6 +73,9 @@ export function RewardCard(props: Prop): JSX.Element {
     );
   }, [props.reward.grants]);
 
+  const deleteRewardMutation = useParentRewardDelete();
+  const changeRewardMutation = useParentRewardPut();
+
   function handleExpandClick() {
     setExpanded(!expanded);
   }
@@ -118,51 +120,46 @@ export function RewardCard(props: Prop): JSX.Element {
 
   function handleDelete() {
     console.log("Deleting...");
-    showInfo("Deleting..."); // TODO js (11.03.2021): Replace dummy implementation.
-
+    deleteRewardMutation.mutate(mutateReward(props.reward));
     handleMoreClose();
   }
 
-  function handleTitleEdit() {
+  function handleTitleEdit(title: string) {
     console.log("Editing title...");
-    showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
-  }
-
-  function handleValueEdit() {
-    console.log("Editing amount of marbles...");
-    showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
-  }
-
-  function getDescription() {
-    if (!props.reward.description) return;
-
-    return (
-      <Typography
-        className={classes.description}
-        variant="body2"
-        color="textSecondary"
-        component="p"
-      >
-        {props.reward.description}
-      </Typography>
+    var updatedReward = produce(
+      props.reward,
+      (draftReward: RewardWithGrants) => {
+        draftReward.name = title;
+      }
     );
+    changeRewardMutation.mutate(mutateReward(updatedReward));
   }
 
-  if (addGrantMutation.isLoading)
-    return (
-      <Box>
-        <p>In progress...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+  function handleValueEdit(value: number) {
+    console.log("Editing amount of marbles...");
+    var updatedReward = produce(
+      props.reward,
+      (draftReward: RewardWithGrants) => {
+        draftReward.value = value;
+      }
+    );
+    changeRewardMutation.mutate(mutateReward(updatedReward));
+  }
 
-  if (addGrantMutation.isError)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${addGrantMutation.error}`}</p>
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
+  function handleDescriptionEdit(description: string) {
+    console.log("Editing description...");
+    var updatedReward = produce(
+      props.reward,
+      (draftReward: RewardWithGrants) => {
+        draftReward.description = description;
+      }
+    );
+    changeRewardMutation.mutate(mutateReward(updatedReward));
+  }
+
+  function getTextColor(): "textSecondary" | "textPrimary" {
+    return cardLocked ? "textSecondary" : "textPrimary";
+  }
 
   return (
     <Card elevation={5}>
@@ -184,6 +181,7 @@ export function RewardCard(props: Prop): JSX.Element {
         titleComponent={
           <EditableText
             text={props.reward.name}
+            editable={!cardLocked}
             editLabel="Bezeichnung der Belohnung"
             validationSchema={Yup.object({
               text: Yup.string()
@@ -191,27 +189,28 @@ export function RewardCard(props: Prop): JSX.Element {
                 .max(50, "Maximum 50 Zeichen"), // TODO js (17.03.2021): Use parameter.
             })}
             onTextChanged={handleTitleEdit}
+            textColor={getTextColor()}
           />
         }
         rightAvatarComponent={
-          <Badge
-            badgeContent={
+          <EditableTextAvatar
+            value={props.reward.value}
+            editable={!cardLocked}
+            editLabel="Preis in Murmeln"
+            validationSchema={Yup.object({
+              value: Yup.number()
+                .required("Bitte Wert definieren")
+                .min(1, "Wert > 0"),
+            })}
+            notifications={
               props.reward.grants.filter(
                 (grant) =>
                   grant.state === GrantState.RequestConfirmed ||
                   grant.state === GrantState.Archived
               ).length
             }
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            color="primary"
-          >
-            <Avatar onClick={handleValueEdit}>
-              {props.reward.value.toString()}
-            </Avatar>
-          </Badge>
+            onValueChanged={handleValueEdit}
+          />
         }
       />
       <AddOptionsExpandCardActions
@@ -223,12 +222,24 @@ export function RewardCard(props: Prop): JSX.Element {
         onExpandClick={handleExpandClick}
         hideAddButton
         disabledAddButton={allChildrenAssigned}
+        locked={cardLocked}
+        lockMessage="Belohnung gesperrt, da bereits durch Kinder in angefordert."
+        unlockMessage="Belohnung Titel, Murmelpreis und Beschreibung anpassbar."
       />
       <CollapsibleCardContent
         className={classes.cardContent}
         expanded={expanded}
       >
-        {getDescription()}
+        <EditableText
+          text={props.reward.description}
+          editable={!cardLocked}
+          editLabel="Beschreibung der Belohnung"
+          validationSchema={Yup.object({
+            text: Yup.string().max(250, "Maximum 250 Zeichen"),
+          })}
+          onTextChanged={handleDescriptionEdit}
+          textColor={getTextColor()}
+        />
         <GrantList grants={props.reward.grants} />
         <AddButtonWithLabel
           title="Kind hinzufügen"
