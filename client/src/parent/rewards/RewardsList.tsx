@@ -12,10 +12,14 @@ import { AddRewardDialog } from "./AddRewardDialog";
 import { useState } from "react";
 import { RewardCard } from "./RewardCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useChildrenDataForUser, useParentRewardData } from "../BackendAccess";
+import { useChildrenDataForUser } from "../BackendAccess";
 import { RewardWithGrants } from "../models/RewardWithGrants";
 import produce from "immer";
-import { mutateReward, useParentRewardPost } from "../../api/BackendAccess";
+import {
+  mutateReward,
+  useParentRewardGet,
+  useParentRewardPost,
+} from "../../api/BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,7 +40,7 @@ export function RewardsList() {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [rewardToEdit, setRewardToEdit] = useState<RewardWithGrants>();
-  const { rewards } = useParentRewardData();
+  const { data: rewards } = useParentRewardGet();
   const addReward = useParentRewardPost();
   const { children } = useChildrenDataForUser();
 

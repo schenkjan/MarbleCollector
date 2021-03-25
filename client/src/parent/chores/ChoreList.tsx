@@ -40,7 +40,7 @@ export function ChoreList(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [choreToEdit, setChoreToEdit] = useState<ChoreWithAssignments>();
-  const { chores } = useParentChoreGet();
+  const { data: chores } = useParentChoreGet();
   const addChore = useParentChorePost();
   const { children } = useChildrenDataForUser();
 

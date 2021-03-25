@@ -11,7 +11,6 @@ import { Assignment } from "./models/Assignment";
 import { AssignmentForCreate } from "./models/AssignmentForCreate";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
 import { GrantForCreate } from "./models/GrantForCreate";
-import { RewardWithGrants } from "./models/RewardWithGrants";
 import { User } from "./models/User";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
@@ -22,21 +21,7 @@ interface ChoreLoadingData {
   chores: ChoreWithAssignments[];
 }
 
-export function useParentChoreData(): ChoreLoadingData {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data: chores } = useQuery("parentChoreGet", () =>
-    axios
-      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => data?.data)
-  );
-
-  return { isLoading: isLoading, error: error, chores: chores ?? [] };
-}
-
+// TODO js (25.03.2021): Move to generic backend access file.
 export function useAddAssignment(): UseMutationResult<
   AxiosResponse<AssignmentForCreate>,
   unknown,
@@ -64,27 +49,6 @@ export function useAddAssignment(): UseMutationResult<
   );
 
   return mutation;
-}
-
-interface RewardLoadingData {
-  isLoading: boolean;
-  error: unknown;
-  rewards: RewardWithGrants[];
-}
-
-export function useParentRewardData(): RewardLoadingData {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data: rewards } = useQuery("parentRewardGet", () =>
-    axios
-      .get<RewardWithGrants[]>(`${apiBaseUrl}/api/Rewards/Grants`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => data?.data)
-  );
-
-  return { isLoading: isLoading, error: error, rewards: rewards ?? [] };
 }
 
 export function useAddGrant(): UseMutationResult<
