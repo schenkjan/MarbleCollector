@@ -15,7 +15,7 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { useChildrenDataForUser, useParentRewardData } from "../BackendAccess";
 import { RewardWithGrants } from "../models/RewardWithGrants";
 import produce from "immer";
-import { useParentRewardPost } from "../../api/BackendAccess";
+import { mutateReward, useParentRewardPost } from "../../api/BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,10 +46,7 @@ export function RewardsList() {
   }
 
   function handleOnSave(reward: RewardWithGrants) {
-    addReward.mutate({
-      url: "/api/Rewards/",
-      object: reward,
-    });
+    addReward.mutate(mutateReward(reward));
     setShowDialog(false);
   }
 
