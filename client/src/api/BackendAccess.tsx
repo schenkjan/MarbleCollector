@@ -12,10 +12,10 @@ import { useGet, usePost, usePut, useDelete } from "./Queries";
 const choreProps: QueryProps = {
   getKey: "parentChoreGet", // Choose a unique keyname
   getUrl: "/api/Chores/Assignments/", // GET-Url from Swagger UI
-  getMessage: "losed Data!", // GET-Message to Snack
-  postMessage: "chore created", // POST-Message to Snack
-  putMessage: "chore updated", // PUT-Message to Snack
-  deleteMessage: "chore deleted", // DELETE-Mesage to Snack
+  getErrorMessage: "Fehler beim Laden der Ämtli.", // GET-Message to Snack
+  postSuccessMessage: "Ämtli wurde erstellt.", // POST-Message to Snack
+  putSuccessMessage: "Ämtli wurde aktualisiert.", // PUT-Message to Snack
+  deleteSuccessMessage: "Ämtli wurde gelöscht.", // DELETE-Mesage to Snack
   mutateUrl: "/api/Chores/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
@@ -24,20 +24,26 @@ export const useParentChoreGet = () =>
   useGet<ChoreWithAssignments[]>(
     choreProps.getKey,
     choreProps.getUrl,
-    choreProps.getMessage
+    choreProps.getErrorMessage
   );
 
 // POST - create one Chore on Parent-Dashboard
 export const useParentChorePost = () =>
-  usePost<ChoreWithAssignments>(choreProps.getKey, choreProps.postMessage);
+  usePost<ChoreWithAssignments>(
+    choreProps.getKey,
+    choreProps.postSuccessMessage
+  );
 
 // PUT - change one Chore on Parent-Dashboard
 export const useParentChorePut = () =>
-  usePut<ChoreWithAssignments>(choreProps.getKey, choreProps.putMessage);
+  usePut<ChoreWithAssignments>(choreProps.getKey, choreProps.putSuccessMessage);
 
 // DELETE - delete one Chore on Parent-Dashboard
 export const useParentChoreDelete = () =>
-  useDelete<ChoreWithAssignments>(choreProps.getKey, choreProps.deleteMessage);
+  useDelete<ChoreWithAssignments>(
+    choreProps.getKey,
+    choreProps.deleteSuccessMessage
+  );
 
 // MUTATE - mutate the POST/PUT/DELETE object on Parent-Dashboard
 export const mutateChore = (object: any) =>
@@ -50,10 +56,10 @@ export const mutateChore = (object: any) =>
 const rewardProps: QueryProps = {
   getKey: "parentRewardGet", // Choose a unique keyname
   getUrl: "/api/Rewards/Grants/", // GET-Url from Swagger UI
-  getMessage: "losed Data!", // GET-Message to Snack
-  postMessage: "reward created", // POST-Message to Snack
-  putMessage: "reward updated", // PUT-Message to Snack
-  deleteMessage: "reward deleted", // DELETE-Mesage to Snack
+  getErrorMessage: "Fehler beim Laden der Belohnungen.", // GET-Message to Snack
+  postSuccessMessage: "Belohnung wurde erstellt.", // POST-Message to Snack
+  putSuccessMessage: "Belohnung wurde aktualisiert.", // PUT-Message to Snack
+  deleteSuccessMessage: "Belohnung wurde gelöscht.", // DELETE-Mesage to Snack
   mutateUrl: "/api/Rewards/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
@@ -62,20 +68,23 @@ export const useParentRewardGet = () =>
   useGet<RewardWithGrants[]>(
     rewardProps.getKey,
     rewardProps.getUrl,
-    rewardProps.getMessage
+    rewardProps.getErrorMessage
   );
 
 // POST - create one Reward on Parent-Dashboard
 export const useParentRewardPost = () =>
-  usePost<RewardWithGrants>(rewardProps.getKey, rewardProps.postMessage);
+  usePost<RewardWithGrants>(rewardProps.getKey, rewardProps.postSuccessMessage);
 
 // PUT - change one Reward on Parent-Dashboard
 export const useParentRewardPut = () =>
-  usePut<RewardWithGrants>(rewardProps.getKey, rewardProps.putMessage);
+  usePut<RewardWithGrants>(rewardProps.getKey, rewardProps.putSuccessMessage);
 
 // DELETE - delete one Reward on Parent-Dashboard
 export const useParentRewardDelete = () =>
-  useDelete<RewardWithGrants>(rewardProps.getKey, rewardProps.deleteMessage);
+  useDelete<RewardWithGrants>(
+    rewardProps.getKey,
+    rewardProps.deleteSuccessMessage
+  );
 
 // MUTATE - mutate the POST/PUT/DELETE object on Parent-Dashboard
 export const mutateReward = (object: any) =>
@@ -88,20 +97,23 @@ export const mutateReward = (object: any) =>
 const assignmentProps: QueryProps = {
   getKey: "parentAssignmentGet", // Choose a unique keyname
   getUrl: "/api/Assignments/", // GET-Url from Swagger UI
-  getMessage: "losed Data!", // GET-Message to Snack
-  postMessage: "assignment created", // POST-Message to Snack
-  putMessage: "assignment updated", // PUT-Message to Snack
-  deleteMessage: "assignment deleted", // DELETE-Mesage to Snack
+  getErrorMessage: "Fehler beim Laden der Zuweisungen.", // GET-Message to Snack
+  postSuccessMessage: "Zuweisung wurde erstellt.", // POST-Message to Snack
+  putSuccessMessage: "Zuweisung wurde aktualisiert.", // PUT-Message to Snack
+  deleteSuccessMessage: "Kind wurde vom Ämtli entfernt.", // DELETE-Mesage to Snack
   mutateUrl: "/api/Assignments/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
 // PUT - change one Assignment on Parent-Dashboard
 export const useParentAssignmentPut = () =>
-  usePut<Assignment>(choreProps.getKey, assignmentProps.putMessage);
+  usePut<Assignment>(choreProps.getKey, assignmentProps.putSuccessMessage);
 
 // DELETE - delete one Assignment on Parent-Dashboard
 export const useParentAssignmentDelete = () =>
-  useDelete<Assignment>(choreProps.getKey, assignmentProps.deleteMessage);
+  useDelete<Assignment>(
+    choreProps.getKey,
+    assignmentProps.deleteSuccessMessage
+  );
 
 // MUTATE - mutate the POST/PUT/DELETE object on Parent-Dashboard
 export const mutateAssignment = (object: any) =>
@@ -114,20 +126,20 @@ export const mutateAssignment = (object: any) =>
 const grantProps: QueryProps = {
   getKey: "parentGrantGet", // Choose a unique keyname
   getUrl: "/api/Grants/", // GET-Url from Swagger UI
-  getMessage: "losed Data!", // GET-Message to Snack
-  postMessage: "grant created", // POST-Message to Snack
-  putMessage: "grant updated", // PUT-Message to Snack
-  deleteMessage: "grant deleted", // DELETE-Mesage to Snack
+  getErrorMessage: "Fehler beim Laden der Berechtigungen", // GET-Message to Snack
+  postSuccessMessage: "Berechtigung wurde erstellt.", // POST-Message to Snack
+  putSuccessMessage: "Berechtigung wurde aktualisiert.", // PUT-Message to Snack
+  deleteSuccessMessage: "Kind wurde von der Belohnung entfernt.", // DELETE-Mesage to Snack
   mutateUrl: "/api/Grants/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
 // PUT - change one Grant on Parent-Dashboard
 export const useParentGrantPut = () =>
-  usePut<Grant>(rewardProps.getKey, grantProps.putMessage);
+  usePut<Grant>(rewardProps.getKey, grantProps.putSuccessMessage);
 
 // DELETE - delete one Grant on Parent-Dashboard
 export const useParentGrantDelete = () =>
-  useDelete<Grant>(rewardProps.getKey, grantProps.deleteMessage);
+  useDelete<Grant>(rewardProps.getKey, grantProps.deleteSuccessMessage);
 
 // MUTATE - mutate the POST/PUT/DELETE object on Parent-Dashboard
 export const mutateGrant = (object: any) =>
@@ -140,10 +152,10 @@ export const mutateGrant = (object: any) =>
 const assignmentForCreateProps: QueryProps = {
   getKey: "parentAssignmentGet", // Choose a unique keyname
   getUrl: "/api/Assignments/", // GET-Url from Swagger UI
-  getMessage: "losed Data!", // GET-Message to Snack
-  postMessage: "assignment created", // POST-Message to Snack
-  putMessage: "assignment updated", // PUT-Message to Snack
-  deleteMessage: "assignment deleted", // DELETE-Mesage to Snack
+  getErrorMessage: "Fehler beim Laden der Zuweisungen.", // GET-Message to Snack
+  postSuccessMessage: "Kind wurde dem Ämtli zugewiesen.", // POST-Message to Snack
+  putSuccessMessage: "Zuweisung wurde aktualisiert.", // PUT-Message to Snack
+  deleteSuccessMessage: "Zuweisung wurde gelöscht.", // DELETE-Mesage to Snack
   mutateUrl: "/api/Assignments/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
@@ -151,7 +163,7 @@ const assignmentForCreateProps: QueryProps = {
 export const useParentAssignmentPost = () =>
   usePost<AssignmentForCreate>(
     choreProps.getKey,
-    assignmentForCreateProps.postMessage
+    assignmentForCreateProps.postSuccessMessage
   );
 
 // MUTATE - mutate the POST/PUT/DELETE object on Parent-Dashboard
@@ -165,16 +177,19 @@ export const mutateAssignmentToCreate = (object: any) =>
 const grantForCreateProps: QueryProps = {
   getKey: "parentGrantGet", // Choose a unique keyname
   getUrl: "/api/Grants/", // GET-Url from Swagger UI
-  getMessage: "losed Data!", // GET-Message to Snack
-  postMessage: "grant created", // POST-Message to Snack
-  putMessage: "grant updated", // PUT-Message to Snack
-  deleteMessage: "grant deleted", // DELETE-Mesage to Snack
+  getErrorMessage: "Fehler beim Laden der Berechtigungen.", // GET-Message to Snack
+  postSuccessMessage: "Kind wurde der Belohnung zugewiesen.", // POST-Message to Snack
+  putSuccessMessage: "Berechtigung wurde aktualisiert.", // PUT-Message to Snack
+  deleteSuccessMessage: "Berechtigung wurde gelöscht.", // DELETE-Mesage to Snack
   mutateUrl: "/api/Grants/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
 // POST - create one Grant on Parent-Dashboard
 export const useParentGrantPost = () =>
-  usePost<GrantForCreate>(rewardProps.getKey, grantForCreateProps.postMessage);
+  usePost<GrantForCreate>(
+    rewardProps.getKey,
+    grantForCreateProps.postSuccessMessage
+  );
 
 // MUTATE - mutate the POST/PUT/DELETE object on Parent-Dashboard
 export const mutateGrantToCreate = (object: any) =>

@@ -3,9 +3,9 @@ import { QueryObjectUrl } from "./QueryObjectUrl";
 export interface QueryProps {
   getKey: string;
   getUrl: QueryObjectUrl;
-  getMessage: string;
-  postMessage: string;
-  putMessage: string;
-  deleteMessage: string;
+  getErrorMessage: string;
+  postSuccessMessage: string;
+  putSuccessMessage: string;
+  deleteSuccessMessage: string;
   mutateUrl: string;
 }
