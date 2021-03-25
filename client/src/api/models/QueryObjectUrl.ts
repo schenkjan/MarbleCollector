@@ -8,4 +8,5 @@ export type QueryObjectUrl =
   | "/api/Grants/"
   | "/api/Grants/Users/"
   | "/api/Rewards/"
-  | "/api/Rewards/Grants/";
+  | "/api/Rewards/Grants/"
+  | "/api/Chores/Assignments/Users/";

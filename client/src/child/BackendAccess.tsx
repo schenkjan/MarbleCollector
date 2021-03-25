@@ -6,6 +6,8 @@ import {
   useQueryClient,
 } from "react-query";
 import { useRecoilValue } from "recoil";
+import { QueryProps } from "../api/models/QueryProps";
+import { useGet } from "../api/Queries";
 import { AppState } from "../AppState";
 import { Assignment } from "../model/Assignment";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
@@ -140,3 +142,43 @@ export function useUpdateRewardState(): UseMutationResult<
 
   return mutation;
 }
+
+//Backendaccess new style
+
+// Settings for Chores on Parent-Dashboard
+const choreProps: QueryProps = {
+  getKey: "childChoreGet", // Choose a unique keyname
+  getUrl: "/api/Chores/Assignments/Users/", // GET-Url from Swagger UI
+  getMessage: "Ämtli konnten nicht geladen werden!", // GET-Message to Snack
+  postMessage: "Ämtli erstellt", // POST-Message to Snack
+  putMessage: "Ämtli aktualisiert", // PUT-Message to Snack
+  deleteMessage: "Ämtli gelöscht", // DELETE-Mesage to Snack
+  mutateUrl: "/api/Chores/", // POST/PUT/DELETE-Url from Swagger UI
+};
+
+// GET - load all Chores on Parent-Dashboard
+export const useChildChoreGet = (id: number) =>
+  useGet<ChoreWithAssignments[]>(
+    choreProps.getKey,
+    choreProps.getUrl + id,
+    choreProps.getMessage
+  );
+
+// Settings for Chores on Parent-Dashboard
+const rewardProps: QueryProps = {
+  getKey: "childRewardGet", // Choose a unique keyname
+  getUrl: "/api/Rewards/Users/", // GET-Url from Swagger UI
+  getMessage: "Belohnungen konnten nicht geladen werden!", // GET-Message to Snack
+  postMessage: "Ämtli erstellt", // POST-Message to Snack
+  putMessage: "Ämtli aktualisiert", // PUT-Message to Snack
+  deleteMessage: "Ämtli gelöscht", // DELETE-Mesage to Snack
+  mutateUrl: "/api/Chores/", // POST/PUT/DELETE-Url from Swagger UI
+};
+
+// GET - load all Rewards on Children-Dashboard
+export const useChildRewardGet = (id: number) =>
+  useGet<RewardWithGrants[]>(
+    rewardProps.getKey,
+    rewardProps.getUrl + id,
+    rewardProps.getMessage
+  );

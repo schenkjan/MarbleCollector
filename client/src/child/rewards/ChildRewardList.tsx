@@ -14,7 +14,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { RewardItem } from "./RewardItem";
 //todo, 210322 hs move backendaccess to common folder
-import { useChildRewardData } from "../BackendAccess";
+import { useChildRewardData, useChildRewardGet } from "../BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,29 +33,35 @@ export function ChildRewardList(): JSX.Element {
   const classes = useStyles();
   useDashboardTitle("Belohnungen");
 
-  const { isLoading, error, rewards } = useChildRewardData(userId);
+  //  const { isLoading, error, rewards } = useChildRewardData(userId);
+  const { data } = useChildRewardGet(userId);
 
-  if (isLoading)
-    return (
-      <Box>
-        <p>Loading...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+  // if (isLoading)
+  //   return (
+  //     <Box>
+  //       <p>Loading...</p>
+  //       <CircularProgress />
+  //     </Box>
+  //   ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
 
-  if (error)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${error}`}</p>
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
+  // if (error)
+  //   return (
+  //     <Box>
+  //       <ErrorIcon color="secondary" fontSize="large" />
+  //       <p>{`An error has occurred: ${error}`}</p>
+  //     </Box>
+  //   ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Container maxWidth="md" className={classes.container}>
       <Box className={classes.box} component={Paper}>
-        <List>
+        {/* <List>
           {rewards?.map((reward) => (
+            <RewardItem key={reward.id} reward={reward} />
+          ))}
+        </List> */}
+        <List>
+          {data?.map((reward) => (
             <RewardItem key={reward.id} reward={reward} />
           ))}
         </List>

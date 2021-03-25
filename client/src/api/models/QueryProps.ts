@@ -2,7 +2,7 @@ import { QueryObjectUrl } from "./QueryObjectUrl";
 
 export interface QueryProps {
   getKey: string;
-  getUrl: QueryObjectUrl;
+  getUrl: QueryObjectUrl | any;
   getMessage: string;
   postMessage: string;
   putMessage: string;

@@ -48,7 +48,7 @@ export function useGet<T>(
     });
   }
   return {
-    chores: data,
+    data: data,
   };
 }
 
