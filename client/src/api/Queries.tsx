@@ -16,7 +16,8 @@ const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 export function useGet<T>(
   key: string,
   url: QueryObjectUrl,
-  errorMessage: string
+  errorMessage: string,
+  additiveUrl?: number | string
 ) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
@@ -24,7 +25,7 @@ export function useGet<T>(
 
   const { isLoading, isFetching, isError, data } = useQuery<T>(key, () =>
     axios
-      .get(`${apiBaseUrl}${url}`, {
+      .get(`${apiBaseUrl}${url}${additiveUrl ? additiveUrl : ""}`, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
@@ -48,7 +49,7 @@ export function useGet<T>(
     });
   }
   return {
-    chores: data,
+    data: data,
   };
 }
 

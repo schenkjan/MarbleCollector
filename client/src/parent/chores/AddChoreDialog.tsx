@@ -16,6 +16,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import { AddChoreValidation } from "../models/AddChoreValidation";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
+import { de } from "date-fns/locale";
 
 type Prop = {
   open: boolean;
@@ -107,7 +108,7 @@ export function AddChoreDialog(props: Prop) {
           >
             {({ submitForm }) => (
               // Use any dateformat which is the best one for the backend!
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <MuiPickersUtilsProvider locale={de} utils={DateFnsUtils}>
                 <Form>
                   <Grid
                     container
@@ -147,6 +148,7 @@ export function AddChoreDialog(props: Prop) {
                           component={DatePicker}
                           name="dueDate"
                           label="Erledigt bis:"
+                          format="dd.MMMM yy"
                         />
                       </Box>
                     </Grid>

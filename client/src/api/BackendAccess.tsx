@@ -1,5 +1,8 @@
+import { useRecoilValue } from "recoil";
+import { AppState } from "../AppState";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
 import { RewardWithGrants } from "../parent/models/RewardWithGrants";
+import { UserProfile } from "../parent/models/UserProfile";
 import { QueryObject } from "./models/QueryObject";
 import { QueryProps } from "./models/QueryProps";
 import { useGet, usePost, usePut, useDelete } from "./Queries";
@@ -16,11 +19,12 @@ const choreProps: QueryProps = {
 };
 
 // GET - load all Chores on Parent-Dashboard
-export const useParentChoreGet = () =>
+export const useParentChoreGet = (additiveUrl?: number | string) =>
   useGet<ChoreWithAssignments[]>(
     choreProps.getKey,
     choreProps.getUrl,
-    choreProps.getMessage
+    choreProps.getMessage,
+    additiveUrl // absolute userId or familyName witch includes at the end of url
   );
 
 // POST - create one Chore on Parent-Dashboard
@@ -54,11 +58,12 @@ const rewardProps: QueryProps = {
 };
 
 // GET - load all Rewards on Parent-Dashboard
-export const useParentRewardGet = () =>
+export const useParentRewardGet = (additiveUrl?: number | string) =>
   useGet<RewardWithGrants[]>(
     rewardProps.getKey,
     rewardProps.getUrl,
-    rewardProps.getMessage
+    rewardProps.getMessage,
+    additiveUrl // absolute userId or familyName witch includes at the end of url
   );
 
 // POST - create one Reward on Parent-Dashboard
@@ -80,4 +85,22 @@ export const mutateReward = (object: any) =>
     object: object,
   } as QueryObject);
 
-// for Users copy the part above this comment --> ....
+// Settings for Profiles on Parent-Dashboard
+const profileProps: QueryProps = {
+  getKey: "parentProfileGet", // Choose a unique keyname
+  getUrl: "/api/Users/", // GET-Url from Swagger UI
+  getMessage: "losed Data!", // GET-Message to Snack
+  postMessage: "profile created", // POST-Message to Snack
+  putMessage: "profile updated", // PUT-Message to Snack
+  deleteMessage: "profile deleted", // DELETE-Mesage to Snack
+  mutateUrl: "/api/Users/", // POST/PUT/DELETE-Url from Swagger UI
+};
+
+// GET - load all Profiles on Parent-Dashboard
+export const useParentProfileGet = (additiveUrl?: number | string) =>
+  useGet<UserProfile>(
+    profileProps.getKey,
+    profileProps.getUrl,
+    profileProps.getMessage,
+    additiveUrl // absolute userId or familyName witch includes at the end of url
+  );
