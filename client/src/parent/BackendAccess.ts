@@ -97,12 +97,14 @@ export function useChildrenData(family: string): ChildrenLoadingData {
   return { isLoading: isLoading, error: error, children: children ?? [] };
 }
 
+// TODO js (25.03.2021): Move to generic backend access file.
 export function useChildrenDataForUser(): ChildrenLoadingData {
   const family = useFamilyMembership();
 
   return useChildrenData(family);
 }
 
+// TODO js (25.03.2021): Remove as soon as the function is not used anymore in the children dashboard.
 export function useChildChoreData(id: number): ChoreLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const { isLoading, error, data: chores } = useQuery("childChoreData", () =>
@@ -121,6 +123,7 @@ export function useChildChoreData(id: number): ChoreLoadingData {
   return { isLoading: isLoading, error: error, chores: chores ?? [] };
 }
 
+// TODO js (25.03.2021): Remove as soon as the function is not used anymore in the children dashboard.
 export function useUpdateChoreState(): UseMutationResult<
   AxiosResponse<Assignment>,
   unknown,

@@ -42,7 +42,7 @@ export function ChoreList(): JSX.Element {
   const [choreToEdit, setChoreToEdit] = useState<ChoreWithAssignments>();
   const { data: chores } = useParentChoreGet();
   const addChore = useParentChorePost();
-  const { children } = useChildrenDataForUser();
+  const { children } = useChildrenDataForUser(); // TODO js (25.03.2021): Move to generic backend access file.
 
   function handleOnCancel() {
     setChoreToEdit(undefined);

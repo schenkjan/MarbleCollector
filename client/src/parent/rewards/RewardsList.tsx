@@ -42,7 +42,7 @@ export function RewardsList() {
   const [rewardToEdit, setRewardToEdit] = useState<RewardWithGrants>();
   const { data: rewards } = useParentRewardGet();
   const addReward = useParentRewardPost();
-  const { children } = useChildrenDataForUser();
+  const { children } = useChildrenDataForUser(); // TODO js (25.03.2021): Move to generic backend access file.
 
   function handleOnCancel() {
     setRewardToEdit(undefined);
