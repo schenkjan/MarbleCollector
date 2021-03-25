@@ -34,7 +34,7 @@ export function HubConnectionHandler() {
     null
   );
 
-  const childNotificationHubUrl = `${apiBaseUrl}/hubs/children`;
+  const childNotificationHubUrl = `${apiBaseUrl}/hubs/child`;
   const parentNotificationHubUrl = `${apiBaseUrl}/hubs/parent`;
 
   useEffect(() => {

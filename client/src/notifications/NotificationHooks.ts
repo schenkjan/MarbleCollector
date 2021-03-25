@@ -85,3 +85,19 @@ export function useMyNotificationsByNameWithHandle(
     setAsHandled,
   ];
 }
+
+/**
+ * Retrieve notifications that are marked as being relevant for me and are of a notification type and allows the consumer to keep track of the messages he already handled.
+ * @returns all the new user notifications as well as a method to mark them as handled, so that they don't reappear.
+ */
+export function useMyNotificationsByNamePrefixWithHandle(
+  notificationNamePrefix: string
+): [UserNotification[], (handledNotifications: UserNotification[]) => void] {
+  const [notifications, setAsHandled] = useMyNotificationsWithHandle();
+  return [
+    notifications.filter((n) =>
+      n.notificationName.startsWith(notificationNamePrefix)
+    ),
+    setAsHandled,
+  ];
+}

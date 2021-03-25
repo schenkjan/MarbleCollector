@@ -11,21 +11,13 @@ import RedeemIcon from "@material-ui/icons/Redeem";
 import { useEffect, useState } from "react";
 import { DashboardState } from "../DashboardState";
 import { Link, useLocation } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { useDashboardBasePath } from "../hooks/DashboardBasePathHook";
-import { useAllNotifications } from "../../notifications/NotificationHooks";
 
 const useStyles = makeStyles({
-  navigation: {
-    //backgroundColor: "#01579b", // TODO js (25.02.2021): Move color selection to theme?
-    //color: "#fff", // TODO js (25.02.2021): Move color selection to theme?
-  },
-  action: {
-    //color: "#fff", // TODO js (25.02.2021): Move color selection to theme?
-  },
-  icon: {
-    //color: "#fff", // TODO js (25.02.2021): Move color selection to theme?
-  },
+  navigation: {},
+  action: {},
+  icon: {},
 });
 
 type NavigationBarProps = {
@@ -37,16 +29,21 @@ export function NavigationBar(props: NavigationBarProps) {
   const [value, setValue] = useState<number>();
   const { pathname: path } = useLocation();
   const dashboardBasePath = useDashboardBasePath();
-  const notifications = useAllNotifications();
-  const [choreNews, setChoreNews] = useRecoilState(
-    DashboardState.choreNewsCount
-  );
-  const [rewardNews, setRewardNews] = useRecoilState(
-    DashboardState.rewardNewsCount
-  );
-  const [profileNews, setProfileNews] = useRecoilState(
-    DashboardState.profileNewsCount
-  );
+
+  const [choreNotificationCount, resetChoreNotificationCount] = [
+    useRecoilValue(DashboardState.choreNotificationCount),
+    useResetRecoilState(DashboardState.choreNotificationCount),
+  ];
+
+  const [rewardNotificationCount, resetRewardNotificationCount] = [
+    useRecoilValue(DashboardState.rewardNotificationCount),
+    useResetRecoilState(DashboardState.rewardNotificationCount),
+  ];
+
+  const [profileNotificationCount, resetProfileNotificationCount] = [
+    useRecoilValue(DashboardState.profileNotificationCount),
+    useResetRecoilState(DashboardState.profileNotificationCount),
+  ];
 
   useEffect(() => {
     if (path.match(/(.*)rewards$/)) {
@@ -60,10 +57,6 @@ export function NavigationBar(props: NavigationBarProps) {
     }
   }, [path]);
 
-  useEffect(() => {
-    setChoreNews(notifications.length);
-  }, [notifications]);
-
   function handleOnChange(event: React.ChangeEvent<{}>, newValue: any) {
     setValue(newValue);
   }
@@ -72,48 +65,50 @@ export function NavigationBar(props: NavigationBarProps) {
 
   // TODO js (27.02.2021): Consider to improve onClick handlers!
   return (
-    <BottomNavigation
-      className={classes.navigation}
-      value={value}
-      onChange={handleOnChange}
-      showLabels
-    >
-      <BottomNavigationAction
-        className={classes.action}
-        label="Ämtli"
-        icon={
-          <Badge badgeContent={choreNews} color="secondary">
-            <AssignmentIcon className={classes.icon} />
-          </Badge>
-        }
-        component={Link}
-        to={`${dashboardBasePath}/chores`}
-        onClick={() => setChoreNews(0)}
-      />
-      <BottomNavigationAction
-        className={classes.action}
-        label="Belohnungen"
-        icon={
-          <Badge badgeContent={rewardNews} color="secondary">
-            <RedeemIcon className={classes.icon} />
-          </Badge>
-        }
-        component={Link}
-        to={`${dashboardBasePath}/rewards`}
-        onClick={() => setRewardNews(0)}
-      />
-      <BottomNavigationAction
-        className={classes.action}
-        label="Profil"
-        icon={
-          <Badge badgeContent={profileNews} color="secondary">
-            <AssignmentIndIcon className={classes.icon} />
-          </Badge>
-        }
-        component={Link}
-        to={`${dashboardBasePath}/profile`}
-        onClick={() => setProfileNews(0)}
-      />
-    </BottomNavigation>
+    <>
+      <BottomNavigation
+        className={classes.navigation}
+        value={value}
+        onChange={handleOnChange}
+        showLabels
+      >
+        <BottomNavigationAction
+          className={classes.action}
+          label="Ämtli"
+          icon={
+            <Badge badgeContent={choreNotificationCount} color="secondary">
+              <AssignmentIcon className={classes.icon} />
+            </Badge>
+          }
+          component={Link}
+          to={`${dashboardBasePath}/chores`}
+          onClick={resetChoreNotificationCount}
+        />
+        <BottomNavigationAction
+          className={classes.action}
+          label="Belohnungen"
+          icon={
+            <Badge badgeContent={rewardNotificationCount} color="secondary">
+              <RedeemIcon className={classes.icon} />
+            </Badge>
+          }
+          component={Link}
+          to={`${dashboardBasePath}/rewards`}
+          onClick={resetRewardNotificationCount}
+        />
+        <BottomNavigationAction
+          className={classes.action}
+          label="Profil"
+          icon={
+            <Badge badgeContent={profileNotificationCount} color="secondary">
+              <AssignmentIndIcon className={classes.icon} />
+            </Badge>
+          }
+          component={Link}
+          to={`${dashboardBasePath}/profile`}
+          onClick={resetProfileNotificationCount}
+        />
+      </BottomNavigation>
+    </>
   );
 }
