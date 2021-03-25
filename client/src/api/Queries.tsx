@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import {
   useErrorNotification,
-  useInfoNotification,
   useSuccessNotification,
 } from "../shell/hooks/SnackbarHooks";
 import { QueryObject } from "./models/QueryObject";

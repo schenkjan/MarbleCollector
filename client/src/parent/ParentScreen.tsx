@@ -4,7 +4,6 @@ import { ProfileDetails } from "./profile/ProfileDetails";
 import { ChoreList } from "./chores/ChoreList";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { RewardsList } from "./rewards/RewardsList";
-import PortalOverlay from "../shell/PortalOverlay";
 
 export function ParentScreen() {
   const { path } = useRouteMatch();
@@ -23,7 +22,6 @@ export function ParentScreen() {
           <ChoreList />
         </Route>
       </Switch>
-      <PortalOverlay />
     </>
   );
 }

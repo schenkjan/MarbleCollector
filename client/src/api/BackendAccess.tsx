@@ -1,5 +1,3 @@
-import { useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
 import { RewardWithGrants } from "../parent/models/RewardWithGrants";
 import { UserProfile } from "../parent/models/UserProfile";
