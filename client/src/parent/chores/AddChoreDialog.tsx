@@ -9,7 +9,7 @@ import {
 import * as React from "react";
 import { Formik, Form, Field } from "formik";
 import MuiTextField from "@material-ui/core/TextField";
-import { fieldToTextField, TextFieldProps, Switch } from "formik-material-ui";
+import { fieldToTextField, TextFieldProps } from "formik-material-ui";
 import { DatePicker } from "formik-material-ui-pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -20,6 +20,7 @@ import { de } from "date-fns/locale";
 
 type Prop = {
   open: boolean;
+  chore?: ChoreWithAssignments;
   onCancel: () => void;
   onSave: (choreObject: ChoreWithAssignments) => void;
 };
@@ -48,20 +49,20 @@ export function AddChoreDialog(props: Prop) {
             // init for the complete Formik-Component --> (GET-method in edit szenario)
 
             initialValues={{
-              id: 0,
-              name: "",
-              description: "",
-              value: 5,
-              dueDate: new Date(),
-              assignments: [],
+              id: props.chore ? props.chore.id : 0,
+              name: props.chore ? props.chore.name : "",
+              description: props.chore ? props.chore.description : "",
+              value: props.chore ? props.chore.value : 5,
+              dueDate: props.chore ? props.chore.dueDate : new Date(Date.now()),
+              assignments: props.chore ? props.chore.assignments : [],
             }}
             // validating for the complete Formik-Component
             validate={(ChoreValidation) => {
               let validDateMessage: string = "";
 
               const validDate = (formValue: Date, actuellValue: Date) => {
-                if (formValue.getFullYear() == actuellValue.getFullYear()) {
-                  if (formValue.getMonth() == actuellValue.getMonth()) {
+                if (formValue.getFullYear() === actuellValue.getFullYear()) {
+                  if (formValue.getMonth() === actuellValue.getMonth()) {
                     if (formValue.getDate() >= actuellValue.getDate()) {
                       return true;
                     } else {

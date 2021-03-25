@@ -10,16 +10,16 @@ import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
 import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { User } from "../models/User";
-import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
-import { useAddAssignment } from "../BackendAccess";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
 import produce from "immer";
 import { EditableDate } from "../EditableDate";
 import { EditableTextAvatar } from "../EditableTextAvatar";
 import {
+  mutateAssignmentToCreate,
   mutateChore,
+  useParentAssignmentPost,
   useParentChoreDelete,
   useParentChorePut,
 } from "../../api/BackendAccess";
@@ -27,6 +27,7 @@ import {
 type Prop = {
   chore: ChoreWithAssignments;
   children: User[];
+  onCopyChore: (choreToCopy: ChoreWithAssignments) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,10 +57,11 @@ export function ChoreCard(props: Prop): JSX.Element {
     showAddChildAnchor,
     setShowAddChildAnchor,
   ] = useState<null | HTMLElement>(null);
-  const showInfo = useInfoNotification();
   const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
   const [cardLocked, setCardLocked] = useState(true);
-  const addAssignmentMutation = useAddAssignment();
+  const addAssignmentMutation = useParentAssignmentPost();
+  const deleteChoreMutation = useParentChoreDelete();
+  const changeChoreMutation = useParentChorePut();
 
   useEffect(() => {
     setAllChildrenAssigned(
@@ -75,9 +77,6 @@ export function ChoreCard(props: Prop): JSX.Element {
     );
   }, [props.chore.assignments]);
 
-  const deleteChoreMutation = useParentChoreDelete();
-  const changeChoreMutation = useParentChorePut();
-
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
   }
@@ -91,7 +90,9 @@ export function ChoreCard(props: Prop): JSX.Element {
     setShowAddChildAnchor(null);
     setShowAddChild(false);
 
-    addAssignmentMutation.mutate({ choreId: props.chore.id, userId: id });
+    addAssignmentMutation.mutate(
+      mutateAssignmentToCreate({ choreId: props.chore.id, userId: id })
+    );
   }
 
   function handleAddChildClose(): void {
@@ -115,9 +116,8 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleCopy() {
     console.log("Copying...");
-    showInfo("Copying..."); // TODO js (11.03.2021): Replace dummy implementation.
-
     handleMoreClose();
+    props.onCopyChore(props.chore);
   }
 
   function handleDelete() {
