@@ -11,14 +11,15 @@ import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { User } from "../models/User";
 import { AddChildMenu } from "../AddChildMenu";
-import { useAddAssignment } from "../BackendAccess";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
 import produce from "immer";
 import { EditableDate } from "../EditableDate";
 import { EditableTextAvatar } from "../EditableTextAvatar";
 import {
+  mutateAssignmentToCreate,
   mutateChore,
+  useParentAssignmentPost,
   useParentChoreDelete,
   useParentChorePut,
 } from "../../api/BackendAccess";
@@ -58,7 +59,9 @@ export function ChoreCard(props: Prop): JSX.Element {
   ] = useState<null | HTMLElement>(null);
   const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
   const [cardLocked, setCardLocked] = useState(true);
-  const addAssignmentMutation = useAddAssignment();
+  const addAssignmentMutation = useParentAssignmentPost();
+  const deleteChoreMutation = useParentChoreDelete();
+  const changeChoreMutation = useParentChorePut();
 
   useEffect(() => {
     setAllChildrenAssigned(
@@ -74,9 +77,6 @@ export function ChoreCard(props: Prop): JSX.Element {
     );
   }, [props.chore.assignments]);
 
-  const deleteChoreMutation = useParentChoreDelete();
-  const changeChoreMutation = useParentChorePut();
-
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
   }
@@ -90,7 +90,9 @@ export function ChoreCard(props: Prop): JSX.Element {
     setShowAddChildAnchor(null);
     setShowAddChild(false);
 
-    addAssignmentMutation.mutate({ choreId: props.chore.id, userId: id });
+    addAssignmentMutation.mutate(
+      mutateAssignmentToCreate({ choreId: props.chore.id, userId: id })
+    );
   }
 
   function handleAddChildClose(): void {

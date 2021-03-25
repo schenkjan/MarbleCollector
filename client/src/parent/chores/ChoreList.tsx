@@ -12,7 +12,11 @@ import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useParentChoreGet, useParentChorePost } from "../../api/BackendAccess";
+import {
+  mutateChore,
+  useParentChoreGet,
+  useParentChorePost,
+} from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useChildrenDataForUser } from "../BackendAccess";
 import produce from "immer";
@@ -36,9 +40,9 @@ export function ChoreList(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [choreToEdit, setChoreToEdit] = useState<ChoreWithAssignments>();
-  const { chores } = useParentChoreGet();
+  const { data: chores } = useParentChoreGet();
   const addChore = useParentChorePost();
-  const { children } = useChildrenDataForUser();
+  const { children } = useChildrenDataForUser(); // TODO js (25.03.2021): Move to generic backend access file.
 
   function handleOnCancel() {
     setChoreToEdit(undefined);
@@ -46,10 +50,7 @@ export function ChoreList(): JSX.Element {
   }
 
   function handleOnSave(choreObject: ChoreWithAssignments) {
-    addChore.mutate({
-      url: "/api/Chores/",
-      object: choreObject,
-    });
+    addChore.mutate(mutateChore(choreObject));
     setShowDialog(false);
   }
 

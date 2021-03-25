@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
 import {
   useErrorNotification,
-  useInfoNotification,
   useSuccessNotification,
 } from "../shell/hooks/SnackbarHooks";
 import { QueryObject } from "./models/QueryObject";
@@ -48,7 +47,7 @@ export function useGet<T>(
     });
   }
   return {
-    chores: data,
+    data: data,
   };
 }
 
@@ -79,7 +78,7 @@ export function usePost<T>(invalidateKey: string, successMessage: string) {
 export function usePut<T>(invalidateKey: string, InfoMessage: string) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
-  const showInfo = useInfoNotification();
+  const showSuccess = useSuccessNotification();
   const mutation = useMutation(
     (object: QueryObject) =>
       axios.put<T>(
@@ -94,7 +93,7 @@ export function usePut<T>(invalidateKey: string, InfoMessage: string) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(invalidateKey);
-        showInfo(InfoMessage);
+        showSuccess(InfoMessage);
       },
     }
   );
@@ -106,7 +105,7 @@ export function usePut<T>(invalidateKey: string, InfoMessage: string) {
 export function useDelete<T>(invalidateKey: string, infoMessage: string) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
-  const showInfo = useInfoNotification();
+  const showSuccess = useSuccessNotification();
   const mutation = useMutation(
     (object: QueryObject) =>
       axios.delete<T>(`${apiBaseUrl}${object.url + object.object.id}`, {
@@ -117,7 +116,7 @@ export function useDelete<T>(invalidateKey: string, infoMessage: string) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(invalidateKey);
-        showInfo(infoMessage);
+        showSuccess(infoMessage);
       },
     }
   );

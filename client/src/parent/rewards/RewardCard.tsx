@@ -11,12 +11,13 @@ import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { User } from "../models/User";
 import { AddChildMenu } from "../AddChildMenu";
-import { useAddGrant } from "../BackendAccess";
 import { EditableText } from "../EditableText";
 import * as Yup from "yup";
 import { EditableTextAvatar } from "../EditableTextAvatar";
 import {
+  mutateGrantToCreate,
   mutateReward,
+  useParentGrantPost,
   useParentRewardDelete,
   useParentRewardPut,
 } from "../../api/BackendAccess";
@@ -57,7 +58,9 @@ export function RewardCard(props: Prop): JSX.Element {
   ] = useState<null | HTMLElement>(null);
   const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
   const [cardLocked, setCardLocked] = useState(true);
-  const addGrantMutation = useAddGrant();
+  const addGrantMutation = useParentGrantPost();
+  const deleteRewardMutation = useParentRewardDelete();
+  const changeRewardMutation = useParentRewardPut();
 
   useEffect(() => {
     setAllChildrenAssigned(
@@ -72,9 +75,6 @@ export function RewardCard(props: Prop): JSX.Element {
     );
   }, [props.reward.grants]);
 
-  const deleteRewardMutation = useParentRewardDelete();
-  const changeRewardMutation = useParentRewardPut();
-
   function handleExpandClick() {
     setExpanded(!expanded);
   }
@@ -88,7 +88,9 @@ export function RewardCard(props: Prop): JSX.Element {
     setShowAddChildAnchor(null);
     setShowAddChild(false);
 
-    addGrantMutation.mutate({ rewardId: props.reward.id, userId: id });
+    addGrantMutation.mutate(
+      mutateGrantToCreate({ rewardId: props.reward.id, userId: id })
+    );
   }
 
   function handleAddChildClose(): void {
