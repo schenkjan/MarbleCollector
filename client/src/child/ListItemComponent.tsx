@@ -16,6 +16,7 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { ChildListItem } from "./types/ChildListItem";
 import { StepperControl } from "./types/StepperControl";
+import { toDeLocaleDateString } from "../helper/DateHelper";
 
 type Props = {
   showBadge: number;
@@ -105,12 +106,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export function ListItemComponent(props: Props) {
   const classes = useStyles();
 
-  const subHeader = new Date(props.item.dueDate).toLocaleDateString("de-DE", {
-    weekday: "short",
-    year: "2-digit",
-    month: "short",
-    day: "numeric",
-  });
+  const subHeader = toDeLocaleDateString(props.item.dueDate);
 
   function onNextStepClick() {
     props.onNextStepClick();

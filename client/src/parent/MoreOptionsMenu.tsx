@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
+import { ConfirmableMenuItem } from "./ConfirmableMenuItem";
 
 type Prop = {
   copyLabel: string;
@@ -35,14 +36,13 @@ export function MoreOptionsMenu(props: Prop): JSX.Element {
           <Typography variant="body2">{props.copyLabel}</Typography>
         </ListItemText>
       </MenuItem>
-      <MenuItem onClick={props.onDelete} disabled={props.disableDelete}>
-        <ListItemIcon>
-          <DeleteForeverIcon />
-        </ListItemIcon>
-        <ListItemText disableTypography>
-          <Typography variant="body2">{props.deleteLabel}</Typography>
-        </ListItemText>
-      </MenuItem>
+      <ConfirmableMenuItem
+        iconComponent={<DeleteForeverIcon />}
+        label={props.deleteLabel}
+        onConfirm={props.onDelete}
+        onCancel={props.onMoreClose}
+        disabled={props.disableDelete}
+      />
     </Menu>
   );
 }

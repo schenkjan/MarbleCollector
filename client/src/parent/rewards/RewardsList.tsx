@@ -10,7 +10,7 @@ import {
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorIcon from "@material-ui/icons/Error";
-import { AddRewardDialog } from "../AddRewardDialog";
+import { AddRewardDialog } from "./AddRewardDialog";
 import { useState } from "react";
 import { RewardCard } from "./RewardCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
@@ -43,10 +43,6 @@ export function RewardsList() {
 
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.
-  }
-
-  function handleOnDelete() {
-    setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct delete logic.
   }
 
   function handleOnSave() {
@@ -92,7 +88,6 @@ export function RewardsList() {
       <AddRewardDialog
         open={showDialog}
         onCancel={handleOnCancel}
-        onDelete={handleOnDelete}
         onSave={handleOnSave}
       />
     </Box>

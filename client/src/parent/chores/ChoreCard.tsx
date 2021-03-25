@@ -1,7 +1,7 @@
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
-import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
+import { Avatar, Badge, Card } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AssignmentState } from "../models/AssignmentState";
 import { AssignmentList } from "./AssignmentList";
 import { MoreOptionsMenu } from "../MoreOptionsMenu";
@@ -13,7 +13,16 @@ import { User } from "../models/User";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
-import ErrorIcon from "@material-ui/icons/Error";
+import { EditableText } from "../EditableText";
+import * as Yup from "yup";
+import produce from "immer";
+import { EditableDate } from "../EditableDate";
+import { EditableTextAvatar } from "../EditableTextAvatar";
+import {
+  mutateChore,
+  useParentChoreDelete,
+  useParentChorePut,
+} from "../../api/BackendAccess";
 
 type Prop = {
   chore: ChoreWithAssignments;
@@ -22,15 +31,18 @@ type Prop = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    description: {
-      textAlign: "left",
-    },
     cardContent: {
       paddingTop: "0px",
       paddingBottom: "8px",
     },
+    avatar: {
+      backgroundColor: theme.palette.primary.main,
+    },
   })
 );
+
+const yesterday = new Date(Date.now());
+yesterday.setDate(yesterday.getDate() - 1);
 
 export function ChoreCard(props: Prop): JSX.Element {
   const classes = useStyles();
@@ -62,6 +74,9 @@ export function ChoreCard(props: Prop): JSX.Element {
       ).length > 0
     );
   }, [props.chore.assignments]);
+
+  const deleteChoreMutation = useParentChoreDelete();
+  const changeChoreMutation = useParentChorePut();
 
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);
@@ -107,86 +122,125 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleDelete() {
     console.log("Deleting...");
-    showInfo("Deleting..."); // TODO js (11.03.2021): Replace dummy implementation.
-
+    deleteChoreMutation.mutate(mutateChore(props.chore));
     handleMoreClose();
   }
 
-  function handleTitleEdit() {
+  function handleTitleEdit(title: string) {
     console.log("Editing title...");
-    showInfo("Editing title..."); // TODO js (11.03.2021): Replace dummy implementation.
-  }
-
-  function handleDueDateEdit() {
-    console.log("Editing due date...");
-    showInfo("Editing due date..."); // TODO js (11.03.2021): Replace dummy implementation.
-  }
-
-  function handleValueEdit() {
-    console.log("Editing amount of marbles...");
-    showInfo("Editing amount of marbles..."); // TODO js (11.03.2021): Replace dummy implementation.
-  }
-
-  function getDescription() {
-    if (!props.chore.description) return;
-
-    return (
-      <Typography
-        className={classes.description}
-        variant="body2"
-        color="textSecondary"
-        component="p"
-      >
-        {props.chore.description}
-      </Typography>
+    var updatedChore = produce(
+      props.chore,
+      (draftChore: ChoreWithAssignments) => {
+        draftChore.name = title;
+      }
     );
+    changeChoreMutation.mutate(mutateChore(updatedChore));
   }
 
-  if (addAssignmentMutation.isLoading)
-    return (
-      <Box>
-        <p>In progress...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+  function handleDueDateEdit(date: Date) {
+    console.log("Editing due date...");
+    var updatedChore = produce(
+      props.chore,
+      (draftChore: ChoreWithAssignments) => {
+        draftChore.dueDate = date;
+      }
+    );
+    changeChoreMutation.mutate(mutateChore(updatedChore));
+  }
 
-  if (addAssignmentMutation.isError)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${addAssignmentMutation.error}`}</p>
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
+  function handleValueEdit(value: number) {
+    console.log("Editing amount of marbles...");
+    var updatedChore = produce(
+      props.chore,
+      (draftChore: ChoreWithAssignments) => {
+        draftChore.value = value;
+      }
+    );
+    changeChoreMutation.mutate(mutateChore(updatedChore));
+  }
+
+  function handleDescriptionEdit(description: string) {
+    console.log("Editing description...");
+    var updatedChore = produce(
+      props.chore,
+      (draftChore: ChoreWithAssignments) => {
+        draftChore.description = description;
+      }
+    );
+    changeChoreMutation.mutate(mutateChore(updatedChore));
+  }
+
+  function getTextColor(): "textSecondary" | "textPrimary" {
+    return cardLocked ? "textSecondary" : "textPrimary";
+  }
 
   return (
     <Card elevation={5}>
       <BiAvatarCardHeader
-        leftAvatarLabel={props.chore.assignments.length.toString()}
-        leftAvatarNotifications={
-          props.chore.assignments.filter(
-            (assignment) =>
-              assignment.state === AssignmentState.RequestedToCheck
-          ).length
+        leftAvatarComponent={
+          <Badge
+            badgeContent={
+              props.chore.assignments.filter(
+                (assignment) =>
+                  assignment.state === AssignmentState.RequestedToCheck
+              ).length
+            }
+            color="secondary"
+          >
+            <Avatar className={classes.avatar} onClick={handleExpandClick}>
+              {props.chore.assignments.length.toString()}
+            </Avatar>
+          </Badge>
         }
-        onLeftAvatarClick={handleExpandClick}
-        title={props.chore.name}
-        subtitle={new Date(props.chore.dueDate).toLocaleDateString("de-DE", {
-          weekday: "short",
-          year: "2-digit",
-          month: "short",
-          day: "numeric",
-        })}
-        rightAvatarLabel={props.chore.value.toString()}
-        rightAvatarNotifications={
-          props.chore.assignments.filter(
-            (assignment) =>
-              assignment.state === AssignmentState.CheckConfirmed ||
-              assignment.state === AssignmentState.Archived
-          ).length
+        titleComponent={
+          <EditableText
+            text={props.chore.name}
+            editable={!cardLocked}
+            editLabel="Bezeichnung des Ämtlis"
+            validationSchema={Yup.object({
+              text: Yup.string()
+                .required("Bitte definieren")
+                .max(50, "Maximum 50 Zeichen"),
+            })}
+            onTextChanged={handleTitleEdit}
+            textColor={getTextColor()}
+          />
         }
-        onRightAvatarClick={handleValueEdit}
-        onTitleClick={handleTitleEdit}
-        onSubtitleClick={handleDueDateEdit}
+        subtitleComponent={
+          <EditableDate
+            date={props.chore.dueDate}
+            editable={!cardLocked}
+            editLabel="Ablaufdatum"
+            validationSchema={Yup.object({
+              date: Yup.date().min(
+                yesterday,
+                "Ausgewählter Tag liegt in der Vergangenheit"
+              ),
+            })}
+            onDateChanged={handleDueDateEdit}
+            textColor={getTextColor()}
+          />
+        }
+        rightAvatarComponent={
+          <EditableTextAvatar
+            value={props.chore.value}
+            editable={!cardLocked}
+            editLabel="Wert in Murmeln"
+            validationSchema={Yup.object({
+              value: Yup.number()
+                .required("Bitte Wert definieren")
+                .min(1, "Wert > 0"),
+            })}
+            notifications={
+              props.chore.assignments.filter(
+                (assignment) =>
+                  assignment.state === AssignmentState.CheckConfirmed ||
+                  assignment.state === AssignmentState.Archived
+              ).length
+            }
+            onValueChanged={handleValueEdit}
+          />
+        }
       />
       <AddOptionsExpandCardActions
         addLabel="Kind hinzufügen"
@@ -197,12 +251,24 @@ export function ChoreCard(props: Prop): JSX.Element {
         onExpandClick={handleExpandClick}
         hideAddButton
         disabledAddButton={allChildrenAssigned}
+        locked={cardLocked}
+        lockMessage="Ämtli gesperrt, da bereits durch Kinder in Bearbeitung."
+        unlockMessage="Ämtli Titel, Zeitpunkt, Murmelwert und Beschreibung anpassbar."
       />
       <CollapsibleCardContent
         className={classes.cardContent}
         expanded={expanded}
       >
-        {getDescription()}
+        <EditableText
+          text={props.chore.description}
+          editable={!cardLocked}
+          editLabel="Beschreibung des Ämtlis"
+          validationSchema={Yup.object({
+            text: Yup.string().max(250, "Maximum 250 Zeichen"),
+          })}
+          onTextChanged={handleDescriptionEdit}
+          textColor={getTextColor()}
+        />
         <AssignmentList assignments={props.chore.assignments} />
         <AddButtonWithLabel
           title="Kind hinzufügen"

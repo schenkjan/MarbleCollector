@@ -1,10 +1,10 @@
 import {
   Grid,
   Button,
-  FormControlLabel,
   Dialog,
   DialogContent,
   DialogContentText,
+  Typography,
 } from "@material-ui/core";
 import * as React from "react";
 import { Formik, Form, Field } from "formik";
@@ -14,13 +14,13 @@ import { DatePicker } from "formik-material-ui-pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
-import { ChoreValidation } from "../../model/ChoreValidation";
+import { AddChoreValidation } from "../models/AddChoreValidation";
+import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 
 type Prop = {
   open: boolean;
   onCancel: () => void;
-  onDelete: () => void;
-  onSave: (choreObject: {}) => void;
+  onSave: (choreObject: ChoreWithAssignments) => void;
 };
 
 function ChoreTextField(props: TextFieldProps) {
@@ -47,12 +47,12 @@ export function AddChoreDialog(props: Prop) {
             // init for the complete Formik-Component --> (GET-method in edit szenario)
 
             initialValues={{
-              choreName: "Rakete bauen (60min)",
-              choreValue: 10,
-              childSelect: true,
-              childSelect2: false,
-              date: new Date(),
-              rememberMe: true,
+              id: 0,
+              name: "",
+              description: "",
+              value: 5,
+              dueDate: new Date(),
+              assignments: [],
             }}
             // validating for the complete Formik-Component
             validate={(ChoreValidation) => {
@@ -86,15 +86,17 @@ export function AddChoreDialog(props: Prop) {
                 }
               };
 
-              const errors: Partial<ChoreValidation> = {};
-              if (!ChoreValidation.choreName) {
-                errors.choreName = "Bitte definieren";
-              } else if (!ChoreValidation.choreValue) {
-                errors.choreValue = "Bitte definieren";
-              } else if (ChoreValidation.choreValue < 1) {
-                errors.choreValue = "Ein wenig unfair, nicht?";
-              } else if (!validDate(ChoreValidation.date, new Date())) {
-                errors.date = validDateMessage;
+              const errors: Partial<AddChoreValidation> = {};
+              if (!ChoreValidation.name) {
+                errors.name = "Bitte definieren";
+              } else if (!ChoreValidation.value) {
+                errors.value = "Bitte definieren";
+              } else if (ChoreValidation.value < 1) {
+                errors.value = "Ein wenig unfair, nicht?";
+              } else if (ChoreValidation.value > 99) {
+                errors.value = "Du riskierst eine Inflation!";
+              } else if (!validDate(ChoreValidation.dueDate, new Date())) {
+                errors.dueDate = validDateMessage;
               }
               return errors;
             }}
@@ -115,53 +117,36 @@ export function AddChoreDialog(props: Prop) {
                     spacing={1}
                   >
                     <Grid item>
+                      <Typography>Was gibt es zu tun?</Typography>
                       <Box margin={2}>
                         <Field
                           component={ChoreTextField}
-                          name="choreName"
+                          name="name"
                           type="text"
-                          label="Ämtlibezeichnung"
+                          label="Ämtliname"
                         />
                       </Box>
                       <Box margin={2}>
                         <Field
                           component={ChoreTextField}
-                          name="choreValue"
+                          name="description"
+                          type="text"
+                          label="Ämtlibeschreibung"
+                        />
+                      </Box>
+                      <Box margin={2}>
+                        <Field
+                          component={ChoreTextField}
+                          name="value"
                           type="number"
                           label="Wert in Murmeln"
-                        />
-                      </Box>
-                      <Box margin={3}>
-                        <FormControlLabel
-                          control={<Field type="checkbox" name="childSelect" />}
-                          label="Peter"
-                        />
-                        <br />
-                        <FormControlLabel
-                          control={
-                            <Field type="checkbox" name="childSelect2" />
-                          }
-                          label="Margret"
                         />
                       </Box>
                       <Box margin={2}>
                         <Field
                           component={DatePicker}
-                          name="date"
+                          name="dueDate"
                           label="Erledigt bis:"
-                        />
-                      </Box>
-                      <Box margin={2}>
-                        <FormControlLabel
-                          control={
-                            <Field
-                              component={Switch}
-                              type="checkbox"
-                              color="primary"
-                              name="rememberMe"
-                            />
-                          }
-                          label="Erinnerung?"
                         />
                       </Box>
                     </Grid>
@@ -172,15 +157,6 @@ export function AddChoreDialog(props: Prop) {
                         onClick={submitForm}
                       >
                         Speichern
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={props.onDelete}
-                      >
-                        Löschen
                       </Button>
                     </Grid>
                     <Grid item>
