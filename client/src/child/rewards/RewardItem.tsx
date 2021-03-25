@@ -1,11 +1,8 @@
 import { ListItemComponent } from "../ListItemComponent";
 import { ChildListItem } from "../types/ChildListItem";
 import { StepperControl } from "../types/StepperControl";
-import { AssignmentState } from "../../parent/models/AssignmentState";
 import { RewardWithGrants } from "../../model/RewardWithGrants";
-import { Card } from "@material-ui/core";
-//todo, 210322 hs move backendaccess to common folder
-import { useUpdateRewardState } from "../BackendAccess";
+import { mutateReward, useChildRewardPut } from "../BackendAccess";
 import produce from "immer";
 import { GrantState } from "../../model/GrantState";
 
@@ -14,7 +11,7 @@ type Props = {
 };
 
 export function RewardItem(props: Props): JSX.Element {
-  const updateGrantMutation = useUpdateRewardState();
+  const updateGrantMutation = useChildRewardPut();
 
   function updateState(reward: RewardWithGrants) {
     let nextState: number;
@@ -31,9 +28,7 @@ export function RewardItem(props: Props): JSX.Element {
       draftGrant.state = nextState;
     });
 
-    updateGrantMutation.mutate(updatedGrant);
-
-    console.log(updatedGrant.state);
+    updateGrantMutation.mutate(mutateReward(updatedGrant));
   }
 
   function mapToListItem(reward: RewardWithGrants): ChildListItem {
@@ -69,20 +64,6 @@ export function RewardItem(props: Props): JSX.Element {
       disableButtonState: [GrantState.Requested, GrantState.Archived],
     };
   }
-
-  if (updateGrantMutation.isLoading)
-    return (
-      <Card elevation={5}>
-        <p>Updating...</p>
-      </Card>
-    ); // TODO hs (210322): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
-
-  if (updateGrantMutation.error)
-    return (
-      <Card elevation={5}>
-        <p>{`An error has occurred: ${updateGrantMutation.error}`}</p>
-      </Card>
-    ); // TODO hs (210322): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <ListItemComponent

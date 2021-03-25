@@ -3,9 +3,7 @@ import { ChildListItem } from "../types/ChildListItem";
 import { StepperControl } from "../types/StepperControl";
 import { AssignmentState } from "../../parent/models/AssignmentState";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
-import { Card } from "@material-ui/core";
-//todo, 210322 hs move backendaccess to common folder
-import { useUpdateChoreState } from "../BackendAccess";
+import { mutateChore, useChildChorePut } from "../BackendAccess";
 import produce from "immer";
 
 type Props = {
@@ -13,13 +11,13 @@ type Props = {
 };
 
 export function ChoreItem(props: Props): JSX.Element {
-  const updateAssignmentMutation = useUpdateChoreState();
+  const updateAssignmentMutation = useChildChorePut();
 
   function updateState(chore: ChoreWithAssignments) {
     let nextState: number;
 
     if (chore.assignments[0].state === AssignmentState.CheckConfirmed) {
-      nextState = AssignmentState.Archived; //chore.assignments[0].state + 2;
+      nextState = AssignmentState.Archived;
     } else if (chore.assignments[0].state === AssignmentState.CheckRefused) {
       nextState = AssignmentState.RequestedToCheck;
     } else {
@@ -33,7 +31,7 @@ export function ChoreItem(props: Props): JSX.Element {
       }
     );
 
-    updateAssignmentMutation.mutate(updatedAssignment);
+    updateAssignmentMutation.mutate(mutateChore(updatedAssignment));
   }
 
   function mapToListItem(chore: ChoreWithAssignments): ChildListItem {
@@ -67,20 +65,6 @@ export function ChoreItem(props: Props): JSX.Element {
       ],
     };
   }
-
-  if (updateAssignmentMutation.isLoading)
-    return (
-      <Card elevation={5}>
-        <p>Updating...</p>
-      </Card>
-    ); // TODO hs (210322): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
-
-  if (updateAssignmentMutation.error)
-    return (
-      <Card elevation={5}>
-        <p>{`An error has occurred: ${updateAssignmentMutation.error}`}</p>
-      </Card>
-    ); // TODO hs (210322): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <ListItemComponent

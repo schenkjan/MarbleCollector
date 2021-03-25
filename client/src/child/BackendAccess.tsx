@@ -6,8 +6,9 @@ import {
   useQueryClient,
 } from "react-query";
 import { useRecoilValue } from "recoil";
+import { QueryObject } from "../api/models/QueryObject";
 import { QueryProps } from "../api/models/QueryProps";
-import { useGet } from "../api/Queries";
+import { useGet, usePut } from "../api/Queries";
 import { AppState } from "../AppState";
 import { Assignment } from "../model/Assignment";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
@@ -56,68 +57,6 @@ export function useProfileData(userId?: number): ProfileData {
   return { isLoading: isLoading, error: error, profile: profile };
 }
 
-export function useChildChoreData(id: number): ChoreLoadingData {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data: chores } = useQuery("childChoreData", () =>
-    axios
-      .get<ChoreWithAssignments[]>(
-        `${apiBaseUrl}/api/Chores/Assignments/Users/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      )
-      .then((data) => data?.data)
-  );
-
-  return { isLoading: isLoading, error: error, chores: chores ?? [] };
-}
-
-export function useUpdateChoreState(): UseMutationResult<
-  AxiosResponse<Assignment>,
-  unknown,
-  Assignment,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    (assignment: Assignment) =>
-      axios.put<Assignment>(
-        `${apiBaseUrl}/api/Assignments/${assignment.id}`,
-        assignment,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      ),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("childChoreData");
-      },
-    }
-  );
-
-  return mutation;
-}
-
-export function useChildRewardData(id: number): RewardLoadingData {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const { isLoading, error, data: rewards } = useQuery("childRewardData", () =>
-    axios
-      .get<RewardWithGrants[]>(`${apiBaseUrl}/api/Rewards/Users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => data?.data)
-  );
-
-  return { isLoading: isLoading, error: error, rewards: rewards ?? [] };
-}
-
 export function useUpdateRewardState(): UseMutationResult<
   AxiosResponse<Grant>,
   unknown,
@@ -143,20 +82,22 @@ export function useUpdateRewardState(): UseMutationResult<
   return mutation;
 }
 
-//Backendaccess new style
-
-// Settings for Chores on Parent-Dashboard
 const choreProps: QueryProps = {
-  getKey: "childChoreGet", // Choose a unique keyname
-  getUrl: "/api/Chores/Assignments/Users/", // GET-Url from Swagger UI
-  getMessage: "Ämtli konnten nicht geladen werden!", // GET-Message to Snack
-  postMessage: "Ämtli erstellt", // POST-Message to Snack
-  putMessage: "Ämtli aktualisiert", // PUT-Message to Snack
-  deleteMessage: "Ämtli gelöscht", // DELETE-Mesage to Snack
-  mutateUrl: "/api/Chores/", // POST/PUT/DELETE-Url from Swagger UI
+  getKey: "childChoreGet",
+  getUrl: "/api/Chores/Assignments/Users/",
+  getMessage: "Ämtli konnte nicht geladen werden!",
+  postMessage: "Ämtli erstellt",
+  putMessage: "Ämtli aktualisiert",
+  deleteMessage: "Ämtli gelöscht",
+  mutateUrl: "/api/Assignments/",
 };
 
-// GET - load all Chores on Parent-Dashboard
+export const mutateChore = (object: any) =>
+  ({
+    url: choreProps.mutateUrl,
+    object: object,
+  } as QueryObject);
+
 export const useChildChoreGet = (id: number) =>
   useGet<ChoreWithAssignments[]>(
     choreProps.getKey,
@@ -164,21 +105,31 @@ export const useChildChoreGet = (id: number) =>
     choreProps.getMessage
   );
 
-// Settings for Chores on Parent-Dashboard
+export const useChildChorePut = () =>
+  usePut<ChoreWithAssignments>(choreProps.getKey, choreProps.putMessage);
+
 const rewardProps: QueryProps = {
-  getKey: "childRewardGet", // Choose a unique keyname
-  getUrl: "/api/Rewards/Users/", // GET-Url from Swagger UI
-  getMessage: "Belohnungen konnten nicht geladen werden!", // GET-Message to Snack
-  postMessage: "Ämtli erstellt", // POST-Message to Snack
-  putMessage: "Ämtli aktualisiert", // PUT-Message to Snack
-  deleteMessage: "Ämtli gelöscht", // DELETE-Mesage to Snack
-  mutateUrl: "/api/Chores/", // POST/PUT/DELETE-Url from Swagger UI
+  getKey: "childRewardGet",
+  getUrl: "/api/Rewards/Users/",
+  getMessage: "Belohnungen konnten nicht geladen werden!",
+  postMessage: "Belohnungen aktualisiert",
+  putMessage: "Belohnung aktualisiert",
+  deleteMessage: "Belohnung gelöscht",
+  mutateUrl: "/api/Grants/",
 };
 
-// GET - load all Rewards on Children-Dashboard
 export const useChildRewardGet = (id: number) =>
   useGet<RewardWithGrants[]>(
     rewardProps.getKey,
     rewardProps.getUrl + id,
     rewardProps.getMessage
   );
+
+export const mutateReward = (object: any) =>
+  ({
+    url: rewardProps.mutateUrl,
+    object: object,
+  } as QueryObject);
+
+export const useChildRewardPut = () =>
+  usePut<RewardWithGrants>(rewardProps.getKey, rewardProps.putMessage);
