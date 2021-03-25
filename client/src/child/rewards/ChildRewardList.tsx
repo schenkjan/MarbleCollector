@@ -14,7 +14,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { RewardItem } from "./RewardItem";
 //todo, 210322 hs move backendaccess to common folder
-import { useChildRewardData } from "../../parent/BackendAccess";
+import { useChildRewardData } from "../BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

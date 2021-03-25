@@ -5,7 +5,7 @@ import { AssignmentState } from "../../parent/models/AssignmentState";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { Card } from "@material-ui/core";
 //todo, 210322 hs move backendaccess to common folder
-import { useUpdateChoreState} from "../../parent/BackendAccess"; 
+import { useUpdateChoreState } from "../BackendAccess";
 import produce from "immer";
 
 type Props = {
@@ -20,16 +20,18 @@ export function ChoreItem(props: Props): JSX.Element {
 
     if (chore.assignments[0].state === AssignmentState.CheckConfirmed) {
       nextState = AssignmentState.Archived; //chore.assignments[0].state + 2;
-    } else if (chore.assignments[0].state === AssignmentState.CheckRefused){
+    } else if (chore.assignments[0].state === AssignmentState.CheckRefused) {
       nextState = AssignmentState.RequestedToCheck;
-    }
-    else {
+    } else {
       nextState = chore.assignments[0].state + 1;
     }
 
-    const updatedAssignment = produce(chore.assignments[0], (draftAssignment) => {
-      draftAssignment.state =  nextState;
-    });
+    const updatedAssignment = produce(
+      chore.assignments[0],
+      (draftAssignment) => {
+        draftAssignment.state = nextState;
+      }
+    );
 
     updateAssignmentMutation.mutate(updatedAssignment);
   }
@@ -67,19 +69,18 @@ export function ChoreItem(props: Props): JSX.Element {
   }
 
   if (updateAssignmentMutation.isLoading)
-  return (
-    <Card elevation={5}>
-      <p>Updating...</p>
-    </Card>
-  ); // TODO hs (210322): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
+    return (
+      <Card elevation={5}>
+        <p>Updating...</p>
+      </Card>
+    ); // TODO hs (210322): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
 
   if (updateAssignmentMutation.error)
-  return (
-    <Card elevation={5}>
-       <p>{`An error has occurred: ${updateAssignmentMutation.error}`}</p>
-    </Card>
-    
-  ); // TODO hs (210322): Implement more sophisticated error screen. Refactor to general error screen?
+    return (
+      <Card elevation={5}>
+        <p>{`An error has occurred: ${updateAssignmentMutation.error}`}</p>
+      </Card>
+    ); // TODO hs (210322): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <ListItemComponent

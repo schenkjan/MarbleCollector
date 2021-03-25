@@ -5,7 +5,7 @@ import { AssignmentState } from "../../parent/models/AssignmentState";
 import { RewardWithGrants } from "../../model/RewardWithGrants";
 import { Card } from "@material-ui/core";
 //todo, 210322 hs move backendaccess to common folder
-import { useUpdateRewardState } from "../../parent/BackendAccess";
+import { useUpdateRewardState } from "../BackendAccess";
 import produce from "immer";
 import { GrantState } from "../../model/GrantState";
 

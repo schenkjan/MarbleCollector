@@ -14,7 +14,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
 //todo, 210322 hs move backendaccess to common folder
-import { useChildChoreData } from "../../parent/BackendAccess";
+import { useChildChoreData } from "../BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
