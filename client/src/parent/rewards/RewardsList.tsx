@@ -29,8 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     fab: {
       position: "absolute",
-      bottom: theme.spacing(6),
+      bottom: theme.spacing(9),
       right: theme.spacing(2),
+      zIndex: 42, // Answer to the Ultimate Question of Life, The Universe, and Everything (https://www.google.com/search?q=the+answer+to+life+the+universe+and+everything)
     },
   })
 );
