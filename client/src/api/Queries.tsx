@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
@@ -31,22 +32,24 @@ export function useGet<T>(
       })
       .then((data) => data.data)
   );
-  if ((isLoading || isFetching) && queryState.open === false) {
-    setqueryState({
-      open: true,
-    });
-  } else if (isError) {
-    showError(errorMessage);
-  } else if (
-    !isLoading &&
-    !isFetching &&
-    !isError &&
-    queryState.open === true
-  ) {
-    setqueryState({
-      open: false,
-    });
-  }
+  useEffect(() => {
+    if ((isLoading || isFetching) && queryState.open === false) {
+      setqueryState({
+        open: true,
+      });
+    } else if (isError) {
+      showError(errorMessage);
+    } else if (
+      !isLoading &&
+      !isFetching &&
+      !isError &&
+      queryState.open === true
+    ) {
+      setqueryState({
+        open: false,
+      });
+    }
+  });
   return {
     data: data,
   };
