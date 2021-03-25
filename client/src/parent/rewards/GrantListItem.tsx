@@ -1,7 +1,6 @@
 import {
   Box,
   Chip,
-  CircularProgress,
   Typography,
   createStyles,
   makeStyles,
@@ -12,9 +11,12 @@ import { Grant } from "../models/Grant";
 import { GrantState, GrantStateNames } from "../models/GrantState";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import { ConfirmRejectChip } from "../ConfirmRejectChip";
-import { useDeleteGrant, useUpdateGrant } from "../BackendAccess";
-import ErrorIcon from "@material-ui/icons/Error";
 import produce from "immer";
+import {
+  mutateGrant,
+  useParentGrantDelete,
+  useParentGrantPut,
+} from "../../api/BackendAccess";
 
 type Prop = {
   grant: Grant;
@@ -30,8 +32,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function GrantListItem(props: Prop): JSX.Element {
   const classes = useStyles();
-  const deleteGrantMutation = useDeleteGrant();
-  const updateGrantMutation = useUpdateGrant();
+  const deleteGrantMutation = useParentGrantDelete();
+  const updateGrantMutation = useParentGrantPut();
 
   function isDone(state: GrantState): boolean {
     return (
@@ -55,43 +57,22 @@ export function GrantListItem(props: Prop): JSX.Element {
   }
 
   function handleRemoveClick() {
-    deleteGrantMutation.mutate(props.grant.id);
+    deleteGrantMutation.mutate(mutateGrant(props.grant));
   }
 
   function handleConfirm() {
     const updatedGrant = produce(props.grant, (draftGrant) => {
       draftGrant.state = GrantState.RequestConfirmed;
     });
-    updateGrantMutation.mutate(updatedGrant);
+    updateGrantMutation.mutate(mutateGrant(updatedGrant));
   }
 
   function handleReject() {
     const updatedGrant = produce(props.grant, (draftGrant) => {
       draftGrant.state = GrantState.RequestRefused;
     });
-    updateGrantMutation.mutate(updatedGrant);
+    updateGrantMutation.mutate(mutateGrant(updatedGrant));
   }
-
-  if (deleteGrantMutation.isLoading || updateGrantMutation.isLoading)
-    return (
-      <Box>
-        <p>In progress...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
-
-  if (deleteGrantMutation.isError || updateGrantMutation.isError)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        {deleteGrantMutation.error && (
-          <p>{`An error has occurred: ${deleteGrantMutation.error}`}</p>
-        )}
-        {updateGrantMutation.error && (
-          <p>{`An error has occurred: ${updateGrantMutation.error}`}</p>
-        )}
-      </Box>
-    ); // TODO js (16.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
     <Grid container spacing={1}>

@@ -1,4 +1,6 @@
+import { Assignment } from "../model/Assignment";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
+import { Grant } from "../model/Grant";
 import { RewardWithGrants } from "../parent/models/RewardWithGrants";
 import { QueryObject } from "./models/QueryObject";
 import { QueryProps } from "./models/QueryProps";
@@ -77,6 +79,58 @@ export const useParentRewardDelete = () =>
 export const mutateReward = (object: any) =>
   ({
     url: rewardProps.mutateUrl,
+    object: object,
+  } as QueryObject);
+
+// Settings for Assignments on Parent-Dashboard
+const assignmentProps: QueryProps = {
+  getKey: "parentAssignmentGet", // Choose a unique keyname
+  getUrl: "/api/Assignments/", // GET-Url from Swagger UI
+  getMessage: "losed Data!", // GET-Message to Snack
+  postMessage: "assignment created", // POST-Message to Snack
+  putMessage: "assignment updated", // PUT-Message to Snack
+  deleteMessage: "assignment deleted", // DELETE-Mesage to Snack
+  mutateUrl: "/api/Assignments/", // POST/PUT/DELETE-Url from Swagger UI
+};
+
+// PUT - change one Assignment on Parent-Dashboard
+export const useParentAssignmentPut = () =>
+  usePut<Assignment>(choreProps.getKey, assignmentProps.putMessage);
+
+// DELETE - delete one Assignment on Parent-Dashboard
+export const useParentAssignmentDelete = () =>
+  useDelete<Assignment>(choreProps.getKey, assignmentProps.deleteMessage);
+
+// MUTATE - mutate the POST/PUT/DELETE object on Parent-Dashboard
+export const mutateAssignment = (object: any) =>
+  ({
+    url: assignmentProps.mutateUrl,
+    object: object,
+  } as QueryObject);
+
+// Settings for Grants on Parent-Dashboard
+const grantProps: QueryProps = {
+  getKey: "parentGrantGet", // Choose a unique keyname
+  getUrl: "/api/Grants/", // GET-Url from Swagger UI
+  getMessage: "losed Data!", // GET-Message to Snack
+  postMessage: "grant created", // POST-Message to Snack
+  putMessage: "grant updated", // PUT-Message to Snack
+  deleteMessage: "grant deleted", // DELETE-Mesage to Snack
+  mutateUrl: "/api/Grants/", // POST/PUT/DELETE-Url from Swagger UI
+};
+
+// PUT - change one Grant on Parent-Dashboard
+export const useParentGrantPut = () =>
+  usePut<Grant>(rewardProps.getKey, grantProps.putMessage);
+
+// DELETE - delete one Grant on Parent-Dashboard
+export const useParentGrantDelete = () =>
+  useDelete<Grant>(rewardProps.getKey, grantProps.deleteMessage);
+
+// MUTATE - mutate the POST/PUT/DELETE object on Parent-Dashboard
+export const mutateGrant = (object: any) =>
+  ({
+    url: grantProps.mutateUrl,
     object: object,
   } as QueryObject);
 

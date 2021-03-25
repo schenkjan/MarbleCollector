@@ -58,7 +58,9 @@ export function ChoreCard(props: Prop): JSX.Element {
   ] = useState<null | HTMLElement>(null);
   const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
   const [cardLocked, setCardLocked] = useState(true);
-  const addAssignmentMutation = useAddAssignment();
+  const addAssignmentMutation = useAddAssignment(); // TODO js (25.03.2021): Move to generic backend access file.
+  const deleteChoreMutation = useParentChoreDelete();
+  const changeChoreMutation = useParentChorePut();
 
   useEffect(() => {
     setAllChildrenAssigned(
@@ -73,9 +75,6 @@ export function ChoreCard(props: Prop): JSX.Element {
       ).length > 0
     );
   }, [props.chore.assignments]);
-
-  const deleteChoreMutation = useParentChoreDelete();
-  const changeChoreMutation = useParentChorePut();
 
   function handleExpandClick() {
     setExpanded((prevExpanded) => !prevExpanded);

@@ -67,60 +67,6 @@ export function useAddAssignment(): UseMutationResult<
   return mutation;
 }
 
-export function useUpdateAssignment(): UseMutationResult<
-  AxiosResponse<Assignment>,
-  unknown,
-  Assignment,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    (assignment: Assignment) =>
-      axios.put<Assignment>(
-        `${apiBaseUrl}/api/Assignments/${assignment.id}`,
-        assignment,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      ),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("parentChoreGet");
-      },
-    }
-  );
-
-  return mutation;
-}
-
-export function useDeleteAssignment(): UseMutationResult<
-  AxiosResponse<number>,
-  unknown,
-  number,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    (id: number) =>
-      axios.delete<number>(`${apiBaseUrl}/api/Assignments/${id}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("parentChoreGet");
-      },
-    }
-  );
-
-  return mutation;
-}
-
 interface RewardLoadingData {
   isLoading: boolean;
   error: unknown;
@@ -167,56 +113,6 @@ export function useAddGrant(): UseMutationResult<
   return mutation;
 }
 
-export function useUpdateGrant(): UseMutationResult<
-  AxiosResponse<Grant>,
-  unknown,
-  Grant,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    (grant: Grant) =>
-      axios.put<Grant>(`${apiBaseUrl}/api/Grants/${grant.id}`, grant, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("parentRewardData");
-      },
-    }
-  );
-
-  return mutation;
-}
-
-export function useDeleteGrant(): UseMutationResult<
-  AxiosResponse<number>,
-  unknown,
-  number,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    (id: number) =>
-      axios.delete<number>(`${apiBaseUrl}/api/Grants/${id}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("parentRewardData");
-      },
-    }
-  );
-
-  return mutation;
-}
-
 interface ChildrenLoadingData {
   isLoading: boolean;
   error: unknown;
@@ -248,11 +144,14 @@ export function useChildChoreData(id: number): ChoreLoadingData {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const { isLoading, error, data: chores } = useQuery("childChoreData", () =>
     axios
-      .get<ChoreWithAssignments[]>(`${apiBaseUrl}/api/Chores/Assignments/Users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
+      .get<ChoreWithAssignments[]>(
+        `${apiBaseUrl}/api/Chores/Assignments/Users/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+      )
       .then((data) => data?.data)
   );
 

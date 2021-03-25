@@ -57,7 +57,9 @@ export function RewardCard(props: Prop): JSX.Element {
   ] = useState<null | HTMLElement>(null);
   const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
   const [cardLocked, setCardLocked] = useState(true);
-  const addGrantMutation = useAddGrant();
+  const addGrantMutation = useAddGrant(); // TODO js (25.03.2021): Move to generic backend access file.
+  const deleteRewardMutation = useParentRewardDelete();
+  const changeRewardMutation = useParentRewardPut();
 
   useEffect(() => {
     setAllChildrenAssigned(
@@ -71,9 +73,6 @@ export function RewardCard(props: Prop): JSX.Element {
         .length > 0
     );
   }, [props.reward.grants]);
-
-  const deleteRewardMutation = useParentRewardDelete();
-  const changeRewardMutation = useParentRewardPut();
 
   function handleExpandClick() {
     setExpanded(!expanded);
