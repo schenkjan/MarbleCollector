@@ -15,6 +15,7 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { useParentChoreGet, useParentChorePost } from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useChildrenDataForUser } from "../BackendAccess";
+import { useNotificationSubscription } from "../../notifications/NotificationHooks";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,12 +39,20 @@ export function ChoreList(): JSX.Element {
 
   const { chores } = useParentChoreGet();
   const addChore = useParentChorePost();
-
+  // const notificationSubscription = useNotificationSubscription({
+  //   subscriberKey: "choreList",
+  //   notificationMethodName: "ReceiveMessage",
+  //   notificationReceivedCallback: receiveMessag,
+  // });
   const {
     isLoading: isChildrenLoading,
     error: childrenError,
     children,
   } = useChildrenDataForUser();
+
+  function receiveMessag(...args: any[]) {
+    console.log(args);
+  }
 
   function handleOnCancel() {
     setShowDialog(false);

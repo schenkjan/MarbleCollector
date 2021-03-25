@@ -7,10 +7,11 @@ import {
   useInfoNotification,
   useSuccessNotification,
 } from "../shell/hooks/SnackbarHooks";
+import { getApiBaseUrl } from "./BackendAccess";
 import { QueryObject } from "./models/QueryObject";
 import { QueryObjectUrl } from "./models/QueryObjectUrl";
 
-const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
+const apiBaseUrl = getApiBaseUrl();
 
 // GET
 export function useGet<T>(

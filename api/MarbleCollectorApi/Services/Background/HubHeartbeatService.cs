@@ -31,7 +31,10 @@ namespace MarbleCollectorApi.Services.Background
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogDebug($"HubHeartbeatService task doing background work.");
-                
+
+                await _parentNotificationHubContext.Clients.All.SendAsync(ParentNotificationHub.ReceiveMessageMethod, nameof(HubHeartbeatService), $"Hearbeat :: {DateTime.Now}");
+                await _childrenNotificationHubContext.Clients.All.SendAsync(ChildrenNotificationHub.UpdateFiguresMethod, nameof(HubHeartbeatService), $"Hearbeat :: {DateTime.Now}");
+
                 await Task.Delay(10000, stoppingToken);
             }
 
