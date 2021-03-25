@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export function RewardsList() {
+export default function RewardsList() {
   useDashboardTitle("Belohnungspinnwand");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);

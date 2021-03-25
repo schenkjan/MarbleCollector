@@ -1,6 +1,6 @@
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 
-export function ProfileDetails() {
+export default function ProfileDetails() {
   useDashboardTitle("Profil");
   return (
     <>

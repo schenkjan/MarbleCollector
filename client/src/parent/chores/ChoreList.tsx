@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export function ChoreList(): JSX.Element {
+export default function ChoreList(): JSX.Element {
   useDashboardTitle("Ämtli Pinnwand");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
