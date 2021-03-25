@@ -55,6 +55,10 @@ const useStyles = makeStyles((theme: Theme) =>
       "font-size": "1rem",
       "padding-right": "8px",
     },
+    doneNotificationBadge: {
+      color: "white",
+      backgroundColor: theme.palette.success.light,
+    },
   })
 );
 
@@ -115,12 +119,12 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
 
   return (
     <Badge
+      classes={{ badge: classes.doneNotificationBadge }}
       badgeContent={props.notifications}
       anchorOrigin={{
         vertical: "bottom",
         horizontal: "left",
       }}
-      color="primary"
     >
       <ThemeProvider theme={theme}>
         <Badge
