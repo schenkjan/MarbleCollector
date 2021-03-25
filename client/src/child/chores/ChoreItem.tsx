@@ -5,6 +5,7 @@ import { AssignmentState } from "../../parent/models/AssignmentState";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { mutateChore, useChildChorePut } from "../BackendAccess";
 import produce from "immer";
+import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 
 type Props = {
   chore: ChoreWithAssignments;
@@ -12,8 +13,23 @@ type Props = {
 
 export function ChoreItem(props: Props): JSX.Element {
   const updateAssignmentMutation = useChildChorePut();
+  const showInfo = useInfoNotification();
+
+  function clickHint(chore: ChoreWithAssignments) {
+    switch (chore.assignments[0].state) {
+      case AssignmentState.Archived: {
+        showInfo("Ämtli wurde bereits erledigt");
+        break;
+      }
+      case AssignmentState.RequestedToCheck: {
+        showInfo("Bitte warte auf die Bestätigung deiner Eltern");
+        break;
+      }
+    }
+  }
 
   function updateState(chore: ChoreWithAssignments) {
+    console.log("clicked");
     let nextState: number;
 
     if (chore.assignments[0].state === AssignmentState.CheckConfirmed) {
@@ -74,6 +90,7 @@ export function ChoreItem(props: Props): JSX.Element {
       item={mapToListItem(props.chore)}
       stepper={itemStepperControl(props.chore)}
       onNextStepClick={() => updateState(props.chore)}
+      onTryClick={() => clickHint(props.chore)}
     />
   );
 }

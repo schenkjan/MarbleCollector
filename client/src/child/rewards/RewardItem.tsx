@@ -5,6 +5,7 @@ import { RewardWithGrants } from "../../model/RewardWithGrants";
 import { mutateReward, useChildRewardPut } from "../BackendAccess";
 import produce from "immer";
 import { GrantState } from "../../model/GrantState";
+import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 
 type Props = {
   reward: RewardWithGrants;
@@ -12,6 +13,20 @@ type Props = {
 
 export function RewardItem(props: Props): JSX.Element {
   const updateGrantMutation = useChildRewardPut();
+  const showInfo = useInfoNotification();
+
+  function clickHint(reward: RewardWithGrants) {
+    switch (reward.grants[0].state) {
+      case GrantState.Archived: {
+        showInfo("Belohnung wurde bereits eingelöst");
+        break;
+      }
+      case GrantState.Requested: {
+        showInfo("Bitte warte auf die Bestätigung deiner Eltern");
+        break;
+      }
+    }
+  }
 
   function updateState(reward: RewardWithGrants) {
     let nextState: number;
@@ -73,6 +88,7 @@ export function RewardItem(props: Props): JSX.Element {
       item={mapToListItem(props.reward)}
       stepper={itemStepperControl(props.reward)}
       onNextStepClick={() => updateState(props.reward)}
+      onTryClick={() => clickHint(props.reward)}
     />
   );
 }

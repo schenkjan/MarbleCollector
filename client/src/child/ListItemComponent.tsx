@@ -23,6 +23,7 @@ type Props = {
   item: ChildListItem;
   stepper: StepperControl;
   onNextStepClick: () => void;
+  onTryClick: () => void;
 };
 
 const theme = createMuiTheme({
@@ -112,6 +113,10 @@ export function ListItemComponent(props: Props) {
     props.onNextStepClick();
   }
 
+  function onTryClick() {
+    props.onTryClick();
+  }
+
   function disableButton(): boolean {
     let disable = false;
     props.stepper.disableButtonState.forEach(function (disableState) {
@@ -182,16 +187,18 @@ export function ListItemComponent(props: Props) {
             </Step>
           ))}
         </Stepper>
-        <Button
-          onClick={() => onNextStepClick()}
-          disabled={disableButton()}
-          className={classes.stepButton}
-          variant="contained"
-          size="small"
-          color="primary"
-        >
-          {props.stepper.buttonText[props.item.state]}
-        </Button>
+        <div onClick={() => onTryClick()}>
+          <Button
+            onClick={() => onNextStepClick()}
+            disabled={disableButton()}
+            className={classes.stepButton}
+            variant="contained"
+            size="small"
+            color="primary"
+          >
+            {props.stepper.buttonText[props.item.state]}
+          </Button>
+        </div>
       </CardActions>
     </Card>
   );
