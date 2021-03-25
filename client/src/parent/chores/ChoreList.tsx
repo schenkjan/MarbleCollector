@@ -15,6 +15,7 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { useParentChoreGet, useParentChorePost } from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useChildrenDataForUser } from "../BackendAccess";
+import produce from "immer";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,19 +34,14 @@ const useStyles = makeStyles((theme: Theme) =>
 export function ChoreList(): JSX.Element {
   useDashboardTitle("Ämtli Pinnwand");
   const classes = useStyles();
-
   const [showDialog, setShowDialog] = useState(false);
-
+  const [choreToEdit, setChoreToEdit] = useState<ChoreWithAssignments>();
   const { chores } = useParentChoreGet();
   const addChore = useParentChorePost();
-
-  const {
-    isLoading: isChildrenLoading,
-    error: childrenError,
-    children,
-  } = useChildrenDataForUser();
+  const { children } = useChildrenDataForUser();
 
   function handleOnCancel() {
+    setChoreToEdit(undefined);
     setShowDialog(false);
   }
 
@@ -61,11 +57,26 @@ export function ChoreList(): JSX.Element {
     setShowDialog(true);
   }
 
+  function handleCopyChore(chore: ChoreWithAssignments) {
+    const choreCopy = produce(chore, (draftChore: ChoreWithAssignments) => {
+      draftChore.id = 0;
+      draftChore.dueDate = new Date(Date.now());
+      draftChore.assignments = [];
+    });
+    setChoreToEdit(choreCopy);
+    setShowDialog(true);
+  }
+
   return (
     <Box className={classes.container} component={Paper}>
       <List>
         {chores?.map((chore) => (
-          <ChoreCard key={chore.id} chore={chore} children={children} />
+          <ChoreCard
+            key={chore.id}
+            chore={chore}
+            children={children}
+            onCopyChore={handleCopyChore}
+          />
         ))}
       </List>
       <Fab
@@ -79,6 +90,7 @@ export function ChoreList(): JSX.Element {
       </Fab>
       <AddChoreDialog
         open={showDialog}
+        chore={choreToEdit}
         onCancel={handleOnCancel}
         onSave={handleOnSave}
       />

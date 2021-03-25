@@ -10,7 +10,6 @@ import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
 import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { User } from "../models/User";
-import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddAssignment } from "../BackendAccess";
 import { EditableText } from "../EditableText";
@@ -27,6 +26,7 @@ import {
 type Prop = {
   chore: ChoreWithAssignments;
   children: User[];
+  onCopyChore: (choreToCopy: ChoreWithAssignments) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,7 +56,6 @@ export function ChoreCard(props: Prop): JSX.Element {
     showAddChildAnchor,
     setShowAddChildAnchor,
   ] = useState<null | HTMLElement>(null);
-  const showInfo = useInfoNotification();
   const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
   const [cardLocked, setCardLocked] = useState(true);
   const addAssignmentMutation = useAddAssignment();
@@ -115,9 +114,8 @@ export function ChoreCard(props: Prop): JSX.Element {
 
   function handleCopy() {
     console.log("Copying...");
-    showInfo("Copying..."); // TODO js (11.03.2021): Replace dummy implementation.
-
     handleMoreClose();
+    props.onCopyChore(props.chore);
   }
 
   function handleDelete() {
