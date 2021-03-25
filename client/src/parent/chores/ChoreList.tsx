@@ -12,7 +12,11 @@ import { AddChoreDialog } from "./AddChoreDialog";
 import { useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useParentChoreGet, useParentChorePost } from "../../api/BackendAccess";
+import {
+  mutateChore,
+  useParentChoreGet,
+  useParentChorePost,
+} from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useChildrenDataForUser } from "../BackendAccess";
 import produce from "immer";
@@ -46,10 +50,7 @@ export function ChoreList(): JSX.Element {
   }
 
   function handleOnSave(choreObject: ChoreWithAssignments) {
-    addChore.mutate({
-      url: "/api/Chores/",
-      object: choreObject,
-    });
+    addChore.mutate(mutateChore(choreObject));
     setShowDialog(false);
   }
 
