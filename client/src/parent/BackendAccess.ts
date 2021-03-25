@@ -8,73 +8,10 @@ import {
 import { useRecoilValue } from "recoil";
 import { AppState, useFamilyMembership } from "../AppState";
 import { Assignment } from "./models/Assignment";
-import { AssignmentForCreate } from "./models/AssignmentForCreate";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
-import { GrantForCreate } from "./models/GrantForCreate";
 import { User } from "./models/User";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
-
-interface ChoreLoadingData {
-  isLoading: boolean;
-  error: unknown;
-  chores: ChoreWithAssignments[];
-}
-
-// TODO js (25.03.2021): Move to generic backend access file.
-export function useAddAssignment(): UseMutationResult<
-  AxiosResponse<AssignmentForCreate>,
-  unknown,
-  AssignmentForCreate,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    (assignment: AssignmentForCreate) =>
-      axios.post<AssignmentForCreate>(
-        `${apiBaseUrl}/api/Assignments`,
-        assignment,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      ),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("parentChoreGet");
-      },
-    }
-  );
-
-  return mutation;
-}
-
-export function useAddGrant(): UseMutationResult<
-  AxiosResponse<GrantForCreate>,
-  unknown,
-  GrantForCreate,
-  unknown
-> {
-  const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    (assignment: GrantForCreate) =>
-      axios.post<GrantForCreate>(`${apiBaseUrl}/api/Grants`, assignment, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("parentRewardGet");
-      },
-    }
-  );
-
-  return mutation;
-}
 
 interface ChildrenLoadingData {
   isLoading: boolean;
@@ -102,6 +39,12 @@ export function useChildrenDataForUser(): ChildrenLoadingData {
   const family = useFamilyMembership();
 
   return useChildrenData(family);
+}
+
+interface ChoreLoadingData {
+  isLoading: boolean;
+  error: unknown;
+  chores: ChoreWithAssignments[];
 }
 
 // TODO js (25.03.2021): Remove as soon as the function is not used anymore in the children dashboard.
