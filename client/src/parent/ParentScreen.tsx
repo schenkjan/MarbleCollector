@@ -6,7 +6,7 @@ import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { RewardsList } from "./rewards/RewardsList";
 import PortalOverlay from "../shell/PortalOverlay";
 
-export function ParentScreen() {
+export default function ParentScreen() {
   const { path } = useRouteMatch();
 
   return (

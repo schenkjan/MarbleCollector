@@ -5,7 +5,7 @@ import { ChildChoreList } from "./chores/ChildChoreList";
 import { ProfileDetails } from "./profile/ProfileDetails";
 import PortalOverlay from "../shell/PortalOverlay";
 
-export function ChildScreen() {
+export default function ChildScreen() {
   const { path } = useRouteMatch();
 
   return (
