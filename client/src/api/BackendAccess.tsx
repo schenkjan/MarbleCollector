@@ -29,7 +29,7 @@ export const useParentChoreGet = (additiveUrl?: number | string) =>
     choreProps.getKey,
     choreProps.getUrl,
     choreProps.getErrorMessage,
-    additiveUrl // absolute userId or familyName witch includes at the end of url
+    additiveUrl // absolute userId or familyName witch includes at the end of url for get single data
   );
 
 // POST - create one Chore on Parent-Dashboard
@@ -83,7 +83,7 @@ export const useParentRewardGet = (additiveUrl?: number | string) =>
     rewardProps.getKey,
     rewardProps.getUrl,
     rewardProps.getErrorMessage,
-    additiveUrl // absolute userId or familyName witch includes at the end of url
+    additiveUrl // absolute userId or familyName witch includes at the end of url for get single data
   );
 
 // POST - create one Reward on Parent-Dashboard
@@ -137,7 +137,7 @@ export const useParentProfileGet = (additiveUrl?: number | string) =>
     profileProps.getKey,
     profileProps.getUrl,
     profileProps.getErrorMessage,
-    additiveUrl // absolute userId or familyName witch includes at the end of url
+    additiveUrl // absolute userId or familyName witch includes at the end of url for get single data
   );
 
 // Settings for Assignments on Parent-Dashboard
