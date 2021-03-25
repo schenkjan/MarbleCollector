@@ -10,7 +10,6 @@ import { AppState, useFamilyMembership } from "../AppState";
 import { Assignment } from "./models/Assignment";
 import { AssignmentForCreate } from "./models/AssignmentForCreate";
 import { ChoreWithAssignments } from "./models/ChoreWithAssignments";
-import { Grant } from "./models/Grant";
 import { GrantForCreate } from "./models/GrantForCreate";
 import { RewardWithGrants } from "./models/RewardWithGrants";
 import { User } from "./models/User";
