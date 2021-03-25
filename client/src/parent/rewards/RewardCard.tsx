@@ -10,7 +10,6 @@ import { BiAvatarCardHeader } from "../BiAvatarCardHeader";
 import { CollapsibleCardContent } from "../CollapsibleCardContent";
 import { AddButtonWithLabel } from "../AddButtonWithLabel";
 import { User } from "../models/User";
-import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { AddChildMenu } from "../AddChildMenu";
 import { useAddGrant } from "../BackendAccess";
 import { EditableText } from "../EditableText";
@@ -26,6 +25,7 @@ import produce from "immer";
 type Prop = {
   reward: RewardWithGrants;
   children: User[];
+  onCopyReward: (rewardToCopy: RewardWithGrants) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -55,7 +55,6 @@ export function RewardCard(props: Prop): JSX.Element {
     showAddChildAnchor,
     setShowAddChildAnchor,
   ] = useState<null | HTMLElement>(null);
-  const showInfo = useInfoNotification();
   const [allChildrenAssigned, setAllChildrenAssigned] = useState(true);
   const [cardLocked, setCardLocked] = useState(true);
   const addGrantMutation = useAddGrant();
@@ -113,9 +112,8 @@ export function RewardCard(props: Prop): JSX.Element {
 
   function handleCopy() {
     console.log("Copying...");
-    showInfo("Copying..."); // TODO js (11.03.2021): Replace dummy implementation.
-
     handleMoreClose();
+    props.onCopyReward(props.reward);
   }
 
   function handleDelete() {
