@@ -22,13 +22,16 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: "1 1 auto",
       padding: "1px",
     },
+    container: {
+      padding: "0px",
+    },
   })
 );
 
 export function ChildRewardList(): JSX.Element {
   const userId = useRecoilValue(AppState.userId);
   const classes = useStyles();
-  useDashboardTitle("Belohnungen Pinnwand");
+  useDashboardTitle("Belohnungen");
 
   const { isLoading, error, rewards } = useChildRewardData(userId);
 
@@ -49,7 +52,7 @@ export function ChildRewardList(): JSX.Element {
     ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" className={classes.container}>
       <Box className={classes.box} component={Paper}>
         <List>
           {rewards?.map((reward) => (

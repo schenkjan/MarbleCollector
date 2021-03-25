@@ -88,14 +88,16 @@ const useStyles = makeStyles((theme: Theme) =>
       "margin-left": "0px",
     },
     root: {
-      width: "100%",
+      width: "80%",
       padding: "8px",
       "padding-right": "0px",
+      "padding-left": "4px",
       textAlign: "left",
     },
     stepButton: {
       "margin-bottom": "35px",
       "margin-right": "16px",
+      fontSize: "0.7rem",
     },
   })
 );
