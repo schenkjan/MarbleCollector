@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
@@ -18,7 +19,7 @@ export function useGet<T>(
   errorMessage: string
 ) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
+  const [queryState, setQueryState] = useRecoilState(AppState.queryStateInfo);
   const showError = useErrorNotification();
 
   const { isLoading, isFetching, isError, data } = useQuery<T>(key, () =>
@@ -30,22 +31,55 @@ export function useGet<T>(
       })
       .then((data) => data.data)
   );
-  if ((isLoading || isFetching) && queryState.open === false) {
-    setqueryState({
-      open: true,
-    });
-  } else if (isError) {
-    showError(errorMessage);
-  } else if (
-    !isLoading &&
-    !isFetching &&
-    !isError &&
-    queryState.open === true
-  ) {
-    setqueryState({
-      open: false,
-    });
-  }
+
+  // if ((isLoading || isFetching) && queryState.open === false) {
+  //   // TOOD js (25.03.2021): The setQueryState() seems to cause problems like "Cannot update a component (`Batcher`) while rendering a different component"
+  //   // in the console output (see https://github.com/facebookexperimental/Recoil/issues/12#issuecomment-648620138 for an explanation).
+  //   // Recoils seems to be working on a fix
+  //   // Possible fix: https://github.com/facebookexperimental/Recoil/issues/12#issuecomment-732193801
+  //   setQueryState({
+  //     open: true,
+  //   });
+  // } else if (isError) {
+  //   showError(errorMessage);
+  // } else if (
+  //   !isLoading &&
+  //   !isFetching &&
+  //   !isError &&
+  //   queryState.open === true
+  // ) {
+  //   setQueryState({
+  //     open: false,
+  //   });
+  // }
+
+  useEffect(() => {
+    if ((isLoading || isFetching) && queryState.open === false) {
+      setQueryState({
+        open: true,
+      });
+    } else if (isError) {
+      showError(errorMessage);
+    } else if (
+      !isLoading &&
+      !isFetching &&
+      !isError &&
+      queryState.open === true
+    ) {
+      setQueryState({
+        open: false,
+      });
+    }
+  }, [
+    errorMessage,
+    isError,
+    isFetching,
+    isLoading,
+    queryState.open,
+    setQueryState,
+    showError,
+  ]);
+
   return {
     data: data,
   };
