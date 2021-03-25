@@ -1,6 +1,6 @@
 import { atom } from "recoil";
-import { HubConnection } from "@microsoft/signalr";
 import { NotificationSubscriber } from "./NotificationSubscriber";
+import { NotificationBase } from "./Notification";
 
 export class NotificationState {
   static hubConnectionEstablished = atom<boolean>({
@@ -13,7 +13,7 @@ export class NotificationState {
     default: [],
   });
 
-  static notifications = atom<Notification[]>({
+  static notifications = atom<NotificationBase[]>({
     key: "notifications",
     default: [],
   });

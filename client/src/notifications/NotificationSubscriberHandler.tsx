@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { UserRoles } from "../auth/UserRoles";
+import { NotificationNames } from "./NotificationNames";
 import { NotificationState } from "./NotificationState";
+import { NotificationSubscriber } from "./NotificationSubscriber";
 
 type NotificationSubscriberHandlerProps = {
   userRole: string | undefined;
@@ -23,6 +25,7 @@ export function NotificationSubscriberHandler(
   const setNotificationSubscribers = useSetRecoilState(
     NotificationState.notificationSubscribers
   );
+  const setNotifications = useSetRecoilState(NotificationState.notifications);
 
   useEffect(() => {
     const userRoleDefined = userRole !== undefined;
@@ -42,23 +45,46 @@ export function NotificationSubscriberHandler(
       setNotificationSubscribers([]);
     }
 
+    function pushNotification(notificationName: string) {
+      return (...args: any[]) => {
+        console.log(`${logPrefix} :: ${notificationName} :: args=`, args);
+        setNotifications((notifications) => [
+          ...notifications,
+          { notificationName: notificationName, args: args },
+        ]);
+      };
+    }
+
+    function getSubscriber(
+      subscriberKey: string,
+      notificationMethodName: string
+    ): NotificationSubscriber {
+      return {
+        subscriberKey: subscriberKey,
+        notificationMethodName: notificationMethodName,
+        notificationReceivedCallback: pushNotification(notificationMethodName),
+      };
+    }
+
     function subscribeToParentNotifications() {
-      setNotificationSubscribers((subscribers) => [
-        {
-          subscriberKey: "parent.receiveMessage",
-          notificationMethodName: "ReceiveMessage",
-          notificationReceivedCallback: (...args: any[]) => console.log(args),
-        },
+      setNotificationSubscribers([
+        getSubscriber(
+          "parent.receiveMessage",
+          NotificationNames.parent.receiveMessage
+        ),
       ]);
     }
 
     function subscribeToChildrenNotifications() {
-      setNotificationSubscribers((subscribers) => [
-        {
-          subscriberKey: "child.figuresUpdated",
-          notificationMethodName: "UpdateFigures",
-          notificationReceivedCallback: (...args: any[]) => console.log(args),
-        },
+      setNotificationSubscribers([
+        getSubscriber(
+          "child.createdAssignment",
+          NotificationNames.children.createdAssignment
+        ),
+        getSubscriber(
+          "child.figuresUpdated",
+          NotificationNames.children.updateFigures
+        ),
       ]);
     }
   }, [hubConnectionEstablished, userRole]);
