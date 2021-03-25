@@ -170,6 +170,10 @@ export function ChoreCard(props: Prop): JSX.Element {
     changeChoreMutation.mutate(mutateChore(updatedChore));
   }
 
+  function getTextColor(): "textSecondary" | "textPrimary" {
+    return cardLocked ? "textSecondary" : "textPrimary";
+  }
+
   return (
     <Card elevation={5}>
       <BiAvatarCardHeader
@@ -199,6 +203,7 @@ export function ChoreCard(props: Prop): JSX.Element {
                 .max(50, "Maximum 50 Zeichen"),
             })}
             onTextChanged={handleTitleEdit}
+            textColor={getTextColor()}
           />
         }
         subtitleComponent={
@@ -213,6 +218,7 @@ export function ChoreCard(props: Prop): JSX.Element {
               ),
             })}
             onDateChanged={handleDueDateEdit}
+            textColor={getTextColor()}
           />
         }
         rightAvatarComponent={
@@ -245,6 +251,9 @@ export function ChoreCard(props: Prop): JSX.Element {
         onExpandClick={handleExpandClick}
         hideAddButton
         disabledAddButton={allChildrenAssigned}
+        locked={cardLocked}
+        lockMessage="Ämtli gesperrt, da bereits durch Kinder in Bearbeitung."
+        unlockMessage="Ämtli Titel, Zeitpunkt, Murmelwert und Beschreibung anpassbar."
       />
       <CollapsibleCardContent
         className={classes.cardContent}
@@ -252,13 +261,13 @@ export function ChoreCard(props: Prop): JSX.Element {
       >
         <EditableText
           text={props.chore.description}
-          textColor="textSecondary"
           editable={!cardLocked}
           editLabel="Beschreibung des Ämtlis"
           validationSchema={Yup.object({
             text: Yup.string().max(250, "Maximum 250 Zeichen"),
           })}
           onTextChanged={handleDescriptionEdit}
+          textColor={getTextColor()}
         />
         <AssignmentList assignments={props.chore.assignments} />
         <AddButtonWithLabel

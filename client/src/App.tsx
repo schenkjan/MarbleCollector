@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { HomeScreen } from "./home/HomeScreen";
 import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import { AuthController } from "./auth/AuthController";
-import { ShowSnack } from "./shell/Snackbar";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
 import { ProtectedRoutesController } from "./auth/ProtectedRoutesController";
