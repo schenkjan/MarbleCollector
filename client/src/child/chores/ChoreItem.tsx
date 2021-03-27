@@ -102,6 +102,7 @@ export function ChoreItem(props: Props): JSX.Element {
         key={props.chore.id}
         // TODO hs (210319): Add show badge function
         showBadge={0}
+        disableControl={false}
         item={mapToListItem(props.chore)}
         stepper={itemStepperControl(props.chore)}
         onNextStepClick={() => updateState(props.chore)}

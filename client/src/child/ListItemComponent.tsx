@@ -19,6 +19,7 @@ import { StepperControl } from "./types/StepperControl";
 import { toDeLocaleDateString } from "../helper/DateHelper";
 
 type Props = {
+  disableControl: boolean;
   showBadge: number;
   item: ChildListItem;
   stepper: StepperControl;
@@ -190,7 +191,7 @@ export function ListItemComponent(props: Props) {
         <div onClick={() => onTryClick()}>
           <Button
             onClick={() => onNextStepClick()}
-            disabled={disableButton()}
+            disabled={disableButton() || props.disableControl}
             className={classes.stepButton}
             variant="contained"
             size="small"

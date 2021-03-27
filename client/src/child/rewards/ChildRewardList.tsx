@@ -11,7 +11,7 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { RewardItem } from "./RewardItem";
-import { useChildRewardGet } from "../BackendAccess";
+import { useChildRewardGet, useUserBalance } from "../BackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,13 +31,20 @@ export function ChildRewardList(): JSX.Element {
   useDashboardTitle("Belohnungen");
 
   const { data } = useChildRewardGet(userId);
+  const { isLoading, error, balance } = useUserBalance();
+
+  //TODO 21037 improve implementation
+  let userBalance = 0;
+  if (balance) {
+    userBalance = balance;
+  }
 
   return (
     <Container maxWidth="md" className={classes.container}>
       <Box className={classes.box} component={Paper}>
         <List>
           {data?.map((reward) => (
-            <RewardItem key={reward.id} reward={reward} />
+            <RewardItem key={reward.id} reward={reward} balance={userBalance} />
           ))}
         </List>
       </Box>

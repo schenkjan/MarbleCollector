@@ -24,16 +24,10 @@ interface ProfileData {
   profile: UserProfile | undefined;
 }
 
-interface RewardLoadingData {
+interface UserBalance {
   isLoading: boolean;
   error: unknown;
-  rewards: RewardWithGrants[];
-}
-
-interface ChoreLoadingData {
-  isLoading: boolean;
-  error: unknown;
-  chores: ChoreWithAssignments[];
+  balance: number | undefined;
 }
 
 export function useProfileData(userId?: number): ProfileData {
@@ -133,3 +127,21 @@ export const mutateReward = (object: any) =>
 
 export const useChildRewardPut = () =>
   usePut<RewardWithGrants>(rewardProps.getKey, rewardProps.putMessage);
+
+export function useUserBalance(userId?: number): UserBalance {
+  const userInfo = useRecoilValue(AppState.userInfo);
+  const bearerToken = useRecoilValue(AppState.userBearerToken);
+  const queryProfileUserId = userId ? userId : userInfo?.id;
+
+  const { isLoading, error, data: balance } = useQuery("userBalance", () =>
+    axios
+      .get<number>(`${apiBaseUrl}/api/Users/${queryProfileUserId}/balance`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+      .then((data) => data?.data)
+  );
+
+  return { isLoading: isLoading, error: error, balance: balance };
+}

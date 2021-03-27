@@ -9,13 +9,14 @@ import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 
 type Props = {
   reward: RewardWithGrants;
+  balance: number;
 };
 
 export function RewardItem(props: Props): JSX.Element {
   const updateGrantMutation = useChildRewardPut();
   const showInfo = useInfoNotification();
 
-  function clickHint(reward: RewardWithGrants) {
+  function clickHint(reward: RewardWithGrants, balance: number) {
     switch (reward.grants[0].state) {
       case GrantState.Archived: {
         showInfo("Belohnung wurde bereits eingelöst");
@@ -24,6 +25,14 @@ export function RewardItem(props: Props): JSX.Element {
       case GrantState.Requested: {
         showInfo("Bitte warte auf die Bestätigung deiner Eltern");
         break;
+      }
+      case GrantState.Assigned: {
+        if (checkForInsufficientBalance(reward, balance)) {
+          showInfo(
+            "Leider hast du nicht genügend Murmeln, erledige doch ein Ämtli :-)"
+          );
+          break;
+        }
       }
     }
   }
@@ -80,15 +89,27 @@ export function RewardItem(props: Props): JSX.Element {
     };
   }
 
+  function checkForInsufficientBalance(
+    reward: RewardWithGrants,
+    balance: number
+  ): boolean {
+    if (reward.value > balance) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <ListItemComponent
       key={props.reward.id}
       // TODO hs (210319): Add show badge function
       showBadge={0}
+      disableControl={checkForInsufficientBalance(props.reward, props.balance)}
       item={mapToListItem(props.reward)}
       stepper={itemStepperControl(props.reward)}
       onNextStepClick={() => updateState(props.reward)}
-      onTryClick={() => clickHint(props.reward)}
+      onTryClick={() => clickHint(props.reward, props.balance)}
     />
   );
 }
