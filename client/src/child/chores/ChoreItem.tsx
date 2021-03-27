@@ -6,21 +6,37 @@ import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
 import { mutateChore, useChildChorePut } from "../BackendAccess";
 import produce from "immer";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { ConfettiRain } from "./ConfettiRain";
+import { ConfettiProps } from "../types/ConfettiProps";
+import { useState } from "react";
+import React from "react";
 
 type Props = {
   chore: ChoreWithAssignments;
+  itemCount: number | undefined;
+  size: ConfettiProps;
 };
 
 export function ChoreItem(props: Props): JSX.Element {
   const updateAssignmentMutation = useChildChorePut();
   const showInfo = useInfoNotification();
+  const [start, setStart] = useState(false);
 
   function clickHint(chore: ChoreWithAssignments) {
     switch (chore.assignments[0].state) {
       case AssignmentState.Archived: {
         showInfo("Ämtli wurde bereits erledigt");
+        let trigger = false;
+        setStart(trigger);
         break;
       }
+
+      case AssignmentState.CheckConfirmed: {
+        let trigger = true;
+        setStart(trigger);
+        break;
+      }
+
       case AssignmentState.RequestedToCheck: {
         showInfo("Bitte warte auf die Bestätigung deiner Eltern");
         break;
@@ -29,7 +45,6 @@ export function ChoreItem(props: Props): JSX.Element {
   }
 
   function updateState(chore: ChoreWithAssignments) {
-    console.log("clicked");
     let nextState: number;
 
     if (chore.assignments[0].state === AssignmentState.CheckConfirmed) {
@@ -81,16 +96,18 @@ export function ChoreItem(props: Props): JSX.Element {
       ],
     };
   }
-
   return (
-    <ListItemComponent
-      key={props.chore.id}
-      // TODO hs (210319): Add show badge function
-      showBadge={0}
-      item={mapToListItem(props.chore)}
-      stepper={itemStepperControl(props.chore)}
-      onNextStepClick={() => updateState(props.chore)}
-      onTryClick={() => clickHint(props.chore)}
-    />
+    <React.Fragment>
+      <ListItemComponent
+        key={props.chore.id}
+        // TODO hs (210319): Add show badge function
+        showBadge={0}
+        item={mapToListItem(props.chore)}
+        stepper={itemStepperControl(props.chore)}
+        onNextStepClick={() => updateState(props.chore)}
+        onTryClick={() => clickHint(props.chore)}
+      />
+      {start && <ConfettiRain size={props.size.size} />}
+    </React.Fragment>
   );
 }
