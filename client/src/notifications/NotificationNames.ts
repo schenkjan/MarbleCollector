@@ -5,6 +5,8 @@ export class NotificationNames {
   };
   static parent = {
     heartbeat: "Heartbeat",
+    assignmentUpdated: "AssignmentUpdated",
+    assignmentDeleted: "AssignmentDeleted",
     receiveMessage: "ReceiveMessage",
   };
   static child = {
