@@ -19,14 +19,11 @@ export function useProfileData(userId?: number): ProfileData {
 
   const { isLoading, error, data: profile } = useQuery("userProfile", () =>
     axios
-      .get<UserProfile>(
-        `${apiBaseUrl}/api/Users/${queryProfileUserId}/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-      )
+      .get<UserProfile>(`${apiBaseUrl}/api/Users/${queryProfileUserId}`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
       .then((data) => data?.data)
   );
 

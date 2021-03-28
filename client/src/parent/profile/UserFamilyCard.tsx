@@ -47,7 +47,7 @@ export function UserFamilyCard(props: UserFamilyCardProps) {
           <List className={classes.root}>
             {family.map((user: User) => {
               return (
-                <>
+                <div key={user.id}>
                   <ListItem
                     alignItems="flex-start"
                     component={Link}
@@ -84,7 +84,7 @@ export function UserFamilyCard(props: UserFamilyCardProps) {
                     />
                   </ListItem>
                   <Divider variant="inset" component="li" />
-                </>
+                </div>
               );
             })}
           </List>
