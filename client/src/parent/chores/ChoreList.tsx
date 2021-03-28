@@ -36,7 +36,7 @@ export function ChoreList(): JSX.Element {
 
   const [showDialog, setShowDialog] = useState(false);
 
-  // const { chores } = useParentChoreGet();
+  const { data: chores } = useParentChoreGet();
   const addChore = useParentChorePost();
 
   const {
@@ -63,11 +63,11 @@ export function ChoreList(): JSX.Element {
 
   return (
     <Box className={classes.container} component={Paper}>
-      {/* <List>
+      <List>
         {chores?.map((chore) => (
           <ChoreCard key={chore.id} chore={chore} children={children} />
         ))}
-      </List> */}
+      </List>
       <Fab
         className={classes.fab}
         size="small"
