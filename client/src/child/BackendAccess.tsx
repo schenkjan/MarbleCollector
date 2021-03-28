@@ -78,8 +78,11 @@ const choreProps: QueryProps = {
   getUrl: "/api/Chores/Assignments/Users/",
   getErrorMessage: "Ämtli konnte nicht geladen werden!",
   postSuccessMessage: "Ämtli erstellt",
+  postErrorMessage: "Ämtli konnte nicht erstellt werden.",
   putSuccessMessage: "Ämtli aktualisiert",
+  putErrorMessage: "Ämtli konnte nicht aktualisiert werden.",
   deleteSuccessMessage: "Ämtli gelöscht",
+  deleteErrorMessage: "Ämtli konnte nicht gelöscht werden.",
   mutateUrl: "/api/Assignments/",
 };
 
@@ -97,15 +100,22 @@ export const useChildChoreGet = (id: number) =>
   );
 
 export const useChildChorePut = () =>
-  usePut<ChoreWithAssignments>(choreProps.getKey, choreProps.putSuccessMessage);
+  usePut<ChoreWithAssignments>(
+    choreProps.getKey,
+    choreProps.putSuccessMessage,
+    choreProps.putErrorMessage
+  );
 
 const rewardProps: QueryProps = {
   getKey: "childRewardGet",
   getUrl: "/api/Rewards/Users/",
   getErrorMessage: "Belohnungen konnten nicht geladen werden!",
   postSuccessMessage: "Belohnungen aktualisiert",
+  postErrorMessage: "Belohnung konnte nicht aktualisiert werden.",
   putSuccessMessage: "Belohnung aktualisiert",
+  putErrorMessage: "Belohung konnte nicht aktualisiert werden.",
   deleteSuccessMessage: "Belohnung gelöscht",
+  deleteErrorMessage: "Belohnung konnte nicht gelöscht werden.",
   mutateUrl: "/api/Grants/",
 };
 
@@ -123,7 +133,11 @@ export const mutateReward = (object: any) =>
   } as QueryObject);
 
 export const useChildRewardPut = () =>
-  usePut<RewardWithGrants>(rewardProps.getKey, rewardProps.putSuccessMessage);
+  usePut<RewardWithGrants>(
+    rewardProps.getKey,
+    rewardProps.putSuccessMessage,
+    rewardProps.putErrorMessage
+  );
 
 export function useUserBalance(userId?: number): UserBalance {
   const userInfo = useRecoilValue(AppState.userInfo);
