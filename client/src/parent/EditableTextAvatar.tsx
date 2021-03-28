@@ -11,6 +11,8 @@ import {
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { TextField } from "./TextField";
+import ImgMarbles from "../images/Marble.png";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 type Prop = {
   value: number;
@@ -21,6 +23,25 @@ type Prop = {
   onValueChanged?: (value: number) => void;
 };
 
+const theme = createMuiTheme({
+  overrides: {
+    MuiAvatar: {
+      img: {
+        opacity: "0.75",
+      },
+    },
+    MuiBadge: {
+      badge: {
+        "font-weight": "bold",
+        "font-size": "1.25rem",
+      },
+      anchorOriginBottomRightCircle: {
+        transform: "scale(1) translate(40%, 50%)",
+      },
+    },
+  },
+});
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     form: {
@@ -28,6 +49,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     text: {
       textAlign: "left",
+    },
+    badgestyle: {
+      "font-weight": "Bold",
+      "font-size": "1rem",
+      "padding-right": "8px",
+    },
+    doneNotificationBadge: {
+      color: "white",
+      backgroundColor: theme.palette.success.light,
     },
   })
 );
@@ -89,14 +119,28 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
 
   return (
     <Badge
+      classes={{ badge: classes.doneNotificationBadge }}
       badgeContent={props.notifications}
       anchorOrigin={{
         vertical: "bottom",
         horizontal: "left",
       }}
-      color="primary"
     >
-      <Avatar onClick={handleOnClick}>{props.value.toString()}</Avatar>
+      <ThemeProvider theme={theme}>
+        <Badge
+          onClick={handleOnClick}
+          overlap="circle"
+          className={classes.badgestyle}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          badgeContent={props.value}
+        >
+          <Avatar src={ImgMarbles}>{props.value.toString()}</Avatar>
+        </Badge>
+      </ThemeProvider>
+
       <Popover
         open={isOpen()}
         anchorEl={anchorEl}

@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       backgroundColor: theme.palette.primary.main,
     },
+    actionNotificationBadge: {
+      color: "white",
+      backgroundColor: theme.palette.warning.light,
+    },
   })
 );
 
@@ -179,15 +183,16 @@ export function ChoreCard(props: Prop): JSX.Element {
       <BiAvatarCardHeader
         leftAvatarComponent={
           <Badge
+            classes={{ badge: classes.actionNotificationBadge }}
             badgeContent={
               props.chore.assignments.filter(
                 (assignment) =>
                   assignment.state === AssignmentState.RequestedToCheck
               ).length
             }
-            color="secondary"
+            onClick={handleExpandClick}
           >
-            <Avatar className={classes.avatar} onClick={handleExpandClick}>
+            <Avatar className={classes.avatar}>
               {props.chore.assignments.length.toString()}
             </Avatar>
           </Badge>

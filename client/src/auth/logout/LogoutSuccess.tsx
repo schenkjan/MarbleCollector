@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   createStyles,
@@ -28,6 +28,17 @@ export type LogoutSuccessProps = {
 
 export function LogoutSuccess(props: LogoutSuccessProps) {
   const classes = useStyles();
+  const [remainingSeconds, setRemainingSeconds] = useState(
+    props.secondsTillRedirect
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRemainingSeconds((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [remainingSeconds]);
 
   return (
     <>
@@ -59,7 +70,7 @@ export function LogoutSuccess(props: LogoutSuccessProps) {
           color="textSecondary"
           component="p"
         >
-          Du wirst in {props.secondsTillRedirect} Sekunden umgeleitet...
+          Du wirst in {remainingSeconds} Sekunden umgeleitet...
         </Typography>
       </Container>
     </>
