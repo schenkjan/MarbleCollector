@@ -95,12 +95,12 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       padding: "8px",
       "padding-right": "0px",
-      "padding-left": "4px",
+      "padding-left": "0px",
       textAlign: "left",
     },
     stepElement: {
-      "padding-left": "6px",
-      "padding-right": "6px",
+      width: "4.3rem",
+      padding: "0px",
     },
     stepButton: {
       "margin-bottom": "20px",
@@ -109,6 +109,8 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: "0.7rem",
     },
     gridButton: {
+      "padding-top": "6px",
+      "padding-right": "2px",
       "margin-bottom": "auto",
     },
   })
@@ -186,13 +188,6 @@ export function ListItemComponent(props: Props) {
         </Typography>
       </CardContent>
       <CardActions className={classes.actions}>
-        {/* <Grid
-          container
-          spacing={0}
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-        > */}
         <Grid
           container
           spacing={0}
@@ -200,7 +195,6 @@ export function ListItemComponent(props: Props) {
           justify="space-evenly"
           alignItems="center"
         >
-          {/* <Grid item sm={10} xs={9}> */}
           <Grid item sm={10}>
             <Stepper
               className={classes.root}
@@ -214,31 +208,19 @@ export function ListItemComponent(props: Props) {
               ))}
             </Stepper>
           </Grid>
-          {/* <Grid item sm={2} xs={3}> */}
           <Grid item className={classes.gridButton}>
-            <Grid
-              container
-              spacing={0}
-              direction="column"
-              justify="flex-end"
-              alignItems="center"
-              className={classes.gridButton}
-            >
-              <Grid item className={classes.gridButton}>
-                <div onClick={() => onTryClick()}>
-                  <Button
-                    onClick={() => onNextStepClick()}
-                    disabled={disableButton() || props.disableControl}
-                    className={classes.stepButton}
-                    variant="contained"
-                    size="small"
-                    color="primary"
-                  >
-                    {props.stepper.buttonText[props.item.state]}
-                  </Button>
-                </div>
-              </Grid>
-            </Grid>
+            <div onClick={() => onTryClick()}>
+              <Button
+                onClick={() => onNextStepClick()}
+                disabled={disableButton() || props.disableControl}
+                className={classes.stepButton}
+                variant="contained"
+                size="small"
+                color="primary"
+              >
+                {props.stepper.buttonText[props.item.state]}
+              </Button>
+            </div>
           </Grid>
         </Grid>
       </CardActions>
