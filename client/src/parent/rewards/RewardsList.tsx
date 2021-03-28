@@ -11,10 +11,12 @@ import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorIcon from "@material-ui/icons/Error";
 import { AddRewardDialog } from "./AddRewardDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RewardCard } from "./RewardCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { useChildrenDataForUser, useParentRewardData } from "../BackendAccess";
+import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
+import { NotificationNames } from "../../notifications/NotificationNames";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +42,24 @@ export function RewardsList() {
     children,
   } = useChildrenDataForUser();
   const { isLoading, error, rewards } = useParentRewardData();
+
+  const [
+    newRewardNotifications,
+    setRewardNotificationsHandled,
+  ] = useMyNotificationsByNamePrefixWithHandle(NotificationNames.prefix.grant);
+
+  useEffect(() => {
+    if (newRewardNotifications.length > 0) {
+      // TODO js (27.03.2021): How to trigger reload of single assignment/chore?
+      for (const notification of newRewardNotifications) {
+        console.log(
+          "Triggering reload for entity with id",
+          notification.targetEntityId
+        );
+      }
+      setRewardNotificationsHandled(newRewardNotifications);
+    }
+  }, [newRewardNotifications, setRewardNotificationsHandled]);
 
   function handleOnCancel() {
     setShowDialog(false); // TODO js (02.03.2021): Replace dummy implementation with correct cancel logic.

@@ -81,6 +81,18 @@ export function NotificationSubscriberHandler(
           "parent.receiveMessage",
           NotificationNames.parent.receiveMessage
         ),
+        getSubscriber(
+          "parent.grantUpdated",
+          NotificationNames.parent.grantUpdated
+        ),
+        getSubscriber(
+          "parent.grantDeleted",
+          NotificationNames.parent.grantDeleted
+        ),
+        getSubscriber(
+          "parent.receiveMessage",
+          NotificationNames.parent.receiveMessage
+        ),
       ]);
     }
 

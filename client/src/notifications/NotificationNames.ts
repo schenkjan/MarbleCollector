@@ -7,6 +7,8 @@ export class NotificationNames {
     heartbeat: "Heartbeat",
     assignmentUpdated: "AssignmentUpdated",
     assignmentDeleted: "AssignmentDeleted",
+    grantUpdated: "GrantUpdated",
+    grantDeleted: "GrantDeleted",
     receiveMessage: "ReceiveMessage",
   };
   static child = {
@@ -14,6 +16,9 @@ export class NotificationNames {
     assignmentCreated: "AssignmentCreated",
     assignmentUpdated: "AssignmentUpdated",
     assignmentDeleted: "AssignmentDeleted",
+    grantCreated: "GrantCreated",
+    grantUpdated: "GrantUpdated",
+    grantDeleted: "GrantDeleted",
     updateFigures: "UpdateFigures",
   };
 }
