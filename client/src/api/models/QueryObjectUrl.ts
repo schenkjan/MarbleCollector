@@ -5,7 +5,11 @@ export type QueryObjectUrl =
   | "/api/Auth/logout/"
   | "/api/Chores/"
   | "/api/Chores/Assignments/"
+  | "/api/Chores/Assignments/Users/"
   | "/api/Grants/"
   | "/api/Grants/Users/"
   | "/api/Rewards/"
-  | "/api/Rewards/Grants/";
+  | "/api/Rewards/Users/"
+  | "/api/Rewards/Grants/"
+  | "/api/Users/"
+  | "/api/Users/families/";

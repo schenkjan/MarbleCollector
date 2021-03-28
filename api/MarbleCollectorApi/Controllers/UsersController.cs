@@ -39,23 +39,6 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<User> GetUser(int id)
-        {
-            var user = _userRepository.GetSingle(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
-        }
-
-        // TODO js (13.03.2021): Can all users get all users?
-        [HttpGet("{id}/profile")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<UserProfile> GetUserProfile(int id)
         {
             var user = _userRepository.GetSingle(id);
@@ -106,6 +89,25 @@ namespace MarbleCollectorApi.Controllers
             }
 
             return Ok(users.Select(user => user.Map()));
+        }
+
+        // TODO js (13.03.2021): Can all users get all users?
+        [HttpGet("{id}/balance")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<UserProfile> GetUserBalance(int id)
+        {
+            var user = _userRepository.GetSingle(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userScore = _userScoreService.GetUserScore(id);
+
+            return Ok(userScore.MarbleBalance);
         }
 
         protected IEnumerable<Data.Models.User> GetUsersForFamily(string family)

@@ -1,7 +1,6 @@
 import {
   Grid,
   Button,
-  FormControlLabel,
   Dialog,
   DialogContent,
   DialogContentText,
@@ -13,11 +12,13 @@ import MuiTextField from "@material-ui/core/TextField";
 import { fieldToTextField, TextFieldProps } from "formik-material-ui";
 import Box from "@material-ui/core/Box";
 import { AddRewardValidation } from "../models/AddRewardValidation";
+import { RewardWithGrants } from "../models/RewardWithGrants";
 
 type Prop = {
   open: boolean;
+  reward?: RewardWithGrants;
   onCancel: () => void;
-  onSave: () => void;
+  onSave: (reward: RewardWithGrants) => void;
 };
 
 function RewardTextField(props: TextFieldProps) {
@@ -35,12 +36,6 @@ function RewardTextField(props: TextFieldProps) {
   return <MuiTextField {...fieldToTextField(props)} onChange={onChange} />;
 }
 
-const cancelForm = () => {
-  alert(
-    "Erfassung abgebrochen -> put here the parent Dashboard link, for canceling reward creating"
-  );
-};
-
 export function AddRewardDialog(props: Prop) {
   return (
     <Dialog open={props.open}>
@@ -50,8 +45,11 @@ export function AddRewardDialog(props: Prop) {
             // init for the complete Formik-Component --> (GET-method in edit szenario)
 
             initialValues={{
-              name: "",
-              value: 100,
+              id: props.reward ? props.reward.id : 0,
+              name: props.reward ? props.reward.name : "",
+              description: props.reward ? props.reward.description : "",
+              value: props.reward ? props.reward.value : 100,
+              grants: props.reward ? props.reward.grants : [],
             }}
             // validating for the complete Formik-Component
             validate={(RewardValidation) => {
@@ -68,16 +66,11 @@ export function AddRewardDialog(props: Prop) {
               return errors;
             }}
             // submit-function for the complete Formik-Component
-            onSubmit={(RewardValidation, { setSubmitting }) => {
-              setSubmitting(false);
-              alert(JSON.stringify(RewardValidation, null, 2));
-              // programming below the POST-method for the backend
-              // (in edit szenario --> PUT-method)
-
-              //
+            onSubmit={(RewardValidation) => {
+              props.onSave(RewardValidation);
             }}
           >
-            {({ submitForm, isSubmitting }) => (
+            {({ submitForm }) => (
               <Form>
                 <Grid
                   container
@@ -93,7 +86,15 @@ export function AddRewardDialog(props: Prop) {
                         component={RewardTextField}
                         name="name"
                         type="text"
-                        label="Belohnungsbezeichnung"
+                        label="Belohnungsname"
+                      />
+                    </Box>
+                    <Box margin={2}>
+                      <Field
+                        component={RewardTextField}
+                        name="description"
+                        type="text"
+                        label="Belohnungsbeschreibung"
                       />
                     </Box>
                     <Box margin={2}>

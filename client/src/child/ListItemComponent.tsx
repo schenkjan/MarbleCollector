@@ -19,10 +19,12 @@ import { StepperControl } from "./types/StepperControl";
 import { toDeLocaleDateString } from "../helper/DateHelper";
 
 type Props = {
+  disableControl: boolean;
   showBadge: number;
   item: ChildListItem;
   stepper: StepperControl;
   onNextStepClick: () => void;
+  onTryClick: () => void;
 };
 
 const theme = createMuiTheme({
@@ -89,14 +91,16 @@ const useStyles = makeStyles((theme: Theme) =>
       "margin-left": "0px",
     },
     root: {
-      width: "100%",
+      width: "80%",
       padding: "8px",
       "padding-right": "0px",
+      "padding-left": "4px",
       textAlign: "left",
     },
     stepButton: {
       "margin-bottom": "35px",
       "margin-right": "16px",
+      fontSize: "0.7rem",
     },
   })
 );
@@ -108,6 +112,10 @@ export function ListItemComponent(props: Props) {
 
   function onNextStepClick() {
     props.onNextStepClick();
+  }
+
+  function onTryClick() {
+    props.onTryClick();
   }
 
   function disableButton(): boolean {
@@ -180,16 +188,18 @@ export function ListItemComponent(props: Props) {
             </Step>
           ))}
         </Stepper>
-        <Button
-          onClick={() => onNextStepClick()}
-          disabled={disableButton()}
-          className={classes.stepButton}
-          variant="contained"
-          size="small"
-          color="primary"
-        >
-          {props.stepper.buttonText[props.item.state]}
-        </Button>
+        <div onClick={() => onTryClick()}>
+          <Button
+            onClick={() => onNextStepClick()}
+            disabled={disableButton() || props.disableControl}
+            className={classes.stepButton}
+            variant="contained"
+            size="small"
+            color="primary"
+          >
+            {props.stepper.buttonText[props.item.state]}
+          </Button>
+        </div>
       </CardActions>
     </Card>
   );
