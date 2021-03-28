@@ -79,10 +79,10 @@ export function useUpdateRewardState(): UseMutationResult<
 const choreProps: QueryProps = {
   getKey: "childChoreGet",
   getUrl: "/api/Chores/Assignments/Users/",
-  getMessage: "Ämtli konnte nicht geladen werden!",
-  postMessage: "Ämtli erstellt",
-  putMessage: "Ämtli aktualisiert",
-  deleteMessage: "Ämtli gelöscht",
+  getErrorMessage: "Ämtli konnte nicht geladen werden!",
+  postSuccessMessage: "Ämtli erstellt",
+  putSuccessMessage: "Ämtli aktualisiert",
+  deleteSuccessMessage: "Ämtli gelöscht",
   mutateUrl: "/api/Assignments/",
 };
 
@@ -96,19 +96,19 @@ export const useChildChoreGet = (id: number) =>
   useGet<ChoreWithAssignments[]>(
     choreProps.getKey,
     choreProps.getUrl + id,
-    choreProps.getMessage
+    choreProps.getErrorMessage
   );
 
 export const useChildChorePut = () =>
-  usePut<ChoreWithAssignments>(choreProps.getKey, choreProps.putMessage);
+  usePut<ChoreWithAssignments>(choreProps.getKey, choreProps.putSuccessMessage);
 
 const rewardProps: QueryProps = {
   getKey: "childRewardGet",
   getUrl: "/api/Rewards/Users/",
-  getMessage: "Belohnungen konnten nicht geladen werden!",
-  postMessage: "Belohnungen aktualisiert",
-  putMessage: "Belohnung aktualisiert",
-  deleteMessage: "Belohnung gelöscht",
+  getErrorMessage: "Belohnungen konnten nicht geladen werden!",
+  postSuccessMessage: "Belohnungen aktualisiert",
+  putSuccessMessage: "Belohnung aktualisiert",
+  deleteSuccessMessage: "Belohnung gelöscht",
   mutateUrl: "/api/Grants/",
 };
 
@@ -116,7 +116,7 @@ export const useChildRewardGet = (id: number) =>
   useGet<RewardWithGrants[]>(
     rewardProps.getKey,
     rewardProps.getUrl + id,
-    rewardProps.getMessage
+    rewardProps.getErrorMessage
   );
 
 export const mutateReward = (object: any) =>
@@ -126,7 +126,7 @@ export const mutateReward = (object: any) =>
   } as QueryObject);
 
 export const useChildRewardPut = () =>
-  usePut<RewardWithGrants>(rewardProps.getKey, rewardProps.putMessage);
+  usePut<RewardWithGrants>(rewardProps.getKey, rewardProps.putSuccessMessage);
 
 export function useUserBalance(userId?: number): UserBalance {
   const userInfo = useRecoilValue(AppState.userInfo);
