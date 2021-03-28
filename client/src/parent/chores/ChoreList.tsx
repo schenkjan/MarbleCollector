@@ -67,10 +67,6 @@ export function ChoreList(): JSX.Element {
     }
   }, [newChoreNotifications, setChoreNotificationsHandled]);
 
-  function receiveMessag(...args: any[]) {
-    console.log(args);
-  }
-
   function handleOnCancel() {
     setChoreToEdit(undefined);
     setShowDialog(false);
