@@ -95,8 +95,9 @@ export const mutateChore = (object: any) =>
 export const useChildChoreGet = (id: number) =>
   useGet<ChoreWithAssignments[]>(
     choreProps.getKey,
-    choreProps.getUrl + id,
-    choreProps.getErrorMessage
+    choreProps.getUrl,
+    choreProps.getErrorMessage,
+    id
   );
 
 export const useChildChorePut = () =>
@@ -122,8 +123,9 @@ const rewardProps: QueryProps = {
 export const useChildRewardGet = (id: number) =>
   useGet<RewardWithGrants[]>(
     rewardProps.getKey,
-    rewardProps.getUrl + id,
-    rewardProps.getErrorMessage
+    rewardProps.getUrl,
+    rewardProps.getErrorMessage,
+    id
   );
 
 export const mutateReward = (object: any) =>
