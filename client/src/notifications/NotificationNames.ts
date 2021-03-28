@@ -1,7 +1,7 @@
 export class NotificationNames {
   static prefix = {
     assignment: "Assignment",
-    grant: "grant",
+    grant: "Grant",
   };
   static parent = {
     heartbeat: "Heartbeat",
