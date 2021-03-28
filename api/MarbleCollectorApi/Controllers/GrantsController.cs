@@ -112,11 +112,11 @@ namespace MarbleCollectorApi.Controllers
 
             if (stateChanged)
             {
-                if (grant.State == GrantState.Assigned || grant.State == GrantState.RequestConfirmed)
+                if (grant.State == GrantState.Assigned || grant.State == GrantState.RequestConfirmed || grant.State == GrantState.RequestRefused)
                 {
                     await _childrenNotificationHubContext.Clients.All.SendAsync("UpdateGrants", grant.UserId, grant.RewardId);
                 }
-                else if (grant.State != GrantState.Archived)
+                else if (grant.State == GrantState.Requested)
                 {
                     await _parentNotificationHubContext.Clients.All.SendAsync("UpdateGrants", grant.UserId, grant.RewardId);
                 }
