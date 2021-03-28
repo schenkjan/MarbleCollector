@@ -6,7 +6,6 @@ import {
 } from "@material-ui/core";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-//import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'; // TODO js (25.02.2021): Alternative icon for rewards.
 import RedeemIcon from "@material-ui/icons/Redeem";
 import { useEffect, useState } from "react";
 import { DashboardState } from "../DashboardState";
