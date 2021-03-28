@@ -119,7 +119,7 @@ export const mutateReward = (object: any) =>
 
 // Settings for Profiles on Parent-Dashboard
 const profileProps: QueryProps = {
-  getKey: "parentProfileGet", // Choose a unique keyname
+  getKey: "profileGet", // Choose a unique keyname
   getUrl: "/api/Users/", // GET-Url from Swagger UI
   getErrorMessage: "Fehler beim Laden des Profils.", // GET-Message to Snack
   postSuccessMessage: "Profil wurde erstellt.", // POST-Message to Snack
@@ -132,7 +132,7 @@ const profileProps: QueryProps = {
 };
 
 // GET - load all Profiles on Parent-Dashboard
-export const useParentProfileGet = (additiveUrl?: number | string) =>
+export const useProfileGet = (additiveUrl?: number | string) =>
   useGet<UserProfile>(
     profileProps.getKey,
     profileProps.getUrl,
