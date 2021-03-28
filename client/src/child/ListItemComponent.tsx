@@ -90,6 +90,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     actions: {
       padding: "2px",
+      "padding-left": "0px",
+      "padding-right": "0px",
       "margin-left": "0px",
     },
     root: {
