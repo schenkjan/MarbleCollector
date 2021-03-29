@@ -3,7 +3,7 @@ import { persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 import { SnackState } from "./shell/models/SnackState";
-import { PortalOverlayState } from "./shell/models/PortalOverlayState";
+import { BackdropOverlayState } from "./shell/models/BackdropOverlayState";
 
 /**
  * Class holding the global app state with static properties.
@@ -111,7 +111,7 @@ export class AppState {
   /**
    * Holding the currently State of react-query requests.
    */
-  static queryStateInfo = atom<PortalOverlayState>({
+  static queryStateInfo = atom<BackdropOverlayState>({
     key: "queryStateInfo",
     default: {
       open: false,

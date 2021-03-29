@@ -3,7 +3,6 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { ChildChoreList } from "./chores/ChildChoreList";
 import { ProfileDetails } from "./profile/ProfileDetails";
-import PortalOverlay from "../shell/PortalOverlay";
 
 export function ChildScreen() {
   const { path } = useRouteMatch();
@@ -21,7 +20,6 @@ export function ChildScreen() {
           <ChildChoreList></ChildChoreList>
         </Route>
       </Switch>
-      <PortalOverlay />
     </>
   );
 }

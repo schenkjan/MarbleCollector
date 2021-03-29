@@ -1,6 +1,8 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
+import { useProfileGet } from "../../api/BackendAccess";
+import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useProfileData } from "../BackendAccess";
 import { UserFamilyCard } from "./UserFamilyCard";
 import { UserProfileCard } from "./UserProfileCard";
 import { UserScoreCard } from "./UserScoreCard";
@@ -8,21 +10,14 @@ import { UserScoreCard } from "./UserScoreCard";
 export function ProfileDetails() {
   useDashboardTitle("Profil");
 
-  const { isLoading, error, profile } = useProfileData();
-
-  if (isLoading) {
-    return <p>Loading</p>;
-  }
-
-  if (error) {
-    return <p>Error</p>;
-  }
+  const userId = useRecoilValue(AppState.userInfo);
+  const { data } = useProfileGet(userId?.id);
 
   return (
     <>
-      <UserProfileCard user={profile?.user} />
-      <UserScoreCard userScore={profile?.score} />
-      <UserFamilyCard family={profile?.family ?? []} />
+      <UserProfileCard user={data?.user} />
+      <UserScoreCard userScore={data?.score} />
+      <UserFamilyCard family={data?.family ?? []} />
     </>
   );
 }
