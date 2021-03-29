@@ -1,9 +1,11 @@
+import { useFamilyMembership } from "../AppState";
 import { Assignment } from "../model/Assignment";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
 import { Grant } from "../model/Grant";
 import { AssignmentForCreate } from "../parent/models/AssignmentForCreate";
 import { GrantForCreate } from "../parent/models/GrantForCreate";
 import { RewardWithGrants } from "../parent/models/RewardWithGrants";
+import { User } from "../parent/models/User";
 import { UserProfile } from "../parent/models/UserProfile";
 import { QueryObject } from "./models/QueryObject";
 import { QueryProps } from "./models/QueryProps";
@@ -29,7 +31,7 @@ export const useParentChoreGet = (additiveUrl?: number | string) =>
     choreProps.getKey,
     choreProps.getUrl,
     choreProps.getErrorMessage,
-    additiveUrl // absolute userId or familyName witch includes at the end of url for get single data
+    additiveUrl // absolute userId or familyName which includes at the end of url for get single data
   );
 
 // POST - create one Chore on Parent-Dashboard
@@ -273,6 +275,29 @@ export const mutateGrantToCreate = (object: any) =>
   } as QueryObject);
 
 // for Users copy the part above this comment --> ....
+
+// Settings for Children on Parent-Dashboard
+const childrenProps: QueryProps = {
+  getKey: "profileGet", // Choose a unique keyname
+  getUrl: "/api/Users/families/", // GET-Url from Swagger UI
+  getErrorMessage: "Fehler beim Laden der Kinder.", // GET-Message to Snack
+  postSuccessMessage: "Kind wurde erstellt.", // POST-Message to Snack
+  postErrorMessage: "Kind konnte nicht erstellt werden.", // POST-Message to Snack
+  putSuccessMessage: "Kind wurde aktualisiert.", // PUT-Message to Snack
+  putErrorMessage: "Kind konnte nicht aktualisiert werden.", // PUT-Message to Snack
+  deleteSuccessMessage: "Kind wurde gelöscht.", // DELETE-Message to Snack
+  deleteErrorMessage: "Kind konnte nicht gelöscht werden.", // DELETE-Message to Snack
+  mutateUrl: "/api/Users/", // POST/PUT/DELETE-Url from Swagger UI
+};
+
+// GET - load all Children for the logged in user's family on Parent-Dashboard
+export const useChildrenForUser = () =>
+  useGet<User[]>(
+    childrenProps.getKey,
+    childrenProps.getUrl,
+    childrenProps.getErrorMessage,
+    `${useFamilyMembership()}?role=Child`
+  );
 
 export function getApiBaseUrl(): string {
   return process.env.REACT_APP_APIBASEURL as string;
