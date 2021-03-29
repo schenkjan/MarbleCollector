@@ -1,4 +1,4 @@
-﻿import { User } from "../../parent/models/User";
+﻿import { User } from "./User";
 import { UserScore } from "./UserScore";
 
 export interface UserProfile {
