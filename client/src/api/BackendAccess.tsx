@@ -199,3 +199,7 @@ export const mutateGrantToCreate = (object: any) =>
   } as QueryObject);
 
 // for Users copy the part above this comment --> ....
+
+export function getApiBaseUrl(): string {
+  return process.env.REACT_APP_APIBASEURL as string;
+}

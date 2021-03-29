@@ -13,6 +13,7 @@ import { DashboardState } from "../DashboardState";
 import { Link, useLocation } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { useDashboardBasePath } from "../hooks/DashboardBasePathHook";
+import { useAllNotifications } from "../../notifications/NotificationHooks";
 
 const useStyles = makeStyles({
   navigation: {
@@ -36,6 +37,7 @@ export function NavigationBar(props: NavigationBarProps) {
   const [value, setValue] = useState<number>();
   const { pathname: path } = useLocation();
   const dashboardBasePath = useDashboardBasePath();
+  const notifications = useAllNotifications();
   const [choreNews, setChoreNews] = useRecoilState(
     DashboardState.choreNewsCount
   );
@@ -57,6 +59,10 @@ export function NavigationBar(props: NavigationBarProps) {
       setValue(0);
     }
   }, [path]);
+
+  useEffect(() => {
+    setChoreNews(notifications.length);
+  }, [notifications]);
 
   function handleOnChange(event: React.ChangeEvent<{}>, newValue: any) {
     setValue(newValue);
