@@ -24,9 +24,9 @@ namespace MarbleCollectorApi.Controllers
         private readonly IRewardRepository _rewardRepository;
         private readonly IUserRepository _userRepository;
         private readonly IHubContext<ParentNotificationHub> _parentNotificationHubContext;
-        private readonly IHubContext<ChildrenNotificationHub> _childrenNotificationHubContext;
+        private readonly IHubContext<ChildNotificationHub> _childrenNotificationHubContext;
 
-        public GrantsController(IGrantRepository grantRepository, IRewardRepository rewardRepository, IUserRepository userRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
+        public GrantsController(IGrantRepository grantRepository, IRewardRepository rewardRepository, IUserRepository userRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildNotificationHub> childrenNotificationHubContext)
         {
             _grantRepository = grantRepository ?? throw new ArgumentNullException(nameof(grantRepository));
             _rewardRepository = rewardRepository ?? throw new ArgumentNullException(nameof(rewardRepository));

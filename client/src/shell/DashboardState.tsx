@@ -9,20 +9,18 @@ export class DashboardState {
     default: "...",
   });
 
-  static choreNewsCount = atom<number>({
-    key: "choreNewsCount",
-    default: 10, // TODO js 27.02.2021: Set correct value.
+  static choreNotificationCount = atom<number>({
+    key: "choreNotificationCount",
+    default: 0,
   });
 
-  // TODO js (27.02.2021): Should we move the state handling code to a store file?
-  static rewardNewsCount = atom<number>({
+  static rewardNotificationCount = atom<number>({
     key: "rewardNewsCount",
-    default: 100, // TODO js 27.02.2021: Set correct value.
+    default: 0,
   });
 
-  // TODO js (27.02.2021): Should we move the state handling code to a store file?
-  static profileNewsCount = atom<number>({
-    key: "profileNewsCount",
-    default: 1, // TODO js 27.02.2021: Set correct value.
+  static profileNotificationCount = atom<number>({
+    key: "profileNotificationCount",
+    default: 0,
   });
 }

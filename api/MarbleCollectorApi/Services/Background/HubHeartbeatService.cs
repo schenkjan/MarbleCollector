@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,9 +11,9 @@ namespace MarbleCollectorApi.Services.Background
     {
         private readonly ILogger<HubHeartbeatService> _logger;
         private readonly IHubContext<ParentNotificationHub> _parentNotificationHubContext;
-        private readonly IHubContext<ChildrenNotificationHub> _childrenNotificationHubContext;
+        private readonly IHubContext<ChildNotificationHub> _childrenNotificationHubContext;
 
-        public HubHeartbeatService(ILogger<HubHeartbeatService> logger, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
+        public HubHeartbeatService(ILogger<HubHeartbeatService> logger, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildNotificationHub> childrenNotificationHubContext)
         {
             _logger = logger;
             _parentNotificationHubContext = parentNotificationHubContext;
@@ -31,7 +30,10 @@ namespace MarbleCollectorApi.Services.Background
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogDebug($"HubHeartbeatService task doing background work.");
-                
+
+                await _parentNotificationHubContext.Clients.All.SendHeartbeat(nameof(HubHeartbeatService));
+                await _childrenNotificationHubContext.Clients.All.SendHeartbeat(nameof(HubHeartbeatService));
+
                 await Task.Delay(10000, stoppingToken);
             }
 

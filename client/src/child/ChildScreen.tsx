@@ -7,7 +7,6 @@ import { ProfileDetails } from "./profile/ProfileDetails";
 
 export function ChildScreen() {
   const { path } = useRouteMatch();
-
   return (
     <>
       <ProtectedRouteForRole />

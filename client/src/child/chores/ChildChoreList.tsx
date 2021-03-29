@@ -12,8 +12,10 @@ import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
 import { useChildChoreGet } from "../BackendAccess";
-import React, { useEffect } from "react";
 import { ConfettiProps } from "../types/ConfettiProps";
+import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
+import { NotificationNames } from "../../notifications/NotificationNames";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,6 +52,26 @@ export function ChildChoreList(): JSX.Element {
   const { data } = useChildChoreGet(userId);
 
   let itemCount = data?.length;
+
+  const [
+    newChoreNotifications,
+    setChoreNotificationsHandled,
+  ] = useMyNotificationsByNamePrefixWithHandle(
+    NotificationNames.prefix.assignment
+  );
+
+  useEffect(() => {
+    if (newChoreNotifications.length > 0) {
+      // TODO @Severin now to trigger reload??
+      for (const notification of newChoreNotifications) {
+        console.log(
+          "Triggering reload for entity with id",
+          notification.targetEntityId
+        );
+      }
+      setChoreNotificationsHandled(newChoreNotifications);
+    }
+  }, [newChoreNotifications, setChoreNotificationsHandled]);
 
   return (
     <Container maxWidth="md" className={classes.container}>
