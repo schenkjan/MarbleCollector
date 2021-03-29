@@ -278,7 +278,7 @@ export const mutateGrantToCreate = (object: any) =>
 
 // Settings for Children on Parent-Dashboard
 const childrenProps: QueryProps = {
-  getKey: "profileGet", // Choose a unique keyname
+  getKey: "childrenGet", // Choose a unique keyname
   getUrl: "/api/Users/families/", // GET-Url from Swagger UI
   getErrorMessage: "Fehler beim Laden der Kinder.", // GET-Message to Snack
   postSuccessMessage: "Kind wurde erstellt.", // POST-Message to Snack
