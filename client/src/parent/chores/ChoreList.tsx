@@ -22,6 +22,7 @@ import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
 import produce from "immer";
+import { useQueryClient } from "react-query";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +47,7 @@ export function ChoreList(): JSX.Element {
   const { data: chores } = useParentChoreGet();
   const addChore = useParentChorePost();
   const { data: children } = useChildrenForUser();
+  const queryClient = useQueryClient();
 
   const [
     newChoreNotifications,
@@ -56,6 +58,7 @@ export function ChoreList(): JSX.Element {
 
   useEffect(() => {
     if (newChoreNotifications.length > 0) {
+      queryClient.invalidateQueries("parentChoreGet"); // TODO js (29.03.2021): Find a way to use the information from the BackendAccess file.
       // TODO js (27.03.2021): How to trigger reload of single assignment/chore?
       for (const notification of newChoreNotifications) {
         console.log(
@@ -65,7 +68,7 @@ export function ChoreList(): JSX.Element {
       }
       setChoreNotificationsHandled(newChoreNotifications);
     }
-  }, [newChoreNotifications, setChoreNotificationsHandled]);
+  }, [newChoreNotifications, queryClient, setChoreNotificationsHandled]);
 
   function handleOnCancel() {
     setChoreToEdit(undefined);

@@ -22,6 +22,7 @@ import {
   useParentRewardGet,
   useParentRewardPost,
 } from "../../api/BackendAccess";
+import { useQueryClient } from "react-query";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +47,7 @@ export function RewardsList() {
   const { data: rewards } = useParentRewardGet();
   const addReward = useParentRewardPost();
   const { data: children } = useChildrenForUser();
+  const queryClient = useQueryClient();
 
   const [
     newRewardNotifications,
@@ -54,6 +56,7 @@ export function RewardsList() {
 
   useEffect(() => {
     if (newRewardNotifications.length > 0) {
+      queryClient.invalidateQueries("parentRewardGet"); // TODO js (29.03.2021): Find a way to use the information from the BackendAccess file.
       // TODO js (27.03.2021): How to trigger reload of single assignment/chore?
       for (const notification of newRewardNotifications) {
         console.log(
@@ -63,7 +66,7 @@ export function RewardsList() {
       }
       setRewardNotificationsHandled(newRewardNotifications);
     }
-  }, [newRewardNotifications, setRewardNotificationsHandled]);
+  }, [newRewardNotifications, queryClient, setRewardNotificationsHandled]);
 
   function handleOnCancel() {
     setRewardToEdit(undefined);
