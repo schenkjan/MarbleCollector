@@ -19,10 +19,9 @@ import produce from "immer";
 import {
   mutateReward,
   useChildrenForUser,
-  useParentRewardGet,
+  useParentRewardLoader,
   useParentRewardPost,
 } from "../../api/BackendAccess";
-import { useQueryClient } from "react-query";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,10 +43,9 @@ export function RewardsList() {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [rewardToEdit, setRewardToEdit] = useState<RewardWithGrants>();
-  const { data: rewards } = useParentRewardGet();
+  const [rewards, invalidateRewards] = useParentRewardLoader();
   const addReward = useParentRewardPost();
   const { data: children } = useChildrenForUser();
-  const queryClient = useQueryClient();
 
   const [
     newRewardNotifications,
@@ -56,17 +54,20 @@ export function RewardsList() {
 
   useEffect(() => {
     if (newRewardNotifications.length > 0) {
-      queryClient.invalidateQueries("parentRewardGet"); // TODO js (29.03.2021): Find a way to use the information from the BackendAccess file.
-      // TODO js (27.03.2021): How to trigger reload of single assignment/chore?
       for (const notification of newRewardNotifications) {
         console.log(
           "Triggering reload for entity with id",
           notification.targetEntityId
         );
       }
+      invalidateRewards(); // trigger the reload of all rewards
       setRewardNotificationsHandled(newRewardNotifications);
     }
-  }, [newRewardNotifications, queryClient, setRewardNotificationsHandled]);
+  }, [
+    invalidateRewards,
+    newRewardNotifications,
+    setRewardNotificationsHandled,
+  ]);
 
   function handleOnCancel() {
     setRewardToEdit(undefined);

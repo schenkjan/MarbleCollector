@@ -15,14 +15,13 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import {
   mutateChore,
   useChildrenForUser,
-  useParentChoreGet,
+  useParentChoreLoader,
   useParentChorePost,
 } from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
 import produce from "immer";
-import { useQueryClient } from "react-query";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,10 +43,9 @@ export function ChoreList(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [choreToEdit, setChoreToEdit] = useState<ChoreWithAssignments>();
-  const { data: chores } = useParentChoreGet();
+  const [chores, invalidateChores] = useParentChoreLoader();
   const addChore = useParentChorePost();
   const { data: children } = useChildrenForUser();
-  const queryClient = useQueryClient();
 
   const [
     newChoreNotifications,
@@ -58,17 +56,16 @@ export function ChoreList(): JSX.Element {
 
   useEffect(() => {
     if (newChoreNotifications.length > 0) {
-      queryClient.invalidateQueries("parentChoreGet"); // TODO js (29.03.2021): Find a way to use the information from the BackendAccess file.
-      // TODO js (27.03.2021): How to trigger reload of single assignment/chore?
       for (const notification of newChoreNotifications) {
         console.log(
           "Triggering reload for entity with id",
           notification.targetEntityId
         );
       }
+      invalidateChores(); // trigger the reload of all chores
       setChoreNotificationsHandled(newChoreNotifications);
     }
-  }, [newChoreNotifications, queryClient, setChoreNotificationsHandled]);
+  }, [invalidateChores, newChoreNotifications, setChoreNotificationsHandled]);
 
   function handleOnCancel() {
     setChoreToEdit(undefined);
