@@ -44,6 +44,15 @@ export function ChildChoreList(): JSX.Element {
   const classes = useStyles();
   useDashboardTitle("Ämtli");
 
+  useEffect(() => {
+    confettiProps.size.width = surroundingElementRef.current.offsetWidth - 1; // 210227 hs -1 quickfix to prevent horizontal slidebar after Confetti Rain
+    confettiProps.size.height = surroundingElementRef.current.offsetHeight;
+  });
+
+  const { data } = useChildChoreGet(userId);
+
+  let itemCount = data?.length;
+
   const [
     newChoreNotifications,
     setChoreNotificationsHandled,
@@ -68,10 +77,6 @@ export function ChildChoreList(): JSX.Element {
     confettiProps.size.width = surroundingElementRef.current.offsetWidth - 1; // 210227 hs -1 quickfix to prevent horizontal slidebar after Confetti Rain
     confettiProps.size.height = surroundingElementRef.current.offsetHeight;
   });
-
-  const { data } = useChildChoreGet(userId);
-
-  let itemCount = data?.length;
 
   return (
     <Container maxWidth="md" className={classes.container}>
