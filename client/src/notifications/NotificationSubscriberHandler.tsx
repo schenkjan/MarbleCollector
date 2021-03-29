@@ -38,7 +38,7 @@ export function NotificationSubscriberHandler(
       if (props.userRole === UserRoles.Parent) {
         subscribeToParentNotifications();
       } else {
-        subscribeToChildrenNotifications();
+        subscribeToChildNotifications();
       }
     } else {
       console.log(`${logPrefix} Unregister notification subscribers...`);
@@ -68,6 +68,7 @@ export function NotificationSubscriberHandler(
 
     function subscribeToParentNotifications() {
       setNotificationSubscribers([
+        // getSubscriber("parent.heartbeat", NotificationNames.parent.heartbeat),
         getSubscriber(
           "parent.receiveMessage",
           NotificationNames.parent.receiveMessage
@@ -75,15 +76,24 @@ export function NotificationSubscriberHandler(
       ]);
     }
 
-    function subscribeToChildrenNotifications() {
+    function subscribeToChildNotifications() {
       setNotificationSubscribers([
+        // getSubscriber("child.heartbeat", NotificationNames.child.heartbeat),
         getSubscriber(
-          "child.createdAssignment",
-          NotificationNames.children.createdAssignment
+          "child.assignmentCreated",
+          NotificationNames.child.assignmentCreated
+        ),
+        getSubscriber(
+          "child.assignmentUpdated",
+          NotificationNames.child.assignmentUpdated
+        ),
+        getSubscriber(
+          "child.assignmentDeleted",
+          NotificationNames.child.assignmentDeleted
         ),
         getSubscriber(
           "child.figuresUpdated",
-          NotificationNames.children.updateFigures
+          NotificationNames.child.updateFigures
         ),
       ]);
     }

@@ -6,6 +6,7 @@ import { DashboardState } from "./DashboardState";
 import { NavigationBar } from "./navigation/NavigationBar";
 import { ShowSnack } from "./Snackbar";
 import { TitleBar } from "./title/TitleBar";
+import { DashboardNotificationHandler } from "./DashboardNotificationHandler";
 
 const useStyles = makeStyles({
   boxRoot: {
@@ -35,6 +36,7 @@ export function DashboardLayout(props: Props) {
       flexDirection="column"
       justifyContent="space-between"
     >
+      <DashboardNotificationHandler />
       <TitleBar
         avatarAlt={userAvatarInfo.imgAlt}
         avatarSrc={userAvatarInfo.imgSrc}

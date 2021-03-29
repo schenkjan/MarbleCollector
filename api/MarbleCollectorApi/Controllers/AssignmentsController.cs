@@ -24,9 +24,9 @@ namespace MarbleCollectorApi.Controllers
         private readonly IChoreRepository _choreRepository;
         private readonly IUserRepository _userRepository;
         private readonly IHubContext<ParentNotificationHub> _parentNotificationHubContext;
-        private readonly IHubContext<ChildrenNotificationHub> _childrenNotificationHubContext;
+        private readonly IHubContext<ChildNotificationHub> _childrenNotificationHubContext;
 
-        public AssignmentsController(IAssignmentRepository assignmentRepository, IChoreRepository choreRepository, IUserRepository userRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildrenNotificationHub> childrenNotificationHubContext)
+        public AssignmentsController(IAssignmentRepository assignmentRepository, IChoreRepository choreRepository, IUserRepository userRepository, IHubContext<ParentNotificationHub> parentNotificationHubContext, IHubContext<ChildNotificationHub> childrenNotificationHubContext)
         {
             _assignmentRepository = assignmentRepository ?? throw new ArgumentNullException(nameof(assignmentRepository));
             _choreRepository = choreRepository ?? throw new ArgumentNullException(nameof(choreRepository));
@@ -88,9 +88,8 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest();
             }
 
-            await _childrenNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", Guid.NewGuid().ToString(), entityEntry.Entity.UserId, entityEntry.Entity.Id);
-
-            await _parentNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", entityEntry.Entity.ChoreId, entityEntry.Entity.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
+            await _childrenNotificationHubContext.Clients.All.SendChildNotification(ChildNotification.AssignmentCreated, entityEntry.Entity.UserId, entityEntry.Entity.Id);
+            //await _parentNotificationHubContext.Clients.All.SendAsync("CreatedAssignment", entityEntry.Entity.ChoreId, entityEntry.Entity.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
 
             return Created("Get", entityEntry.Entity.Map());
         }
@@ -116,11 +115,11 @@ namespace MarbleCollectorApi.Controllers
             {
                 if (assignment.State == AssignmentState.Assigned || assignment.State == AssignmentState.CheckConfirmed || assignment.State == AssignmentState.CheckRefused)
                 {
-                    await _childrenNotificationHubContext.Clients.All.SendAsync("UpdateAssignments", assignment.UserId, assignment.ChoreId);
+                    await _childrenNotificationHubContext.Clients.All.SendChildNotification(ChildNotification.AssignmentUpdated, assignment.UserId, assignment.ChoreId);
                 }
                 else if (assignment.State != AssignmentState.Archived)
                 {
-                    await _parentNotificationHubContext.Clients.All.SendAsync("UpdateAssignments", assignment.UserId, assignment.ChoreId);
+                    await _parentNotificationHubContext.Clients.All.SendParentNotification(ParentNotification.AssignmentUpdated, assignment.UserId, assignment.ChoreId);
                 }
             }
 
@@ -144,9 +143,8 @@ namespace MarbleCollectorApi.Controllers
             _assignmentRepository.Delete(assignment);
             _assignmentRepository.Commit();
 
-            await _childrenNotificationHubContext.Clients.All.SendAsync("DeletedAssignment", assignment.UserId, assignment.Id);
-
-            await _parentNotificationHubContext.Clients.All.SendAsync("DeletedAssignment", assignment.ChoreId, assignment.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
+            await _childrenNotificationHubContext.Clients.All.SendChildNotification(ChildNotification.AssignmentDeleted, assignment.UserId, assignment.Id);
+            await _parentNotificationHubContext.Clients.All.SendParentNotification(ParentNotification.AssignmentDeleted, assignment.ChoreId, assignment.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
 
             return Ok();
         }
