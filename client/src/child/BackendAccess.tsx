@@ -10,7 +10,6 @@ import { QueryObject } from "../api/models/QueryObject";
 import { QueryProps } from "../api/models/QueryProps";
 import { useGet, usePut } from "../api/Queries";
 import { AppState } from "../AppState";
-import { Assignment } from "../model/Assignment";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
 import { Grant } from "../model/Grant";
 import { RewardWithGrants } from "../model/RewardWithGrants";
