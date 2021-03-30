@@ -17,7 +17,6 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { ChildListItem } from "./types/ChildListItem";
 import { StepperControl } from "./types/StepperControl";
 import { toDeLocaleDateString } from "../helper/DateHelper";
-import Grid from "@material-ui/core/Grid";
 
 type Props = {
   disableControl: boolean;
@@ -72,7 +71,6 @@ const useStyles = makeStyles((theme: Theme) =>
       "font-weight": "Bold",
       "font-size": "1rem",
       "padding-right": "8px",
-      "padding-left": "4px",
     },
     content: {
       "padding-bottom": "0px",
@@ -90,30 +88,24 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     actions: {
       padding: "2px",
-      "padding-left": "0px",
-      "padding-right": "0px",
       "margin-left": "0px",
     },
     root: {
+      width: "76%",
       padding: "8px",
       "padding-right": "0px",
-      "padding-left": "0px",
+      "padding-left": "4px",
       textAlign: "left",
     },
     stepElement: {
-      width: "4.3rem",
-      padding: "0px",
+      "padding-left": "6px",
+      "padding-right": "6px",
     },
     stepButton: {
-      "margin-bottom": "20px",
-      "margin-left": "4px",
+      "margin-bottom": "35px",
+      "margin-right": "16px",
       padding: "4px",
       fontSize: "0.7rem",
-    },
-    gridButton: {
-      "padding-top": "6px",
-      "padding-right": "2px",
-      "margin-bottom": "auto",
     },
   })
 );
@@ -190,41 +182,29 @@ export function ListItemComponent(props: Props) {
         </Typography>
       </CardContent>
       <CardActions className={classes.actions}>
-        <Grid
-          container
-          spacing={0}
-          direction="row"
-          justify="space-evenly"
-          alignItems="center"
+        <Stepper
+          className={classes.root}
+          activeStep={props.stepper.activeStep}
+          alternativeLabel
         >
-          <Grid item sm={10}>
-            <Stepper
-              className={classes.root}
-              activeStep={props.stepper.activeStep}
-              alternativeLabel
-            >
-              {props.stepper.stepsText.map((label) => (
-                <Step className={classes.stepElement} key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-          </Grid>
-          <Grid item className={classes.gridButton}>
-            <div onClick={() => onTryClick()}>
-              <Button
-                onClick={() => onNextStepClick()}
-                disabled={disableButton() || props.disableControl}
-                className={classes.stepButton}
-                variant="contained"
-                size="small"
-                color="primary"
-              >
-                {props.stepper.buttonText[props.item.state]}
-              </Button>
-            </div>
-          </Grid>
-        </Grid>
+          {props.stepper.stepsText.map((label) => (
+            <Step className={classes.stepElement} key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        <div onClick={() => onTryClick()}>
+          <Button
+            onClick={() => onNextStepClick()}
+            disabled={disableButton() || props.disableControl}
+            className={classes.stepButton}
+            variant="contained"
+            size="small"
+            color="primary"
+          >
+            {props.stepper.buttonText[props.item.state]}
+          </Button>
+        </div>
       </CardActions>
     </Card>
   );

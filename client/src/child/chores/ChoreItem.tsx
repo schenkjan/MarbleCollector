@@ -3,35 +3,66 @@ import { ChildListItem } from "../types/ChildListItem";
 import { StepperControl } from "../types/StepperControl";
 import { AssignmentState } from "../../parent/models/AssignmentState";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
-import { Card } from "@material-ui/core";
-//todo, 210322 hs move backendaccess to common folder
-import { useUpdateChoreState} from "../../parent/BackendAccess"; 
+import { mutateChore, useChildChorePut } from "../BackendAccess";
 import produce from "immer";
+import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
+import { ConfettiRain } from "./ConfettiRain";
+import { ConfettiProps } from "../types/ConfettiProps";
+import { useState } from "react";
+import React from "react";
 
 type Props = {
   chore: ChoreWithAssignments;
+  itemCount: number | undefined;
+  size: ConfettiProps;
 };
 
 export function ChoreItem(props: Props): JSX.Element {
-  const updateAssignmentMutation = useUpdateChoreState();
+  const updateAssignmentMutation = useChildChorePut();
+  const showInfo = useInfoNotification();
+  const [start, setStart] = useState(false);
+
+  function clickHint(chore: ChoreWithAssignments) {
+    switch (chore.assignments[0].state) {
+      case AssignmentState.Archived: {
+        showInfo("Ämtli wurde bereits erledigt");
+        let trigger = false;
+        setStart(trigger);
+        break;
+      }
+
+      case AssignmentState.CheckConfirmed: {
+        let trigger = true;
+        setStart(trigger);
+        break;
+      }
+
+      case AssignmentState.RequestedToCheck: {
+        showInfo("Bitte warte auf die Bestätigung deiner Eltern");
+        break;
+      }
+    }
+  }
 
   function updateState(chore: ChoreWithAssignments) {
     let nextState: number;
 
     if (chore.assignments[0].state === AssignmentState.CheckConfirmed) {
-      nextState = AssignmentState.Archived; //chore.assignments[0].state + 2;
-    } else if (chore.assignments[0].state === AssignmentState.CheckRefused){
+      nextState = AssignmentState.Archived;
+    } else if (chore.assignments[0].state === AssignmentState.CheckRefused) {
       nextState = AssignmentState.RequestedToCheck;
-    }
-    else {
+    } else {
       nextState = chore.assignments[0].state + 1;
     }
 
-    const updatedAssignment = produce(chore.assignments[0], (draftAssignment) => {
-      draftAssignment.state =  nextState;
-    });
+    const updatedAssignment = produce(
+      chore.assignments[0],
+      (draftAssignment) => {
+        draftAssignment.state = nextState;
+      }
+    );
 
-    updateAssignmentMutation.mutate(updatedAssignment);
+    updateAssignmentMutation.mutate(mutateChore(updatedAssignment));
   }
 
   function mapToListItem(chore: ChoreWithAssignments): ChildListItem {
@@ -65,30 +96,19 @@ export function ChoreItem(props: Props): JSX.Element {
       ],
     };
   }
-
-  if (updateAssignmentMutation.isLoading)
   return (
-    <Card elevation={5}>
-      <p>Updating...</p>
-    </Card>
-  ); // TODO hs (210322): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
-
-  if (updateAssignmentMutation.error)
-  return (
-    <Card elevation={5}>
-       <p>{`An error has occurred: ${updateAssignmentMutation.error}`}</p>
-    </Card>
-    
-  ); // TODO hs (210322): Implement more sophisticated error screen. Refactor to general error screen?
-
-  return (
-    <ListItemComponent
-      key={props.chore.id}
-      // TODO hs (210319): Add show badge function
-      showBadge={0}
-      item={mapToListItem(props.chore)}
-      stepper={itemStepperControl(props.chore)}
-      onNextStepClick={() => updateState(props.chore)}
-    />
+    <React.Fragment>
+      <ListItemComponent
+        key={props.chore.id}
+        // TODO hs (210319): Add show badge function
+        showBadge={0}
+        disableControl={false}
+        item={mapToListItem(props.chore)}
+        stepper={itemStepperControl(props.chore)}
+        onNextStepClick={() => updateState(props.chore)}
+        onTryClick={() => clickHint(props.chore)}
+      />
+      {start && <ConfettiRain size={props.size.size} />}
+    </React.Fragment>
   );
 }

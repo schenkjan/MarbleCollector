@@ -1,7 +1,6 @@
 import {
   Box,
   Container,
-  CircularProgress,
   Paper,
   makeStyles,
   createStyles,
@@ -10,14 +9,14 @@ import {
 } from "@material-ui/core";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
-import ErrorIcon from "@material-ui/icons/Error";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
-//todo, 210322 hs move backendaccess to common folder
-import { useChildChoreData } from "../../parent/BackendAccess";
+import { useChildChoreGet } from "../BackendAccess";
+import { ConfettiProps } from "../types/ConfettiProps";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
 import { useEffect } from "react";
+import React from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,13 +24,35 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: "1 1 auto",
       padding: "1px",
     },
+    container: {
+      padding: "0px",
+    },
   })
 );
+
+//some default values for IPhone 6/7/8 Plus
+let confettiProps: ConfettiProps = {
+  size: {
+    width: 414,
+    height: 918,
+  },
+};
+
+let surroundingElementRef: any = React.createRef();
 
 export function ChildChoreList(): JSX.Element {
   const userId = useRecoilValue(AppState.userId);
   const classes = useStyles();
-  useDashboardTitle("Ämtli Pinnwand");
+  useDashboardTitle("Ämtli");
+
+  useEffect(() => {
+    confettiProps.size.width = surroundingElementRef.current.offsetWidth - 1; // 210227 hs -1 quickfix to prevent horizontal slidebar after Confetti Rain
+    confettiProps.size.height = surroundingElementRef.current.offsetHeight;
+  });
+
+  const { data } = useChildChoreGet(userId);
+
+  let itemCount = data?.length;
 
   const [
     newChoreNotifications,
@@ -53,33 +74,22 @@ export function ChildChoreList(): JSX.Element {
     }
   }, [newChoreNotifications, setChoreNotificationsHandled]);
 
-  const { isLoading, error, chores } = useChildChoreData(userId);
-
-  if (isLoading)
-    return (
-      <Box>
-        <p>Loading...</p>
-        <CircularProgress />
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated loading screen. Refactor to general loading screen/overlay?
-
-  if (error)
-    return (
-      <Box>
-        <ErrorIcon color="secondary" fontSize="large" />
-        <p>{`An error has occurred: ${error}`}</p>
-      </Box>
-    ); // TODO js (04.03.2021): Implement more sophisticated error screen. Refactor to general error screen?
-
   return (
-    <Container maxWidth="md">
-      <Box className={classes.box} component={Paper}>
-        <List>
-          {chores?.map((chore) => (
-            <ChoreItem key={chore.id} chore={chore} />
-          ))}
-        </List>
-      </Box>
+    <Container maxWidth="md" className={classes.container}>
+      <div ref={surroundingElementRef}>
+        <Box className={classes.box} component={Paper}>
+          <List>
+            {data?.map((chore) => (
+              <ChoreItem
+                key={chore.id}
+                chore={chore}
+                itemCount={itemCount}
+                size={confettiProps}
+              />
+            ))}
+          </List>
+        </Box>
+      </div>
     </Container>
   );
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { ChildChoreList } from "./chores/ChildChoreList";
+import { ChildRewardList } from "./rewards/ChildRewardList";
 import { ProfileDetails } from "./profile/ProfileDetails";
 
 export function ChildScreen() {
@@ -11,7 +12,7 @@ export function ChildScreen() {
       <ProtectedRouteForRole />
       <Switch>
         <Route path={`${path}/rewards`}>
-          <p>Child Rewards</p>
+          <ChildRewardList />
         </Route>
         <Route path={`${path}/profile`}>
           <ProfileDetails />
