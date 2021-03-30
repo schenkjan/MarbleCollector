@@ -14,11 +14,11 @@ import { RewardCard } from "./RewardCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
-import { useChildrenDataForUser } from "../BackendAccess";
 import { RewardWithGrants } from "../models/RewardWithGrants";
 import produce from "immer";
 import {
   mutateReward,
+  useChildrenForUser,
   useParentRewardGet,
   useParentRewardPost,
 } from "../../api/BackendAccess";
@@ -45,7 +45,7 @@ export function RewardsList() {
   const [rewardToEdit, setRewardToEdit] = useState<RewardWithGrants>();
   const { data: rewards } = useParentRewardGet();
   const addReward = useParentRewardPost();
-  const { children } = useChildrenDataForUser(); // TODO js (25.03.2021): Move to generic backend access file.
+  const { data: children } = useChildrenForUser();
 
   const [
     newRewardNotifications,
@@ -95,7 +95,7 @@ export function RewardsList() {
           <RewardCard
             key={reward.id}
             reward={reward}
-            children={children}
+            children={children ?? []}
             onCopyReward={handleCopyReward}
           />
         ))}

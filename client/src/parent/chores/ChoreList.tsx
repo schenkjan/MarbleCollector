@@ -14,11 +14,11 @@ import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import {
   mutateChore,
+  useChildrenForUser,
   useParentChoreGet,
   useParentChorePost,
 } from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
-import { useChildrenDataForUser } from "../BackendAccess";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
 import produce from "immer";
@@ -45,7 +45,7 @@ export function ChoreList(): JSX.Element {
   const [choreToEdit, setChoreToEdit] = useState<ChoreWithAssignments>();
   const { data: chores } = useParentChoreGet();
   const addChore = useParentChorePost();
-  const { children } = useChildrenDataForUser(); // TODO js (25.03.2021): Move to generic backend access file.
+  const { data: children } = useChildrenForUser();
 
   const [
     newChoreNotifications,
@@ -98,7 +98,7 @@ export function ChoreList(): JSX.Element {
           <ChoreCard
             key={chore.id}
             chore={chore}
-            children={children}
+            children={children ?? []}
             onCopyChore={handleCopyChore}
           />
         ))}
