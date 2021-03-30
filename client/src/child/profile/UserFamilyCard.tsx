@@ -51,7 +51,7 @@ export function UserFamilyCard(props: UserFamilyCardProps) {
                   <ListItem
                     alignItems="flex-start"
                     component={Link}
-                    to={`${"/app/child/profile"}/${user.username}`}
+                    to={`/app/child/profile/${user.username}`}
                   >
                     <ListItemAvatar>
                       <Avatar alt={user.username} src={user.avatar} />

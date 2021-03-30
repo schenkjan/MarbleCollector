@@ -118,8 +118,8 @@ export function UserProfileCard(props: UserProfileCardProps) {
                 <p className={styles.statValue}>{user?.role}</p>
               </Box>
               <Box p={2} flex={"auto"}>
-                <p className={styles.statLabel}>Profile Prop 1</p>
-                <p className={styles.statValue}>xyz</p>
+                <p className={styles.statLabel}>User-Id</p>
+                <p className={styles.statValue}>{user?.id}</p>
               </Box>
               <Box p={2} flex={"auto"}>
                 <p className={styles.statLabel}>Profile Prop 2</p>
