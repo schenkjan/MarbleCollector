@@ -41,5 +41,5 @@ export function compareChores(
   const grantComparison = compareGrants(a.grants, b.grants);
   if (grantComparison !== 0) return grantComparison;
 
-  return a.name.localeCompare(b.name);
+  return b.name.localeCompare(a.name);
 }

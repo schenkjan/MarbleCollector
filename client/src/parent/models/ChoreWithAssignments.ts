@@ -42,5 +42,5 @@ export function compareChores(
   const assignmentComparison = compareAssignments(a.assignments, b.assignments);
   if (assignmentComparison !== 0) return assignmentComparison;
 
-  return a.name.localeCompare(b.name);
+  return b.name.localeCompare(a.name);
 }
