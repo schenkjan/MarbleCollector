@@ -5,7 +5,10 @@ export interface QueryProps {
   getUrl: QueryObjectUrl;
   getErrorMessage: string;
   postSuccessMessage: string;
+  postErrorMessage: string;
   putSuccessMessage: string;
+  putErrorMessage: string;
   deleteSuccessMessage: string;
+  deleteErrorMessage: string;
   mutateUrl: string;
 }

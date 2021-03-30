@@ -4,7 +4,6 @@ import { ProfileDetails } from "./profile/ProfileDetails";
 import { ChoreList } from "./chores/ChoreList";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { RewardsList } from "./rewards/RewardsList";
-import PortalOverlay from "../shell/PortalOverlay";
 import { Container } from "@material-ui/core";
 
 export function ParentScreen() {
@@ -24,7 +23,6 @@ export function ParentScreen() {
           <ChoreList />
         </Route>
       </Switch>
-      <PortalOverlay />
     </Container>
   );
 }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AppState } from "../AppState";
@@ -16,7 +17,8 @@ const apiBaseUrl = getApiBaseUrl();
 export function useGet<T>(
   key: string,
   url: QueryObjectUrl,
-  errorMessage: string
+  errorMessage: string,
+  additiveUrl?: number | string
 ) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
@@ -24,42 +26,49 @@ export function useGet<T>(
 
   const { isLoading, isFetching, isError, data } = useQuery<T>(key, () =>
     axios
-      .get(`${apiBaseUrl}${url}`, {
+      .get(`${apiBaseUrl}${url}${additiveUrl ? additiveUrl : ""}`, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
       })
       .then((data) => data.data)
   );
-  if ((isLoading || isFetching) && queryState.open === false) {
-    setqueryState({
-      open: true,
-    });
-  } else if (isError) {
-    showError(errorMessage);
-  } else if (
-    !isLoading &&
-    !isFetching &&
-    !isError &&
-    queryState.open === true
-  ) {
-    setqueryState({
-      open: false,
-    });
-  }
+  useEffect(() => {
+    if ((isLoading || isFetching) && queryState.open === false) {
+      setqueryState({
+        open: true,
+      });
+    } else if (isError) {
+      showError(errorMessage);
+    } else if (
+      !isLoading &&
+      !isFetching &&
+      !isError &&
+      queryState.open === true
+    ) {
+      setqueryState({
+        open: false,
+      });
+    }
+  });
   return {
     data: data,
   };
 }
 
 // POST
-export function usePost<T>(invalidateKey: string, successMessage: string) {
+export function usePost<T>(
+  invalidateKey: string,
+  successMessage: string,
+  errorMessage: string
+) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
   const showSuccess = useSuccessNotification();
-  const mutation = useMutation(
+  const showError = useErrorNotification();
+  const mutate = useMutation(
     (object: QueryObject) =>
-      axios.post<T>(`${apiBaseUrl}${object.url}`, object.object, {
+      axios.post(`${apiBaseUrl}${object.url}`, object.object, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
@@ -69,17 +78,26 @@ export function usePost<T>(invalidateKey: string, successMessage: string) {
         queryClient.invalidateQueries(invalidateKey);
         showSuccess(successMessage);
       },
+      onError: () => {
+        queryClient.invalidateQueries(invalidateKey);
+        showError(errorMessage);
+      },
     }
   );
 
-  return mutation;
+  return mutate;
 }
 
 // PUT
-export function usePut<T>(invalidateKey: string, InfoMessage: string) {
+export function usePut<T>(
+  invalidateKey: string,
+  successMessage: string,
+  errorMessage: string
+) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
   const showSuccess = useSuccessNotification();
+  const showError = useErrorNotification();
   const mutation = useMutation(
     (object: QueryObject) =>
       axios.put<T>(
@@ -94,7 +112,11 @@ export function usePut<T>(invalidateKey: string, InfoMessage: string) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(invalidateKey);
-        showSuccess(InfoMessage);
+        showSuccess(successMessage);
+      },
+      onError: () => {
+        queryClient.invalidateQueries(invalidateKey);
+        showError(errorMessage);
       },
     }
   );
@@ -103,10 +125,15 @@ export function usePut<T>(invalidateKey: string, InfoMessage: string) {
 }
 
 // DELETE
-export function useDelete<T>(invalidateKey: string, infoMessage: string) {
+export function useDelete<T>(
+  invalidateKey: string,
+  successMessage: string,
+  errorMessage: string
+) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
   const showSuccess = useSuccessNotification();
+  const showError = useErrorNotification();
   const mutation = useMutation(
     (object: QueryObject) =>
       axios.delete<T>(`${apiBaseUrl}${object.url + object.object.id}`, {
@@ -117,7 +144,11 @@ export function useDelete<T>(invalidateKey: string, infoMessage: string) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(invalidateKey);
-        showSuccess(infoMessage);
+        showSuccess(successMessage);
+      },
+      onError: () => {
+        queryClient.invalidateQueries(invalidateKey);
+        showError(errorMessage);
       },
     }
   );

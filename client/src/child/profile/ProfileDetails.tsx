@@ -1,6 +1,10 @@
 import React from "react";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { useProfileGet } from "../../api/BackendAccess";
+import { AppState } from "../../AppState";
+import { ProtectedRouteForRole } from "../../auth/ProtectedRouteForRole";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { useProfileData } from "../BackendAccess";
 import { UserFamilyCard } from "./UserFamilyCard";
 import { UserProfileCard } from "./UserProfileCard";
 import { UserScoreCard } from "./UserScoreCard";
@@ -8,21 +12,24 @@ import { UserScoreCard } from "./UserScoreCard";
 export function ProfileDetails() {
   useDashboardTitle("Profil");
 
-  const { isLoading, error, profile } = useProfileData();
+  const { path } = useRouteMatch();
 
-  if (isLoading) {
-    return <p>Loading</p>;
-  }
+  const userInfo = useRecoilValue(AppState.userInfo);
+  const { data } = useProfileGet(userInfo?.id);
+  const name = userInfo?.username;
 
-  if (error) {
-    return <p>Error</p>;
-  }
+  // const family = data?.family;
+  console.log(name);
 
   return (
     <>
-      <UserProfileCard user={profile?.user} />
-      <UserScoreCard userScore={profile?.score} />
-      <UserFamilyCard family={profile?.family ?? []} />
+      <Switch>
+        <Route path={`${path}/${name}`}>
+          <UserProfileCard user={data?.user} />
+          <UserScoreCard userScore={data?.score} />
+          <UserFamilyCard family={data?.family ?? []} />
+        </Route>
+      </Switch>
     </>
   );
 }

@@ -6,6 +6,7 @@ import { DashboardState } from "./DashboardState";
 import { NavigationBar } from "./navigation/NavigationBar";
 import { ShowSnack } from "./Snackbar";
 import { TitleBar } from "./title/TitleBar";
+import BackdropOverlay from "./BackdropOverlay";
 import { DashboardNotificationHandler } from "./DashboardNotificationHandler";
 
 const useStyles = makeStyles({
@@ -46,6 +47,7 @@ export function DashboardLayout(props: Props) {
       <div className={classes.children}>{props.children}</div>
       <NavigationBar showNavigationBar={userIsAuthenticated} />
       <ShowSnack />
+      <BackdropOverlay />
     </Box>
   );
 }
