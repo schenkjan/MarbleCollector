@@ -18,7 +18,10 @@ import {
   useParentChoreLoader,
   useParentChorePost,
 } from "../../api/BackendAccess";
-import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
+import {
+  ChoreWithAssignments,
+  compareChores,
+} from "../models/ChoreWithAssignments";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
 import produce from "immer";
@@ -94,14 +97,17 @@ export function ChoreList(): JSX.Element {
   return (
     <Box className={classes.container} component={Paper}>
       <List>
-        {chores?.map((chore) => (
-          <ChoreCard
-            key={chore.id}
-            chore={chore}
-            children={children ?? []}
-            onCopyChore={handleCopyChore}
-          />
-        ))}
+        {chores
+          ?.sort(compareChores)
+          .reverse()
+          .map((chore) => (
+            <ChoreCard
+              key={chore.id}
+              chore={chore}
+              children={children ?? []}
+              onCopyChore={handleCopyChore}
+            />
+          ))}
       </List>
       <Fab
         className={classes.fab}
