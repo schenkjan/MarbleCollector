@@ -1,3 +1,4 @@
+import { useQueryClient } from "react-query";
 import { useFamilyMembership } from "../AppState";
 import { Assignment } from "../model/Assignment";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
@@ -25,7 +26,7 @@ const choreProps: QueryProps = {
   mutateUrl: "/api/Chores/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
-// GET - load all Chores on Parent-Dashboard
+// GET - all Chores on Parent-Dashboard
 export const useParentChoreGet = (additiveUrl?: number | string) =>
   useGet<ChoreWithAssignments[]>(
     choreProps.getKey,
@@ -33,6 +34,21 @@ export const useParentChoreGet = (additiveUrl?: number | string) =>
     choreProps.getErrorMessage,
     additiveUrl // absolute userId or familyName which includes at the end of url for get single data
   );
+
+// GET and invalidate - all Chores on Parent-Dashboard
+export const useParentChoreLoader = (): [
+  chores: ChoreWithAssignments[],
+  invalidateQuery: () => void
+] => {
+  const query = useParentChoreGet();
+  const queryClient = useQueryClient();
+
+  const invalidateQuery = () => {
+    queryClient.invalidateQueries(choreProps.getKey);
+  };
+
+  return [query.data ?? [], invalidateQuery];
+};
 
 // POST - create one Chore on Parent-Dashboard
 export const useParentChorePost = () =>
@@ -79,7 +95,7 @@ const rewardProps: QueryProps = {
   mutateUrl: "/api/Rewards/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
-// GET - load all Rewards on Parent-Dashboard
+// GET - all Rewards on Parent-Dashboard
 export const useParentRewardGet = (additiveUrl?: number | string) =>
   useGet<RewardWithGrants[]>(
     rewardProps.getKey,
@@ -87,6 +103,21 @@ export const useParentRewardGet = (additiveUrl?: number | string) =>
     rewardProps.getErrorMessage,
     additiveUrl // absolute userId or familyName witch includes at the end of url for get single data
   );
+
+// GET and invalidate - all Rewards on Parent-Dashboard
+export const useParentRewardLoader = (): [
+  rewards: RewardWithGrants[],
+  invalidateQuery: () => void
+] => {
+  const query = useParentRewardGet();
+  const queryClient = useQueryClient();
+
+  const invalidateQuery = () => {
+    queryClient.invalidateQueries(rewardProps.getKey);
+  };
+
+  return [query.data ?? [], invalidateQuery];
+};
 
 // POST - create one Reward on Parent-Dashboard
 export const useParentRewardPost = () =>
@@ -133,7 +164,7 @@ const profileProps: QueryProps = {
   mutateUrl: "/api/Users/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
-// GET - load all Profiles on Parent-Dashboard
+// GET - all Profiles on Parent-Dashboard
 export const useProfileGet = (additiveUrl?: number | string) =>
   useGet<UserProfile>(
     profileProps.getKey,
@@ -290,7 +321,7 @@ const childrenProps: QueryProps = {
   mutateUrl: "/api/Users/", // POST/PUT/DELETE-Url from Swagger UI
 };
 
-// GET - load all Children for the logged in user's family on Parent-Dashboard
+// GET - all Children for the logged in user's family on Parent-Dashboard
 export const useChildrenForUser = () =>
   useGet<User[]>(
     childrenProps.getKey,

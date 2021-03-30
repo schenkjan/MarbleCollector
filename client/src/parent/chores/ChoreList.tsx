@@ -15,7 +15,7 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import {
   mutateChore,
   useChildrenForUser,
-  useParentChoreGet,
+  useParentChoreLoader,
   useParentChorePost,
 } from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
@@ -43,7 +43,7 @@ export function ChoreList(): JSX.Element {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [choreToEdit, setChoreToEdit] = useState<ChoreWithAssignments>();
-  const { data: chores } = useParentChoreGet();
+  const [chores, invalidateChores] = useParentChoreLoader();
   const addChore = useParentChorePost();
   const { data: children } = useChildrenForUser();
 
@@ -56,16 +56,16 @@ export function ChoreList(): JSX.Element {
 
   useEffect(() => {
     if (newChoreNotifications.length > 0) {
-      // TODO js (27.03.2021): How to trigger reload of single assignment/chore?
       for (const notification of newChoreNotifications) {
         console.log(
           "Triggering reload for entity with id",
           notification.targetEntityId
         );
       }
+      invalidateChores(); // trigger the reload of all chores
       setChoreNotificationsHandled(newChoreNotifications);
     }
-  }, [newChoreNotifications, setChoreNotificationsHandled]);
+  }, [invalidateChores, newChoreNotifications, setChoreNotificationsHandled]);
 
   function handleOnCancel() {
     setChoreToEdit(undefined);

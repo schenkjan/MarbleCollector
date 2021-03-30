@@ -19,7 +19,7 @@ import produce from "immer";
 import {
   mutateReward,
   useChildrenForUser,
-  useParentRewardGet,
+  useParentRewardLoader,
   useParentRewardPost,
 } from "../../api/BackendAccess";
 
@@ -43,7 +43,7 @@ export function RewardsList() {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [rewardToEdit, setRewardToEdit] = useState<RewardWithGrants>();
-  const { data: rewards } = useParentRewardGet();
+  const [rewards, invalidateRewards] = useParentRewardLoader();
   const addReward = useParentRewardPost();
   const { data: children } = useChildrenForUser();
 
@@ -54,16 +54,20 @@ export function RewardsList() {
 
   useEffect(() => {
     if (newRewardNotifications.length > 0) {
-      // TODO js (27.03.2021): How to trigger reload of single assignment/chore?
       for (const notification of newRewardNotifications) {
         console.log(
           "Triggering reload for entity with id",
           notification.targetEntityId
         );
       }
+      invalidateRewards(); // trigger the reload of all rewards
       setRewardNotificationsHandled(newRewardNotifications);
     }
-  }, [newRewardNotifications, setRewardNotificationsHandled]);
+  }, [
+    invalidateRewards,
+    newRewardNotifications,
+    setRewardNotificationsHandled,
+  ]);
 
   function handleOnCancel() {
     setRewardToEdit(undefined);
