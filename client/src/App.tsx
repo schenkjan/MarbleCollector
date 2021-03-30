@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
 import { ProtectedRoutesController } from "./auth/ProtectedRoutesController";
 import { DashboardLayout } from "./shell/DashboardLayout";
+import { HubConnectionHandler } from "./notifications/HubConnectionHandler";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ function App() {
                 </ProtectedRoute>
               </Switch>
             </DashboardLayout>
+            <HubConnectionHandler />
           </div>
         </ThemeProvider>
       </QueryClientProvider>

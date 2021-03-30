@@ -4,12 +4,13 @@ import { ProfileDetails } from "./profile/ProfileDetails";
 import { ChoreList } from "./chores/ChoreList";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { RewardsList } from "./rewards/RewardsList";
+import { Container } from "@material-ui/core";
 
 export function ParentScreen() {
   const { path } = useRouteMatch();
 
   return (
-    <>
+    <Container maxWidth="md" disableGutters>
       <ProtectedRouteForRole />
       <Switch>
         <Route path={`${path}/rewards`}>
@@ -22,6 +23,6 @@ export function ParentScreen() {
           <ChoreList />
         </Route>
       </Switch>
-    </>
+    </Container>
   );
 }

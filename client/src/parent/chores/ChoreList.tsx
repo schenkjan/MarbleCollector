@@ -45,6 +45,10 @@ export function ChoreList(): JSX.Element {
   const addChore = useParentChorePost();
   const { children } = useChildrenDataForUser(); // TODO js (25.03.2021): Move to generic backend access file.
 
+  function receiveMessag(...args: any[]) {
+    console.log(args);
+  }
+
   function handleOnCancel() {
     setChoreToEdit(undefined);
     setShowDialog(false);

@@ -15,6 +15,9 @@ import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
 //todo, 210322 hs move backendaccess to common folder
 import { useChildChoreData } from "../../parent/BackendAccess";
+import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
+import { NotificationNames } from "../../notifications/NotificationNames";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,6 +32,26 @@ export function ChildChoreList(): JSX.Element {
   const userId = useRecoilValue(AppState.userId);
   const classes = useStyles();
   useDashboardTitle("Ämtli Pinnwand");
+
+  const [
+    newChoreNotifications,
+    setChoreNotificationsHandled,
+  ] = useMyNotificationsByNamePrefixWithHandle(
+    NotificationNames.prefix.assignment
+  );
+
+  useEffect(() => {
+    if (newChoreNotifications.length > 0) {
+      // TODO @Severin now to trigger reload??
+      for (const notification of newChoreNotifications) {
+        console.log(
+          "Triggering reload for entity with id",
+          notification.targetEntityId
+        );
+      }
+      setChoreNotificationsHandled(newChoreNotifications);
+    }
+  }, [newChoreNotifications, setChoreNotificationsHandled]);
 
   const { isLoading, error, chores } = useChildChoreData(userId);
 

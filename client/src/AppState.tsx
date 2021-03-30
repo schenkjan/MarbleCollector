@@ -26,7 +26,15 @@ export class AppState {
   static userInfo = selector<AuthResponse | null>({
     key: "userInfo",
     get: ({ get }) => {
-      return get(AppState.userInfoState) as AuthResponse;
+      const userInfo = get(AppState.userInfoState) as AuthResponse;
+      if (
+        userInfo &&
+        Object.keys(userInfo).length === 0 &&
+        userInfo.constructor === Object
+      ) {
+        return null;
+      }
+      return userInfo;
     },
   });
 

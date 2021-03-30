@@ -103,7 +103,11 @@ export function EditableText(props: Prop): JSX.Element {
         color={props.textColor ?? "initial"}
         className={classes.text}
       >
-        {text ? text : "Nicht definiert. Text mit Klick hinzufügen."}
+        {text
+          ? text
+          : props.editable
+          ? "Nicht definiert. Text mit Klick hinzufügen."
+          : ""}
       </Typography>
       <Popover
         open={isOpen()}
