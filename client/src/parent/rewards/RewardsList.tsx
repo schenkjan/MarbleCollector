@@ -97,7 +97,7 @@ export function RewardsList() {
       <List>
         {rewards
           ?.sort(compareChores)
-          .reverse()
+          .reverse() // sort descending
           .map((reward) => (
             <RewardCard
               key={reward.id}

@@ -99,7 +99,7 @@ export function ChoreList(): JSX.Element {
       <List>
         {chores
           ?.sort(compareChores)
-          .reverse()
+          .reverse() // sort descending
           .map((chore) => (
             <ChoreCard
               key={chore.id}
