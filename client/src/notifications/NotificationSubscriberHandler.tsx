@@ -70,6 +70,26 @@ export function NotificationSubscriberHandler(
       setNotificationSubscribers([
         // getSubscriber("parent.heartbeat", NotificationNames.parent.heartbeat),
         getSubscriber(
+          "parent.assignmentUpdated",
+          NotificationNames.parent.assignmentUpdated
+        ),
+        getSubscriber(
+          "parent.assignmentDeleted",
+          NotificationNames.parent.assignmentDeleted
+        ),
+        getSubscriber(
+          "parent.receiveMessage",
+          NotificationNames.parent.receiveMessage
+        ),
+        getSubscriber(
+          "parent.grantUpdated",
+          NotificationNames.parent.grantUpdated
+        ),
+        getSubscriber(
+          "parent.grantDeleted",
+          NotificationNames.parent.grantDeleted
+        ),
+        getSubscriber(
           "parent.receiveMessage",
           NotificationNames.parent.receiveMessage
         ),

@@ -4,6 +4,9 @@
     {
         AssignmentCreated,
         AssignmentUpdated,
-        AssignmentDeleted
+        AssignmentDeleted,
+        GrantCreated,
+        GrantUpdated,
+        GrantDeleted
     }
 }

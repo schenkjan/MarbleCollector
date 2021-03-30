@@ -86,9 +86,9 @@ namespace MarbleCollectorApi.Controllers
                 return BadRequest(); ;
             }
 
-            await _childrenNotificationHubContext.Clients.All.SendAsync("CreatedGrant", grant.UserId, grant.Id);
+            await _childrenNotificationHubContext.Clients.All.SendChildNotification(ChildNotification.GrantCreated, grant.UserId, grant.Id);
 
-            await _parentNotificationHubContext.Clients.All.SendAsync("CreatedGrant", grant.RewardId, grant.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
+            //await _parentNotificationHubContext.Clients.All.SendAsync("CreatedGrant", grant.RewardId, grant.Id); // TODO js (16.03.2021): Do we need to notify the parents as well?
 
             return Created("Get", entityEntry.Entity.Map());
         }
@@ -112,13 +112,13 @@ namespace MarbleCollectorApi.Controllers
 
             if (stateChanged)
             {
-                if (grant.State == GrantState.Assigned || grant.State == GrantState.RequestConfirmed)
+                if (grant.State == GrantState.Assigned || grant.State == GrantState.RequestConfirmed || grant.State == GrantState.RequestRefused)
                 {
-                    await _childrenNotificationHubContext.Clients.All.SendAsync("UpdateGrants", grant.UserId, grant.RewardId);
+                    await _childrenNotificationHubContext.Clients.All.SendChildNotification(ChildNotification.GrantUpdated, grant.UserId, grant.RewardId);
                 }
-                else if (grant.State != GrantState.Archived)
+                else if (grant.State == GrantState.Requested)
                 {
-                    await _parentNotificationHubContext.Clients.All.SendAsync("UpdateGrants", grant.UserId, grant.RewardId);
+                    await _parentNotificationHubContext.Clients.All.SendParentNotification(ParentNotification.GrantUpdated, grant.UserId, grant.RewardId);
                 }
             }
 

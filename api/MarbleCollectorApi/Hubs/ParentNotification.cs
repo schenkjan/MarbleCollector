@@ -4,7 +4,8 @@
     {
         AssignmentUpdated,
         AssignmentDeleted,
-
+        GrantUpdated,
+        GrantDeleted,
         ReceiveMessage
     }
 }

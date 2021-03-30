@@ -12,11 +12,10 @@ import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
 import { useChildChoreGet } from "../BackendAccess";
+import React, { useEffect } from "react";
 import { ConfettiProps } from "../types/ConfettiProps";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
-import { useEffect } from "react";
-import React from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,6 +72,11 @@ export function ChildChoreList(): JSX.Element {
       setChoreNotificationsHandled(newChoreNotifications);
     }
   }, [newChoreNotifications, setChoreNotificationsHandled]);
+
+  useEffect(() => {
+    confettiProps.size.width = surroundingElementRef.current.offsetWidth - 1; // 210227 hs -1 quickfix to prevent horizontal slidebar after Confetti Rain
+    confettiProps.size.height = surroundingElementRef.current.offsetHeight;
+  });
 
   return (
     <Container maxWidth="md" className={classes.container}>

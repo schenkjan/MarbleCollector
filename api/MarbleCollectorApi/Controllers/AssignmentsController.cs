@@ -117,7 +117,7 @@ namespace MarbleCollectorApi.Controllers
                 {
                     await _childrenNotificationHubContext.Clients.All.SendChildNotification(ChildNotification.AssignmentUpdated, assignment.UserId, assignment.ChoreId);
                 }
-                else if (assignment.State != AssignmentState.Archived)
+                else if (assignment.State == AssignmentState.RequestedToCheck)
                 {
                     await _parentNotificationHubContext.Clients.All.SendParentNotification(ParentNotification.AssignmentUpdated, assignment.UserId, assignment.ChoreId);
                 }

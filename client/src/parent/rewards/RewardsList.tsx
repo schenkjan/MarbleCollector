@@ -9,9 +9,11 @@ import {
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { AddRewardDialog } from "./AddRewardDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RewardCard } from "./RewardCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
+import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
+import { NotificationNames } from "../../notifications/NotificationNames";
 import { useChildrenDataForUser } from "../BackendAccess";
 import { RewardWithGrants } from "../models/RewardWithGrants";
 import produce from "immer";
@@ -44,6 +46,24 @@ export function RewardsList() {
   const { data: rewards } = useParentRewardGet();
   const addReward = useParentRewardPost();
   const { children } = useChildrenDataForUser(); // TODO js (25.03.2021): Move to generic backend access file.
+
+  const [
+    newRewardNotifications,
+    setRewardNotificationsHandled,
+  ] = useMyNotificationsByNamePrefixWithHandle(NotificationNames.prefix.grant);
+
+  useEffect(() => {
+    if (newRewardNotifications.length > 0) {
+      // TODO js (27.03.2021): How to trigger reload of single assignment/chore?
+      for (const notification of newRewardNotifications) {
+        console.log(
+          "Triggering reload for entity with id",
+          notification.targetEntityId
+        );
+      }
+      setRewardNotificationsHandled(newRewardNotifications);
+    }
+  }, [newRewardNotifications, setRewardNotificationsHandled]);
 
   function handleOnCancel() {
     setRewardToEdit(undefined);

@@ -9,7 +9,7 @@ import {
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { AddChoreDialog } from "./AddChoreDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import {
@@ -19,6 +19,8 @@ import {
 } from "../../api/BackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useChildrenDataForUser } from "../BackendAccess";
+import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
+import { NotificationNames } from "../../notifications/NotificationNames";
 import produce from "immer";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,9 +47,25 @@ export function ChoreList(): JSX.Element {
   const addChore = useParentChorePost();
   const { children } = useChildrenDataForUser(); // TODO js (25.03.2021): Move to generic backend access file.
 
-  function receiveMessag(...args: any[]) {
-    console.log(args);
-  }
+  const [
+    newChoreNotifications,
+    setChoreNotificationsHandled,
+  ] = useMyNotificationsByNamePrefixWithHandle(
+    NotificationNames.prefix.assignment
+  );
+
+  useEffect(() => {
+    if (newChoreNotifications.length > 0) {
+      // TODO js (27.03.2021): How to trigger reload of single assignment/chore?
+      for (const notification of newChoreNotifications) {
+        console.log(
+          "Triggering reload for entity with id",
+          notification.targetEntityId
+        );
+      }
+      setChoreNotificationsHandled(newChoreNotifications);
+    }
+  }, [newChoreNotifications, setChoreNotificationsHandled]);
 
   function handleOnCancel() {
     setChoreToEdit(undefined);

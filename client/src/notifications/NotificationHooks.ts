@@ -29,11 +29,12 @@ export function useAllNotificationsByName(notificationName: string) {
  * @returns notifications for me
  */
 export function useMyNotifications() {
+  const userRole = useRecoilValue(AppState.userRole);
   const userId = useRecoilValue(AppState.userId);
   const notifications = useAllNotifications();
   return notifications
     .map((n) => new UserNotification(n))
-    .filter((un) => un.targetUserId === userId);
+    .filter((un) => (userRole === "Child" ? un.targetUserId === userId : true)); // Parent notifications are not targeted to a specific user, therefore we need all notifications for parents.
 }
 
 /**
