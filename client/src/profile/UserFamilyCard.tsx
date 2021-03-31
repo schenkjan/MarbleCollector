@@ -16,7 +16,7 @@ import {
   getUsernameUppercase,
 } from "./ProfileCardStyles";
 import { Link } from "react-router-dom";
-import { User } from "../../parent/models/User";
+import { User } from "../parent/models/User";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +51,7 @@ export function UserFamilyCard(props: UserFamilyCardProps) {
                   <ListItem
                     alignItems="flex-start"
                     component={Link}
-                    to={`/app/child/profile/${user.username}`}
+                    to={`/app/child/profile/${user.id}`}
                   >
                     <ListItemAvatar>
                       <Avatar alt={user.username} src={user.avatar} />

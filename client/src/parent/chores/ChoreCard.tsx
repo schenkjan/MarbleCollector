@@ -22,7 +22,7 @@ import {
   useParentAssignmentPost,
   useParentChoreDelete,
   useParentChorePut,
-} from "../../api/BackendAccess";
+} from "../ParentBackendAccess";
 
 type Prop = {
   chore: ChoreWithAssignments;

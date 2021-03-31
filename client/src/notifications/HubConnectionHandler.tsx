@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { getApiBaseUrl } from "../api/BackendAccess";
+import { getApiBaseUrl } from "../parent/ParentBackendAccess";
 import { AppState } from "../AppState";
 import { UserRoles } from "../auth/UserRoles";
 import { useErrorNotification } from "../shell/hooks/SnackbarHooks";

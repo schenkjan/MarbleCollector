@@ -3,14 +3,14 @@ import { useFamilyMembership } from "../AppState";
 import { Assignment } from "../model/Assignment";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
 import { Grant } from "../model/Grant";
-import { AssignmentForCreate } from "../parent/models/AssignmentForCreate";
-import { GrantForCreate } from "../parent/models/GrantForCreate";
-import { RewardWithGrants } from "../parent/models/RewardWithGrants";
-import { User } from "../parent/models/User";
-import { UserProfile } from "../parent/models/UserProfile";
-import { QueryObject } from "./models/QueryObject";
-import { QueryProps } from "./models/QueryProps";
-import { useGet, usePost, usePut, useDelete } from "./Queries";
+import { AssignmentForCreate } from "./models/AssignmentForCreate";
+import { GrantForCreate } from "./models/GrantForCreate";
+import { RewardWithGrants } from "./models/RewardWithGrants";
+import { User } from "./models/User";
+import { UserProfile } from "./models/UserProfile";
+import { QueryObject } from "../api/models/QueryObject";
+import { QueryProps } from "../api/models/QueryProps";
+import { useGet, usePost, usePut, useDelete } from "../api/Queries";
 
 // Settings for Chores on Parent-Dashboard
 const choreProps: QueryProps = {
@@ -149,29 +149,6 @@ export const mutateReward = (object: any) =>
     url: rewardProps.mutateUrl,
     object: object,
   } as QueryObject);
-
-// Settings for Profiles on Parent-Dashboard
-const profileProps: QueryProps = {
-  getKey: "profileGet", // Choose a unique keyname
-  getUrl: "/api/Users/", // GET-Url from Swagger UI
-  getErrorMessage: "Fehler beim Laden des Profils.", // GET-Message to Snack
-  postSuccessMessage: "Profil wurde erstellt.", // POST-Message to Snack
-  postErrorMessage: "Profil konnte nicht erstellt werden.", // POST-Message to Snack
-  putSuccessMessage: "Profil wurde aktualisiert.", // PUT-Message to Snack
-  putErrorMessage: "Profil konnte nicht aktualisiert werden.", // PUT-Message to Snack
-  deleteSuccessMessage: "Profil wurde gelöscht.", // DELETE-Message to Snack
-  deleteErrorMessage: "Profil konnte nicht gelöscht werden.", // DELETE-Message to Snack
-  mutateUrl: "/api/Users/", // POST/PUT/DELETE-Url from Swagger UI
-};
-
-// GET - all Profiles on Parent-Dashboard
-export const useProfileGet = (additiveUrl?: number | string) =>
-  useGet<UserProfile>(
-    profileProps.getKey,
-    profileProps.getUrl,
-    profileProps.getErrorMessage,
-    additiveUrl // absolute userId or familyName witch includes at the end of url for get single data
-  );
 
 // Settings for Assignments on Parent-Dashboard
 const assignmentProps: QueryProps = {

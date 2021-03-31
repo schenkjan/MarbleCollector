@@ -11,7 +11,7 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { RewardItem } from "./RewardItem";
-import { useChildRewardGet, useUserBalance } from "../BackendAccess";
+import { useChildRewardGet, useUserBalance } from "../ChildBackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

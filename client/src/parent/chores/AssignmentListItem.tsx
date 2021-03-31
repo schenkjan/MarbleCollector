@@ -19,7 +19,7 @@ import {
   mutateAssignment,
   useParentAssignmentDelete,
   useParentAssignmentPut,
-} from "../../api/BackendAccess";
+} from "../ParentBackendAccess";
 
 type Prop = {
   assignment: Assignment;

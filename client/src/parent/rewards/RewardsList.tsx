@@ -21,7 +21,7 @@ import {
   useChildrenForUser,
   useParentRewardLoader,
   useParentRewardPost,
-} from "../../api/BackendAccess";
+} from "../ParentBackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

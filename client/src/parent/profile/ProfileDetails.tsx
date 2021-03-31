@@ -1,10 +1,10 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import { useProfileGet } from "../../api/BackendAccess";
 import { AppState } from "../../AppState";
+import { useProfileGet } from "../../profile/ProfileBackendAccess";
+import { UserFamilyCard } from "../../profile/UserFamilyCard";
+import { UserProfileCard } from "../../profile/UserProfileCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { UserFamilyCard } from "./UserFamilyCard";
-import { UserProfileCard } from "./UserProfileCard";
 
 export function ProfileDetails() {
   useDashboardTitle("Profil");

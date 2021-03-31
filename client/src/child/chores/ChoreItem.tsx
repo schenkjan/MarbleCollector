@@ -3,7 +3,7 @@ import { ChildListItem } from "../types/ChildListItem";
 import { StepperControl } from "../types/StepperControl";
 import { AssignmentState } from "../../parent/models/AssignmentState";
 import { ChoreWithAssignments } from "../../model/ChoreWithAssignments";
-import { mutateChore, useChildChorePut } from "../BackendAccess";
+import { mutateChore, useChildChorePut } from "../ChildBackendAccess";
 import produce from "immer";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";
 import { ConfettiRain } from "./ConfettiRain";

@@ -7,7 +7,7 @@ import {
   useErrorNotification,
   useSuccessNotification,
 } from "../shell/hooks/SnackbarHooks";
-import { getApiBaseUrl } from "./BackendAccess";
+import { getApiBaseUrl } from "../parent/ParentBackendAccess";
 import { QueryObject } from "./models/QueryObject";
 import { QueryObjectUrl } from "./models/QueryObjectUrl";
 

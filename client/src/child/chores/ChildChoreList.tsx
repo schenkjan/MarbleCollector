@@ -11,7 +11,7 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
-import { useChildChoreGet } from "../BackendAccess";
+import { useChildChoreGet } from "../ChildBackendAccess";
 import React, { useEffect } from "react";
 import { ConfettiProps } from "../types/ConfettiProps";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";

@@ -17,7 +17,7 @@ import {
   useChildrenForUser,
   useParentChoreLoader,
   useParentChorePost,
-} from "../../api/BackendAccess";
+} from "../ParentBackendAccess";
 import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
