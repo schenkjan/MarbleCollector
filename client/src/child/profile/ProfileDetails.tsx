@@ -12,9 +12,9 @@ export function ProfileDetails() {
 
   const { path } = useRouteMatch();
 
-  const { data } = useProfileGet();
+  // const { data } = useProfileGet();
   const userId = useRecoilValue(AppState.userInfo);
-  const presentUserId = data ? data?.user.id : userId?.id;
+  // const presentedUserId = data ? data?.user.id : userId?.id;
 
   return (
     <>
@@ -23,10 +23,7 @@ export function ProfileDetails() {
           <ProfileDetailsForUser />
         </Route>
         <Route path={`${path}`}>
-          <Redirect
-            to={`${path}/${presentUserId /* userinfo.id*/}`}
-            // to={`${path}/${userId?.id}`}
-          />
+          <Redirect to={`${path}/${userId?.id}`} />
         </Route>
       </Switch>
     </>
