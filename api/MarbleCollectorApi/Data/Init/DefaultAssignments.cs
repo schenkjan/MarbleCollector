@@ -1,10 +1,30 @@
 ﻿using MarbleCollectorApi.Data.Models;
+using System.Collections.Generic;
 
 namespace MarbleCollectorApi.Data.Init
 {
-    public static class DefaultAssignments
+    public class DefaultAssignments : IDataSeeder<Assignment>
     {
-        public static Assignment[] GetAssignments()
+        public IEnumerable<Assignment> GetDemoData()
+        {
+            return new[]
+            {
+                new Assignment
+                {
+                    UserId = 3,
+                    ChoreId = 1,
+                    State = AssignmentState.Archived
+                },
+                new Assignment
+                {
+                    UserId = 4,
+                    ChoreId = 1,
+                    State = AssignmentState.Archived
+                },
+            };
+        }
+
+        public IEnumerable<Assignment> GetDevelopmentData()
         {
             return new[]
             {
