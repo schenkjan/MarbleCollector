@@ -5,7 +5,7 @@ import {
   Button,
   createStyles,
   makeStyles,
-  Popover,
+  Modal,
   Theme,
 } from "@material-ui/core";
 import { Field, Form, Formik } from "formik";
@@ -59,24 +59,34 @@ const useStyles = makeStyles((theme: Theme) =>
       color: "white",
       backgroundColor: theme.palette.success.light,
     },
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 2, 2),
+    },
   })
 );
 
 export function EditableTextAvatar(props: Prop): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setValue(props.value);
   }, [props.value]);
 
-  function handleOnClick(event: React.MouseEvent<HTMLDivElement>) {
-    setAnchorEl(event.currentTarget);
+  function handleOnClick() {
+    setOpen(true);
   }
 
   function handleClose() {
-    setAnchorEl(null);
+    setOpen(false);
   }
 
   function handleSubmit(value: number) {
@@ -94,7 +104,7 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
         onReset={handleClose}
       >
         <Form className={classes.form}>
-          <Box display="flex" flexDirection="column">
+          <Box className={classes.paper} display="flex" flexDirection="column">
             <Field
               component={TextField}
               name="value"
@@ -114,7 +124,7 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
   }
 
   function isOpen(): boolean {
-    return (props.editable ?? false) && Boolean(anchorEl);
+    return (props.editable ?? false) && open;
   }
 
   return (
@@ -141,21 +151,9 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
         </Badge>
       </ThemeProvider>
 
-      <Popover
-        open={isOpen()}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
+      <Modal className={classes.modal} open={isOpen()} onClose={handleClose}>
         {getForm()}
-      </Popover>
+      </Modal>
     </Badge>
   );
 }

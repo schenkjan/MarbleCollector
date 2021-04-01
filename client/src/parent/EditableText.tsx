@@ -3,7 +3,7 @@ import {
   Button,
   createStyles,
   makeStyles,
-  Popover,
+  Modal,
   Theme,
   Typography,
 } from "@material-ui/core";
@@ -38,24 +38,34 @@ const useStyles = makeStyles((theme: Theme) =>
     text: {
       textAlign: "left",
     },
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 2, 2),
+    },
   })
 );
 
 export function EditableText(props: Prop): JSX.Element {
   const classes = useStyles();
   const [text, setText] = useState("");
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setText(props.text);
   }, [props.text]);
 
-  function handleOnClick(event: React.MouseEvent<HTMLButtonElement>) {
-    setAnchorEl(event.currentTarget);
+  function handleOnClick() {
+    setOpen(true);
   }
 
   function handleClose() {
-    setAnchorEl(null);
+    setOpen(false);
   }
 
   function handleSubmit(value: string) {
@@ -73,7 +83,7 @@ export function EditableText(props: Prop): JSX.Element {
         onReset={handleClose}
       >
         <Form className={classes.form}>
-          <Box display="flex" flexDirection="column">
+          <Box className={classes.paper} display="flex" flexDirection="column">
             <Field
               component={TextField}
               name="text"
@@ -93,7 +103,7 @@ export function EditableText(props: Prop): JSX.Element {
   }
 
   function isOpen(): boolean {
-    return (props.editable ?? false) && Boolean(anchorEl);
+    return (props.editable ?? false) && open;
   }
 
   return (
@@ -109,21 +119,9 @@ export function EditableText(props: Prop): JSX.Element {
           ? "Nicht definiert. Text mit Klick hinzufügen."
           : ""}
       </Typography>
-      <Popover
-        open={isOpen()}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
+      <Modal className={classes.modal} open={isOpen()} onClose={handleClose}>
         {getForm()}
-      </Popover>
+      </Modal>
     </Box>
   );
 }
