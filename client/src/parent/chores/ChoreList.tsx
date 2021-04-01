@@ -94,23 +94,22 @@ export function ChoreList(): JSX.Element {
     setShowDialog(true);
   }
 
+  const sortedChores = chores?.sort(compareChores).reverse(); // sort descending
+
   return (
     <Box className={classes.container} component={Paper}>
-      {!chores || chores.length === 0 ? (
+      {!sortedChores || sortedChores.length === 0 ? (
         <p>Keine Ämtli vorhanden.</p>
       ) : (
         <List>
-          {chores
-            ?.sort(compareChores)
-            .reverse() // sort descending
-            .map((chore) => (
-              <ChoreCard
-                key={chore.id}
-                chore={chore}
-                children={children ?? []}
-                onCopyChore={handleCopyChore}
-              />
-            ))}
+          {sortedChores.map((chore) => (
+            <ChoreCard
+              key={chore.id}
+              chore={chore}
+              children={children ?? []}
+              onCopyChore={handleCopyChore}
+            />
+          ))}
         </List>
       )}
       <Fab

@@ -92,23 +92,22 @@ export function RewardsList() {
     setShowDialog(true);
   }
 
+  const sortedRewards = rewards?.sort(compareChores).reverse(); // sort descending
+
   return (
     <Box className={classes.container} component={Paper}>
-      {!rewards || rewards.length === 0 ? (
+      {!sortedRewards || sortedRewards.length === 0 ? (
         <p>Keine Belohnungen vorhanden.</p>
       ) : (
         <List>
-          {rewards
-            ?.sort(compareChores)
-            .reverse() // sort descending
-            .map((reward) => (
-              <RewardCard
-                key={reward.id}
-                reward={reward}
-                children={children ?? []}
-                onCopyReward={handleCopyReward}
-              />
-            ))}
+          {sortedRewards.map((reward) => (
+            <RewardCard
+              key={reward.id}
+              reward={reward}
+              children={children ?? []}
+              onCopyReward={handleCopyReward}
+            />
+          ))}
         </List>
       )}
       <Fab
