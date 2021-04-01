@@ -94,6 +94,7 @@ export function RewardItem(props: Props): JSX.Element {
     balance: number
   ): boolean {
     if (reward.value > balance) {
+      console.log(balance);
       return true;
     } else {
       return false;
@@ -103,8 +104,14 @@ export function RewardItem(props: Props): JSX.Element {
   return (
     <ListItemComponent
       key={props.reward.id}
-      // TODO hs (210319): Add show badge function
-      showBadge={0}
+      showBadge={
+        props.reward.grants.filter(
+          (grant) =>
+            grant.state === GrantState.Assigned ||
+            grant.state === GrantState.RequestRefused ||
+            grant.state === GrantState.RequestConfirmed
+        ).length
+      }
       disableControl={checkForInsufficientBalance(props.reward, props.balance)}
       item={mapToListItem(props.reward)}
       stepper={itemStepperControl(props.reward)}

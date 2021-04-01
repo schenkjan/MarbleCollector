@@ -11,7 +11,10 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { RewardItem } from "./RewardItem";
-import { useChildRewardGet, useUserBalance } from "../BackendAccess";
+import { useChildRewardLoader, useUserBalance } from "../BackendAccess";
+import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
+import { NotificationNames } from "../../notifications/NotificationNames";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,10 +30,32 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function ChildRewardList(): JSX.Element {
   const userId = useRecoilValue(AppState.userId);
+  const [rewards, invalidateRewards] = useChildRewardLoader(userId);
   const classes = useStyles();
   useDashboardTitle("Belohnungen");
 
-  const { data } = useChildRewardGet(userId);
+  const [
+    newRewardNotifications,
+    setRewardNotificationsHandled,
+  ] = useMyNotificationsByNamePrefixWithHandle(NotificationNames.prefix.grant);
+
+  useEffect(() => {
+    if (newRewardNotifications.length > 0) {
+      for (const notification of newRewardNotifications) {
+        console.log(
+          "Triggering reload for entity with id",
+          notification.targetEntityId
+        );
+      }
+      invalidateRewards();
+      setRewardNotificationsHandled(newRewardNotifications);
+    }
+  }, [
+    invalidateRewards,
+    newRewardNotifications,
+    setRewardNotificationsHandled,
+  ]);
+
   const { isLoading, error, balance } = useUserBalance();
 
   //TODO 21037 improve implementation
@@ -43,7 +68,7 @@ export function ChildRewardList(): JSX.Element {
     <Container maxWidth="md" className={classes.container}>
       <Box className={classes.box} component={Paper}>
         <List>
-          {data?.map((reward) => (
+          {rewards?.map((reward) => (
             <RewardItem key={reward.id} reward={reward} balance={userBalance} />
           ))}
         </List>
