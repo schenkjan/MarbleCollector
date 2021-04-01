@@ -68,6 +68,10 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       backgroundColor: theme.palette.primary.main,
     },
+    actionNotificationBadge: {
+      color: "white",
+      backgroundColor: theme.palette.warning.light,
+    },
     badgestyle: {
       "font-weight": "Bold",
       "font-size": "1rem",
@@ -150,13 +154,13 @@ export function ListItemComponent(props: Props) {
         subheader={props.item.dueDate ? subHeader : null}
         avatar={
           <Badge
-            variant="dot"
+            variant="standard"
             badgeContent={props.showBadge}
             anchorOrigin={{
               vertical: "top",
-              horizontal: "left",
+              horizontal: "right",
             }}
-            color="secondary"
+            classes={{ badge: classes.actionNotificationBadge }}
           >
             <Avatar aria-label="Chore">
               {props.item.name[0].toUpperCase()}
