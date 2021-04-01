@@ -66,6 +66,9 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       justifyContent: "center",
     },
+    button: {
+      "margin-top": theme.spacing(1),
+    },
   })
 );
 
@@ -108,10 +111,20 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
               type="number"
               label={props.editLabel}
             />
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              className={classes.button}
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
               Speichern
             </Button>
-            <Button type="reset" variant="outlined" color="primary">
+            <Button
+              className={classes.button}
+              type="reset"
+              variant="outlined"
+              color="primary"
+            >
               Abbruch
             </Button>
           </Box>
