@@ -56,21 +56,16 @@ export function ChildRewardList(): JSX.Element {
     setRewardNotificationsHandled,
   ]);
 
-  const { isLoading, error, balance } = useUserBalance();
-
-  //TODO 21037 improve implementation
-  let userBalance = 0;
-  if (balance) {
-    userBalance = balance;
-  }
+  const { balance } = useUserBalance();
 
   return (
     <Container maxWidth="md" className={classes.container}>
       <Box className={classes.box} component={Paper}>
         <List>
-          {rewards?.map((reward) => (
-            <RewardItem key={reward.id} reward={reward} balance={userBalance} />
-          ))}
+          {balance &&
+            rewards?.map((reward) => (
+              <RewardItem key={reward.id} reward={reward} balance={balance} />
+            ))}
         </List>
       </Box>
     </Container>
