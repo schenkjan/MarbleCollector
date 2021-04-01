@@ -4,8 +4,8 @@ import {
   Box,
   Button,
   createStyles,
+  Dialog,
   makeStyles,
-  Modal,
   Theme,
 } from "@material-ui/core";
 import { Field, Form, Formik } from "formik";
@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     form: {
       padding: theme.spacing(2),
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
     },
     text: {
       textAlign: "left",
@@ -63,11 +65,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 2, 2),
     },
   })
 );
@@ -104,7 +101,7 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
         onReset={handleClose}
       >
         <Form className={classes.form}>
-          <Box className={classes.paper} display="flex" flexDirection="column">
+          <Box display="flex" flexDirection="column">
             <Field
               component={SinglelineTextField}
               name="value"
@@ -151,9 +148,9 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
         </Badge>
       </ThemeProvider>
 
-      <Modal className={classes.modal} open={isOpen()} onClose={handleClose}>
+      <Dialog className={classes.modal} open={isOpen()} onClose={handleClose}>
         {getForm()}
-      </Modal>
+      </Dialog>
     </Badge>
   );
 }

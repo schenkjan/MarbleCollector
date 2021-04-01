@@ -2,8 +2,8 @@ import {
   Box,
   Button,
   createStyles,
+  Dialog,
   makeStyles,
-  Modal,
   Theme,
   Typography,
 } from "@material-ui/core";
@@ -38,6 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     form: {
       padding: theme.spacing(2),
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
     },
     text: {
       textAlign: "left",
@@ -46,11 +48,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 2, 2),
     },
   })
 );
@@ -88,11 +85,7 @@ export function EditableDate(props: Prop): JSX.Element {
       >
         <MuiPickersUtilsProvider locale={de} utils={DateFnsUtils}>
           <Form className={classes.form}>
-            <Box
-              className={classes.paper}
-              display="flex"
-              flexDirection="column"
-            >
+            <Box display="flex" flexDirection="column">
               <Field
                 component={DatePicker}
                 name="date"
@@ -125,9 +118,9 @@ export function EditableDate(props: Prop): JSX.Element {
       >
         {toDeLocaleDateString(date)}
       </Typography>
-      <Modal className={classes.modal} open={isOpen()} onClose={handleClose}>
+      <Dialog className={classes.modal} open={isOpen()} onClose={handleClose}>
         {getForm()}
-      </Modal>
+      </Dialog>
     </Box>
   );
 }
