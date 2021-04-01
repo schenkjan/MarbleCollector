@@ -16,7 +16,7 @@ import {
   getUsernameUppercase,
 } from "./ProfileCardStyles";
 import { Link } from "react-router-dom";
-import { User } from "../../parent/models/User";
+import { getRoleName, User } from "../../parent/models/User";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,7 +77,7 @@ export function UserFamilyCard(props: UserFamilyCardProps) {
                             className={classes.userRole}
                             color="textSecondary"
                           >
-                            {user.role}
+                            {getRoleName(user)}
                           </Typography>
                         </>
                       }

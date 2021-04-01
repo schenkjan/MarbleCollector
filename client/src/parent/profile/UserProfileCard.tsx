@@ -5,7 +5,7 @@ import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
-import { User } from "../../parent/models/User";
+import { getRoleName, User } from "../../parent/models/User";
 import { CardActions, Collapse, Grid, IconButton } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -115,7 +115,7 @@ export function UserProfileCard(props: UserProfileCardProps) {
               </Box>
               <Box p={2} flex={"auto"}>
                 <p className={styles.statLabel}>Rolle</p>
-                <p className={styles.statValue}>{user?.role}</p>
+                <p className={styles.statValue}>{getRoleName(user)}</p>
               </Box>
               <Box p={2} flex={"auto"}>
                 <p className={styles.statLabel}>User-Id</p>
