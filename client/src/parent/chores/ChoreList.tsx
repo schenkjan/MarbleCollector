@@ -93,16 +93,20 @@ export function ChoreList(): JSX.Element {
 
   return (
     <Box className={classes.container} component={Paper}>
-      <List>
-        {chores?.map((chore) => (
-          <ChoreCard
-            key={chore.id}
-            chore={chore}
-            children={children ?? []}
-            onCopyChore={handleCopyChore}
-          />
-        ))}
-      </List>
+      {!chores || chores.length === 0 ? (
+        <p>Keine Ämtli vorhanden.</p>
+      ) : (
+        <List>
+          {chores?.map((chore) => (
+            <ChoreCard
+              key={chore.id}
+              chore={chore}
+              children={children ?? []}
+              onCopyChore={handleCopyChore}
+            />
+          ))}
+        </List>
+      )}
       <Fab
         className={classes.fab}
         size="small"

@@ -94,16 +94,20 @@ export function RewardsList() {
 
   return (
     <Box className={classes.container} component={Paper}>
-      <List>
-        {rewards?.map((reward) => (
-          <RewardCard
-            key={reward.id}
-            reward={reward}
-            children={children ?? []}
-            onCopyReward={handleCopyReward}
-          />
-        ))}
-      </List>
+      {!rewards || rewards.length === 0 ? (
+        <p>Keine Belohnungen vorhanden.</p>
+      ) : (
+        <List>
+          {rewards?.map((reward) => (
+            <RewardCard
+              key={reward.id}
+              reward={reward}
+              children={children ?? []}
+              onCopyReward={handleCopyReward}
+            />
+          ))}
+        </List>
+      )}
       <Fab
         className={classes.fab}
         size="small"
