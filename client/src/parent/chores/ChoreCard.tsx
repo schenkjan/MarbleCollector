@@ -237,7 +237,8 @@ export function ChoreCard(props: Prop): JSX.Element {
             validationSchema={Yup.object({
               value: Yup.number()
                 .required("Bitte Wert definieren")
-                .min(1, "Wert > 0"),
+                .min(1, "Wert > 0")
+                .max(99, "Wert < 100"),
             })}
             notifications={
               props.chore.assignments.filter((assignment) =>
