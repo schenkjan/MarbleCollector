@@ -18,7 +18,10 @@ import {
   useParentChoreLoader,
   useParentChorePost,
 } from "../../api/BackendAccess";
-import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
+import {
+  ChoreWithAssignments,
+  compareChores,
+} from "../models/ChoreWithAssignments";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
 import produce from "immer";
@@ -97,14 +100,17 @@ export function ChoreList(): JSX.Element {
         <p>Keine Ämtli vorhanden.</p>
       ) : (
         <List>
-          {chores?.map((chore) => (
-            <ChoreCard
-              key={chore.id}
-              chore={chore}
-              children={children ?? []}
-              onCopyChore={handleCopyChore}
-            />
-          ))}
+          {chores
+            ?.sort(compareChores)
+            .reverse() // sort descending
+            .map((chore) => (
+              <ChoreCard
+                key={chore.id}
+                chore={chore}
+                children={children ?? []}
+                onCopyChore={handleCopyChore}
+              />
+            ))}
         </List>
       )}
       <Fab

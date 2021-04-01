@@ -1,10 +1,30 @@
 ﻿using MarbleCollectorApi.Data.Models;
+using System.Collections.Generic;
 
 namespace MarbleCollectorApi.Data.Init
 {
-    public static class DefaultRewards
+    public class DefaultRewards : IDataSeeder<Reward>
     {
-        public static Reward[] GetRewards()
+        public IEnumerable<Reward> GetDemoData()
+        {
+            return new[] {
+                new Reward
+                {
+                    Name = "Bräteln auf dem Gurten",
+                    Description = "Mit Cervelat und Marshmallows",
+                    Value = 10
+                },
+                new Reward
+                {
+                    Name = "1 Stunde Fernseh schauen",
+                    Description = "Trickfilme schauen",
+                    Value = 5
+                },
+                
+            };
+        }
+
+        public IEnumerable<Reward> GetDevelopmentData()
         {
             return new[]
             {

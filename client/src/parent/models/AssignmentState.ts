@@ -15,3 +15,14 @@ export const AssignmentStateNames = [
   "abgelehnt",
   "erledigt",
 ];
+
+export function isParentActionNeeded(state: AssignmentState): boolean {
+  return state === AssignmentState.RequestedToCheck;
+}
+
+export function isDone(state: AssignmentState): boolean {
+  return (
+    state === AssignmentState.CheckConfirmed ||
+    state === AssignmentState.Archived
+  );
+}

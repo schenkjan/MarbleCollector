@@ -5,6 +5,7 @@ using MarbleCollectorApi.Data.Models.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Threading.Tasks;
 
 namespace MarbleCollectorApi.Data
 {
@@ -19,7 +20,7 @@ namespace MarbleCollectorApi.Data
 
         public DbSet<Chore> Chores { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Assignment> Assignments{ get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Grant> Grants { get; set; }
         public DbSet<Reward> Rewards { get; set; }
 
@@ -69,43 +70,57 @@ namespace MarbleCollectorApi.Data
             return base.SaveChanges();
         }
 
-        public async void EnsureSeedData()
+        /// <summary>
+        /// Will either purge all data and recreate demo data or will create test data if no data is present for development.
+        /// </summary>
+        /// <param name="isDevelopment"></param>
+        public async void EnsureSeedData(bool isDevelopment)
         {
-            bool anyUsersSeeded = await Users.AnyAsync();
-            bool anyChoresSeeded = await Chores.AnyAsync();
-            bool anyRewardsSeeded = await Rewards.AnyAsync();
-            bool anyAssignmentSeeded = await Assignments.AnyAsync();
-            bool anyGrantsSeeded = await Grants.AnyAsync();
-
-            if (!anyUsersSeeded)
+            if (isDevelopment)
             {
-                Users.AddRange(DefaultFamily.GetUsers());
+                await SeedIfDataNotAvailable();
+            }
+            else
+            {
+                await PurgeAndSeedDemoData();
+            }
+        }
+
+        private async Task SeedIfDataNotAvailable()
+        {
+            await SeedDbSetIfNotAvailable(Users, new DefaultFamily());
+            await SeedDbSetIfNotAvailable(Chores, new DefaultChores());
+            await SeedDbSetIfNotAvailable(Rewards, new DefaultRewards());
+            await SeedDbSetIfNotAvailable(Assignments, new DefaultAssignments());
+            await SeedDbSetIfNotAvailable(Grants, new DefaultGrants());
+        }
+
+        private async Task SeedDbSetIfNotAvailable<TEntity>(DbSet<TEntity> dbSet, IDataSeeder<TEntity> dataSeeder) where TEntity : class
+        {
+            bool anyDataAvailable = await dbSet.AnyAsync();
+            if (!anyDataAvailable)
+            {
+                dbSet.AddRange(dataSeeder.GetDevelopmentData());
                 SaveChanges();
             }
+        }
 
-            if (!anyChoresSeeded)
-            {
-                Chores.AddRange(DefaultChores.GetChores());
-                SaveChanges();
-            }
+        private async Task PurgeAndSeedDemoData()
+        {
+            // recreate database from scratch (so that ids get reset)
+            Database.EnsureDeleted();
+            Database.Migrate();
 
-            if (!anyRewardsSeeded)
-            {
-                Rewards.AddRange(DefaultRewards.GetRewards());
-                SaveChanges();
-            }
-
-            if (!anyAssignmentSeeded)
-            {
-                Assignments.AddRange(DefaultAssignments.GetAssignments());
-                SaveChanges();
-            }
-
-            if (!anyGrantsSeeded)
-            {
-                Grants.AddRange(DefaultGrants.GetGrants());
-                SaveChanges();
-            }
+            Users.AddRange(new DefaultFamily().GetDemoData());
+            await SaveChangesAsync();
+            Chores.AddRange(new DefaultChores().GetDemoData());
+            await SaveChangesAsync();
+            Rewards.AddRange(new DefaultRewards().GetDemoData());
+            await SaveChangesAsync();
+            Assignments.AddRange(new DefaultAssignments().GetDemoData());
+            await SaveChangesAsync();
+            Grants.AddRange(new DefaultGrants().GetDemoData());
+            await SaveChangesAsync();
         }
     }
 }

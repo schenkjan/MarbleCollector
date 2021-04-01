@@ -13,7 +13,6 @@ import React from "react";
 
 type Props = {
   chore: ChoreWithAssignments;
-  itemCount: number | undefined;
   size: ConfettiProps;
 };
 
@@ -100,8 +99,14 @@ export function ChoreItem(props: Props): JSX.Element {
     <React.Fragment>
       <ListItemComponent
         key={props.chore.id}
-        // TODO hs (210319): Add show badge function
-        showBadge={0}
+        showBadge={
+          props.chore.assignments.filter(
+            (assignment) =>
+              assignment.state === AssignmentState.Assigned ||
+              assignment.state === AssignmentState.CheckConfirmed ||
+              assignment.state === AssignmentState.CheckRefused
+          ).length
+        }
         disableControl={false}
         item={mapToListItem(props.chore)}
         stepper={itemStepperControl(props.chore)}

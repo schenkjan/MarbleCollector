@@ -115,6 +115,18 @@ export function NotificationSubscriberHandler(
           "child.figuresUpdated",
           NotificationNames.child.updateFigures
         ),
+        getSubscriber(
+          "child.grantCreated",
+          NotificationNames.child.grantCreated
+        ),
+        getSubscriber(
+          "child.grantUpdated",
+          NotificationNames.child.grantUpdated
+        ),
+        getSubscriber(
+          "child.grantDeleted",
+          NotificationNames.child.grantDeleted
+        ),
       ]);
     }
   }, [hubConnectionEstablished, userRole]);

@@ -11,7 +11,10 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { RewardItem } from "./RewardItem";
-import { useChildRewardGet, useUserBalance } from "../BackendAccess";
+import { useChildRewardLoader, useUserBalance } from "../BackendAccess";
+import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
+import { NotificationNames } from "../../notifications/NotificationNames";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,30 +30,46 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function ChildRewardList(): JSX.Element {
   const userId = useRecoilValue(AppState.userId);
+  const [rewards, invalidateRewards] = useChildRewardLoader(userId);
   const classes = useStyles();
   useDashboardTitle("Belohnungen");
 
-  const { data } = useChildRewardGet(userId);
-  const { isLoading, error, balance } = useUserBalance();
+  const [
+    newRewardNotifications,
+    setRewardNotificationsHandled,
+  ] = useMyNotificationsByNamePrefixWithHandle(NotificationNames.prefix.grant);
 
-  //TODO 21037 improve implementation
-  let userBalance = 0;
-  if (balance) {
-    userBalance = balance;
-  }
+  useEffect(() => {
+    if (newRewardNotifications.length > 0) {
+      for (const notification of newRewardNotifications) {
+        console.log(
+          "Triggering reload for entity with id",
+          notification.targetEntityId
+        );
+      }
+      invalidateRewards();
+      setRewardNotificationsHandled(newRewardNotifications);
+    }
+  }, [
+    invalidateRewards,
+    newRewardNotifications,
+    setRewardNotificationsHandled,
+  ]);
+
+  const { balance } = useUserBalance();
 
   return (
     <Container maxWidth="md" className={classes.container}>
       <Box className={classes.box} component={Paper}>
-        {!data || data.length === 0 ? (
+        {!rewards || rewards.length === 0 ? (
           <p>Keine Belohnungen vorhanden.</p>
         ) : (
           <List>
-            {data?.map((reward) => (
+            { balance && rewards?.map((reward) => (
               <RewardItem
                 key={reward.id}
                 reward={reward}
-                balance={userBalance}
+                balance={balance}
               />
             ))}
           </List>

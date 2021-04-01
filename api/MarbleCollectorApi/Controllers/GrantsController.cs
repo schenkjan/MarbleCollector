@@ -97,7 +97,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async System.Threading.Tasks.Task<ActionResult<Grant>> UpdateGrantAsync(int id, Grant grant)
+        public async Task<ActionResult<Grant>> UpdateGrantAsync(int id, Grant grant)
         {
             if (id != grant.Id)
             {
@@ -105,6 +105,7 @@ namespace MarbleCollectorApi.Controllers
             }
 
             var stateChanged = CheckHasStateChanged(grant.State, id);
+
 
             // TODO hs 210307, can a grant be modified if the state is Archived, which is by defintion the final state
             EntityEntry entityEntry = _grantRepository.Update(grant.Map());
@@ -130,7 +131,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var grant = _grantRepository.GetSingle(id);
             if (grant == null)
@@ -142,6 +143,8 @@ namespace MarbleCollectorApi.Controllers
             _grantRepository.Delete(grant);
 
             _grantRepository.Commit();
+
+            await _childrenNotificationHubContext.Clients.All.SendChildNotification(ChildNotification.GrantDeleted, grant.UserId, grant.RewardId);
 
             return Ok();
         }

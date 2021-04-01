@@ -14,7 +14,7 @@ import { RewardCard } from "./RewardCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
-import { RewardWithGrants } from "../models/RewardWithGrants";
+import { compareChores, RewardWithGrants } from "../models/RewardWithGrants";
 import produce from "immer";
 import {
   mutateReward,
@@ -98,14 +98,17 @@ export function RewardsList() {
         <p>Keine Belohnungen vorhanden.</p>
       ) : (
         <List>
-          {rewards?.map((reward) => (
-            <RewardCard
-              key={reward.id}
-              reward={reward}
-              children={children ?? []}
-              onCopyReward={handleCopyReward}
-            />
-          ))}
+          {rewards
+            ?.sort(compareChores)
+            .reverse() // sort descending
+            .map((reward) => (
+              <RewardCard
+                key={reward.id}
+                reward={reward}
+                children={children ?? []}
+                onCopyReward={handleCopyReward}
+              />
+            ))}
         </List>
       )}
       <Fab

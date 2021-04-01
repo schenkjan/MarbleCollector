@@ -21,21 +21,27 @@ export function useGet<T>(
   additiveUrl?: number | string
 ) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
-  const [queryState, setqueryState] = useRecoilState(AppState.queryStateInfo);
+  const [queryState, setQueryState] = useRecoilState(AppState.queryStateInfo);
   const showError = useErrorNotification();
 
-  const { isLoading, isFetching, isError, data } = useQuery<T>(key, () =>
-    axios
-      .get(`${apiBaseUrl}${url}${additiveUrl ? additiveUrl : ""}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((data) => data.data)
+  const { isLoading, isFetching, isError, data } = useQuery<T>(
+    key,
+    () =>
+      axios
+        .get(`${apiBaseUrl}${url}${additiveUrl ? additiveUrl : ""}`, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        })
+        .then((data) => data.data),
+    {
+      refetchOnWindowFocus: false,
+    }
   );
+
   useEffect(() => {
     if ((isLoading || isFetching) && queryState.open === false) {
-      setqueryState({
+      setQueryState({
         open: true,
       });
     } else if (isError) {
@@ -46,7 +52,7 @@ export function useGet<T>(
       !isError &&
       queryState.open === true
     ) {
-      setqueryState({
+      setQueryState({
         open: false,
       });
     }

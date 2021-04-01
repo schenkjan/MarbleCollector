@@ -2,7 +2,11 @@ import { ChoreWithAssignments } from "../models/ChoreWithAssignments";
 import { Avatar, Badge, Card } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
-import { AssignmentState } from "../models/AssignmentState";
+import {
+  AssignmentState,
+  isDone,
+  isParentActionNeeded,
+} from "../models/AssignmentState";
 import { AssignmentList } from "./AssignmentList";
 import { MoreOptionsMenu } from "../MoreOptionsMenu";
 import { AddOptionsExpandCardActions } from "../AddOptionsExpandCardActions";
@@ -185,9 +189,8 @@ export function ChoreCard(props: Prop): JSX.Element {
           <Badge
             classes={{ badge: classes.actionNotificationBadge }}
             badgeContent={
-              props.chore.assignments.filter(
-                (assignment) =>
-                  assignment.state === AssignmentState.RequestedToCheck
+              props.chore.assignments.filter((assignment) =>
+                isParentActionNeeded(assignment.state)
               ).length
             }
             onClick={handleExpandClick}
@@ -237,10 +240,8 @@ export function ChoreCard(props: Prop): JSX.Element {
                 .min(1, "Wert > 0"),
             })}
             notifications={
-              props.chore.assignments.filter(
-                (assignment) =>
-                  assignment.state === AssignmentState.CheckConfirmed ||
-                  assignment.state === AssignmentState.Archived
+              props.chore.assignments.filter((assignment) =>
+                isDone(assignment.state)
               ).length
             }
             onValueChanged={handleValueEdit}
