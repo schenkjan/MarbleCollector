@@ -56,7 +56,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<Reward> CreateReward(Reward reward)
         {
-            if (string.IsNullOrEmpty(reward.Name) || string.IsNullOrEmpty(reward.Description))
+            if (string.IsNullOrEmpty(reward.Name))
             {
                 return BadRequest();
             }

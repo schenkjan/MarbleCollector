@@ -56,7 +56,7 @@ namespace MarbleCollectorApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<Chore> CreateChore(Chore chore)
         {
-            if (string.IsNullOrEmpty(chore.Name) || string.IsNullOrEmpty(chore.Description))
+            if (string.IsNullOrEmpty(chore.Name))
             {
                 return BadRequest();
             }
