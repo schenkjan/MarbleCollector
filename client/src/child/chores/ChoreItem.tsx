@@ -89,7 +89,14 @@ export function ChoreItem(props: Props): JSX.Element {
     return {
       activeStep: activeStep,
       stepsText: ["Neu", "Aktiv", "Prüfen", "Erledigt"],
-      buttonText: ["Start", "Prüfen", "Warten", "Murmel", "Prüfen", "Fertig"],
+      buttonText: [
+        "Start",
+        "Prüfen lassen",
+        "Warten",
+        "Murmel",
+        "Prüfen lassen",
+        "Fertig",
+      ],
       disableButtonState: [
         AssignmentState.RequestedToCheck,
         AssignmentState.Archived,
