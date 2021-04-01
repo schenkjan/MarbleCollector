@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function ChoreList(): JSX.Element {
-  useDashboardTitle("Ämtli Pinnwand");
+  useDashboardTitle("Ämtli");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [choreToEdit, setChoreToEdit] = useState<ChoreWithAssignments>();

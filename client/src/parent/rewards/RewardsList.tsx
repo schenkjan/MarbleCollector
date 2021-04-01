@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function RewardsList() {
-  useDashboardTitle("Belohnungspinnwand");
+  useDashboardTitle("Belohnungen");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [rewardToEdit, setRewardToEdit] = useState<RewardWithGrants>();
