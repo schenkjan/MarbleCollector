@@ -10,9 +10,9 @@ import {
 } from "@material-ui/core";
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { TextField } from "./TextField";
 import ImgMarbles from "../images/Marble.png";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { SinglelineTextField } from "./SinglelineTextField";
 
 type Prop = {
   value: number;
@@ -106,7 +106,7 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
         <Form className={classes.form}>
           <Box className={classes.paper} display="flex" flexDirection="column">
             <Field
-              component={TextField}
+              component={SinglelineTextField}
               name="value"
               type="number"
               label={props.editLabel}

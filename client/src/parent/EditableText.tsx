@@ -10,7 +10,7 @@ import {
 import { Variant } from "@material-ui/core/styles/createTypography";
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { TextField } from "./TextField";
+import { MulilineTextField } from "./MulilineTextField";
 
 type Prop = {
   text: string;
@@ -85,7 +85,7 @@ export function EditableText(props: Prop): JSX.Element {
         <Form className={classes.form}>
           <Box className={classes.paper} display="flex" flexDirection="column">
             <Field
-              component={TextField}
+              component={MulilineTextField}
               name="text"
               type="text"
               label={props.editLabel}
