@@ -157,17 +157,18 @@ namespace MarbleCollectorApi
                 endpoints.MapHub<ParentNotificationHub>("/hubs/parent");
             });
 
-            UpdateDatabase(app);
+            UpdateDatabase(app, env);
         }
 
-        private void UpdateDatabase(IApplicationBuilder app)
+        private void UpdateDatabase(IApplicationBuilder app, IWebHostEnvironment env)
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 using (var context = serviceScope.ServiceProvider.GetService<MarbleCollectorDbContext>())
                 {
                     context.Database.Migrate();
-                    context.EnsureSeedData();
+                    context.EnsureSeedData(env.IsDevelopment()); // should create demo data when deploying to azure
+                    // context.EnsureSeedData(false); // use this if you want demo data in local dev
                 }
             }
         }

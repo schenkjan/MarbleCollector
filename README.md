@@ -1,8 +1,65 @@
 # MarbleCollector
 
-The repository potentially hosting the source code for the MarbleCollector project.
+This repository is hosting the source code for the MarbleCollector project.
 
-## Setup
+## Try it out
+
+The MarbleCollector web app is hosted in Azure and can be tried out by using the following urls.
+
+| Component | Url                                             | Description               |
+| --------- | ----------------------------------------------- | ------------------------- |
+| Frontend  | https://marblecollector.z1.web.core.windows.net | Will show react frontend  |
+| Backend   | https://marblecollector-api.azurewebsites.net   | Will show swagger API doc |
+
+Mind that this is a shared instance which is publicly available.
+
+## Test users
+
+The following users are available in the app by default and are also seeded when running locally.
+
+Family "Muster"
+
+| Username | Password | Role   |
+| -------- | -------- | ------ |
+| peter    | 123456   | Parent |
+| petra    | 123456   | Parent |
+| lars     | 123456   | Child  |
+| lara     | 123456   | Child  |
+| lena     | 123456   | Child  |
+
+### Test scenario
+
+This test scenario can be used to see most features of MarbleCollector in action:
+
+1. Open three independent browser instances (e.g. profiles)
+2. Login with one parent account and two children
+3. [...] Add from demo prep
+
+## Run it locally
+
+To run it locally you must first get the code
+
+`git checkout https://github.com/TashunkoWitko/MarbleCollector.git`
+
+### Run api (backend)
+
+Option 1 (simple)
+Open visual studio solution and hit F5.
+
+Option 2 (more complex)
+- Install dotnet sdk and cli (.NET 5.0) -> https://dotnet.microsoft.com/download
+- Run `dotnet dev-certs https --trust` so we can use https for local dev
+- Go to the root of the project and run `dotnet run --project .\api\MarbleCollectorApi\MarbleCollectorApi.csproj`
+- Ensure that the backend url configured in the client project matches the url where the api is listening 
+  - Replace url present in file `.\client\.env.development`
+  - with `https://localhost:5001`, which is the default path on our environment
+- Ready to test
+
+### Run client (frontend)
+
+Navigate to the client folder and run `npm start`.
+
+## Project Setup
 
 ### Repository Setup
 
@@ -42,23 +99,3 @@ According to the documentation https://docs.microsoft.com/en-us/azure/devops/pip
 1. Grant permissions in [Github Repo](https://github.com/TashunkoWitko/MarbleCollector)
 2. Grant permissions in [Azure Portal](https://portal.azure.com/#@bfh.ch/resource/subscriptions/a2bcdf72-b2d2-4aff-a317-85e0bb318f1a/users)
 3. Grant permissions in [Azure DevOps](https://dev.azure.com/aescd5/MarbleCollector/_settings/projectOverview)
-
-## Run
-
-### Run client (frontend)
-
-Navigate to the client folder and run `npm start`
-
-### Run api (backend)
-
-Open visual studio solution and hit F5
-
-## Deploy
-
-We want to use Azure to host the MarbleCollector web app.
-The aim is to have a continuous integration/deployment proccess in place (Azure DevOps).
-
-| Component | Url                                             |
-| --------- | ----------------------------------------------- |
-| Frontend  | https://marblecollector.z1.web.core.windows.net |
-| Backend   | https://marblecollector-api.azurewebsites.net   |

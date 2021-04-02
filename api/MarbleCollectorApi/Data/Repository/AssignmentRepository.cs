@@ -24,6 +24,12 @@ namespace MarbleCollectorApi.Data.Repository
             return GetAll().Where(a => a.UserId == userId);
         }
 
+        /// <summary>
+        /// An assignment is only completed if the assignment is marked as archived.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="assignments"></param>
+        /// <returns></returns>
         public IEnumerable<Assignment> GetCompletedAssignments(int userId, IEnumerable<Assignment> assignments = null)
         {
             if (assignments == null)
@@ -33,6 +39,13 @@ namespace MarbleCollectorApi.Data.Repository
             return assignments.Where(assignment => assignment.State == AssignmentState.Archived);
         }
 
+        /// <summary>
+        /// By default you will want to call this method with the completed assignments.
+        /// If no assignment collection is provided this is exactly what the repo will do.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="assignments"></param>
+        /// <returns></returns>
         public int GetMarblesEarned(int userId, IEnumerable<Assignment> assignments = null)
         {
             if (assignments == null)
