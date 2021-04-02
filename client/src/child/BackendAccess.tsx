@@ -99,6 +99,20 @@ export const useChildChoreGet = (id: number) =>
     id
   );
 
+// GET and invalidate - all Chores on Children-Dashboard
+export const useChildChoreLoader = (
+  id: number
+): [chores: ChoreWithAssignments[], invalidateQuery: () => void] => {
+  const query = useChildChoreGet(id);
+  const queryClient = useQueryClient();
+
+  const invalidateQuery = () => {
+    queryClient.invalidateQueries(choreProps.getKey);
+  };
+
+  return [query.data ?? [], invalidateQuery];
+};
+
 export const useChildChorePut = () =>
   usePut<ChoreWithAssignments>(
     choreProps.getKey,
@@ -126,6 +140,20 @@ export const useChildRewardGet = (id: number) =>
     rewardProps.getErrorMessage,
     id
   );
+
+// GET and invalidate - all Rewards on Children-Dashboard
+export const useChildRewardLoader = (
+  id: number
+): [rewards: RewardWithGrants[], invalidateQuery: () => void] => {
+  const query = useChildRewardGet(id);
+  const queryClient = useQueryClient();
+
+  const invalidateQuery = () => {
+    queryClient.invalidateQueries(rewardProps.getKey);
+  };
+
+  return [query.data ?? [], invalidateQuery];
+};
 
 export const mutateReward = (object: any) =>
   ({

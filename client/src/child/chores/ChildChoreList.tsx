@@ -11,7 +11,7 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
-import { useChildChoreGet } from "../BackendAccess";
+import { useChildChoreLoader } from "../BackendAccess";
 import React, { useEffect } from "react";
 import { ConfettiProps } from "../types/ConfettiProps";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-//some default values for IPhone 6/7/8 Plus
+//some default values...
 let confettiProps: ConfettiProps = {
   size: {
     width: 414,
@@ -41,6 +41,7 @@ let surroundingElementRef: any = React.createRef();
 
 export function ChildChoreList(): JSX.Element {
   const userId = useRecoilValue(AppState.userId);
+  const [chores, invalidateChores] = useChildChoreLoader(userId);
   const classes = useStyles();
   useDashboardTitle("Ämtli");
 
@@ -48,10 +49,6 @@ export function ChildChoreList(): JSX.Element {
     confettiProps.size.width = surroundingElementRef.current.offsetWidth - 1; // 210227 hs -1 quickfix to prevent horizontal slidebar after Confetti Rain
     confettiProps.size.height = surroundingElementRef.current.offsetHeight;
   });
-
-  const { data } = useChildChoreGet(userId);
-
-  let itemCount = data?.length;
 
   const [
     newChoreNotifications,
@@ -62,16 +59,16 @@ export function ChildChoreList(): JSX.Element {
 
   useEffect(() => {
     if (newChoreNotifications.length > 0) {
-      // TODO @Severin now to trigger reload??
       for (const notification of newChoreNotifications) {
         console.log(
           "Triggering reload for entity with id",
           notification.targetEntityId
         );
       }
+      invalidateChores();
       setChoreNotificationsHandled(newChoreNotifications);
     }
-  }, [newChoreNotifications, setChoreNotificationsHandled]);
+  }, [invalidateChores, newChoreNotifications, setChoreNotificationsHandled]);
 
   useEffect(() => {
     confettiProps.size.width = surroundingElementRef.current.offsetWidth - 1; // 210227 hs -1 quickfix to prevent horizontal slidebar after Confetti Rain
@@ -83,13 +80,8 @@ export function ChildChoreList(): JSX.Element {
       <div ref={surroundingElementRef}>
         <Box className={classes.box} component={Paper}>
           <List>
-            {data?.map((chore) => (
-              <ChoreItem
-                key={chore.id}
-                chore={chore}
-                itemCount={itemCount}
-                size={confettiProps}
-              />
+            {chores?.map((chore) => (
+              <ChoreItem key={chore.id} chore={chore} size={confettiProps} />
             ))}
           </List>
         </Box>
