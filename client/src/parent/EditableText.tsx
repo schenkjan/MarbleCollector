@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     text: {
       textAlign: "left",
+      overflowWrap: "anywhere",
     },
     modal: {
       display: "flex",
