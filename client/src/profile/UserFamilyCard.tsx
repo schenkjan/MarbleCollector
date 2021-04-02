@@ -17,6 +17,8 @@ import {
 } from "./ProfileCardStyles";
 import { Link } from "react-router-dom";
 import { User } from "../parent/models/User";
+import { useRecoilValue } from "recoil";
+import { AppState } from "../AppState";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +41,7 @@ export function UserFamilyCard(props: UserFamilyCardProps) {
   const { family } = props;
   const classes = useStyles();
   const profileCardStyles = useProfileCardStyles();
+  const userId = useRecoilValue(AppState.userInfo);
 
   return (
     <>
@@ -51,7 +54,7 @@ export function UserFamilyCard(props: UserFamilyCardProps) {
                   <ListItem
                     alignItems="flex-start"
                     component={Link}
-                    to={`/app/child/profile/${user.id}`}
+                    to={`/app/${userId?.role.toLowerCase()}/profile/${user.id}`}
                   >
                     <ListItemAvatar>
                       <Avatar alt={user.username} src={user.avatar} />

@@ -1,4 +1,6 @@
+import { Box } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 import { Route } from "react-router";
 import { Redirect, Switch, useParams, useRouteMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -15,8 +17,6 @@ type ProfileDetailsParams = {
 
 export function ProfileDetailsForUser() {
   let { id } = useParams<ProfileDetailsParams>();
-
-  console.log(id);
 
   // function presentUserId: UserProfile(id: string) => {
   //   let { data } = useProfileGet(id);
@@ -40,38 +40,20 @@ export function ProfileDetailsForUser() {
   // let data: UserProfile;
 
   // const userInfo = useRecoilValue(AppState.userInfo);
-  // const changeProfileInfos = (id: string) => {
-  //   return useProfileGet(id);
-  // };
 
-  let { data } = useProfileGet(id);
-  // let { data } = changeProfileInfos(id);
+  let [data, invalidateQuery] = useProfileGet(id);
 
-  // const initData: UserProfile {
-  //   data = {
-  //     user = {},
-  //     family = [],
-  //     score = {},
-  //   }
-  // }
-
-  // const initData: UserProfile;
-
-  const [actData, setActData] = useState(data);
+  // const [actData, setActData] = useState(data);
 
   useEffect(() => {
-    setActData(data);
-    console.log("changed!!!");
+    invalidateQuery();
   }, [id]);
 
-  console.log(actData?.user.id);
-
   return (
-    <>
-      <span>Loading profile for user with {id}</span>
-      <UserProfileCard user={actData?.user} />
-      <UserScoreCard userScore={actData?.score} />
-      <UserFamilyCard family={actData?.family ?? []} />
-    </>
+    <Box key={id}>
+      <UserProfileCard user={data?.user} />
+      <UserScoreCard userScore={data?.score} />
+      <UserFamilyCard family={data?.family ?? []} />
+    </Box>
   );
 }

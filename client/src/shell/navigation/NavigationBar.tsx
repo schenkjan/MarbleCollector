@@ -47,7 +47,7 @@ export function NavigationBar(props: NavigationBarProps) {
   useEffect(() => {
     if (path.match(/(.*)rewards$/)) {
       setValue(1);
-    } else if (path.match(/(.*)profile$/)) {
+    } else if (path.match(/(.*)profile(.*)$/)) {
       setValue(2);
     } else if (path.match(/(.*)chores$/)) {
       setValue(0);

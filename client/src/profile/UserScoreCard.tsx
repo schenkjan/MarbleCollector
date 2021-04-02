@@ -46,7 +46,7 @@ export function UserScoreCard(props: UserScoreCardProps) {
               <UserScoreCardItem
                 ammount={userScore?.rewardsGrantsCompleted ?? 0}
                 icon={<RedeemIcon fontSize="large" />}
-                text="Verdiente Belohnungen"
+                text="Eingelöste Belohnungen"
               />
             </Grid>
           </Grid>

@@ -10,7 +10,7 @@ export function ProfileDetails() {
   useDashboardTitle("Profil");
 
   const userId = useRecoilValue(AppState.userInfo);
-  const { data } = useProfileGet(userId?.id);
+  const [data] = useProfileGet(userId?.id);
 
   return (
     <>

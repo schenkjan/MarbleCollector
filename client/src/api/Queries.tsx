@@ -15,7 +15,7 @@ const apiBaseUrl = getApiBaseUrl();
 
 // GET
 export function useGet<T>(
-  key: string,
+  key: string | [string, string | number | undefined],
   url: QueryObjectUrl,
   errorMessage: string,
   additiveUrl?: number | string
@@ -39,6 +39,9 @@ export function useGet<T>(
         open: true,
       });
     } else if (isError) {
+      setqueryState({
+        open: false,
+      });
       showError(errorMessage);
     } else if (
       !isLoading &&
@@ -50,7 +53,7 @@ export function useGet<T>(
         open: false,
       });
     }
-  });
+  }, [isLoading, isFetching, isError, data]);
   return {
     data: data,
   };

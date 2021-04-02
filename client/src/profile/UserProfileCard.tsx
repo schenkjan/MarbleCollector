@@ -121,10 +121,6 @@ export function UserProfileCard(props: UserProfileCardProps) {
                 <p className={styles.statLabel}>User-Id</p>
                 <p className={styles.statValue}>{user?.id}</p>
               </Box>
-              <Box p={2} flex={"auto"}>
-                <p className={styles.statLabel}>Profile Prop 2</p>
-                <p className={styles.statValue}>abc</p>
-              </Box>
             </Grid>
           </CardContent>
         </Collapse>

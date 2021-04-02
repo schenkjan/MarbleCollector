@@ -1,3 +1,4 @@
+import { useQueryClient } from "react-query";
 import { QueryProps } from "../api/models/QueryProps";
 import { useGet } from "../api/Queries";
 import { UserProfile } from "./models/UserProfile";
@@ -17,10 +18,19 @@ const profileProps: QueryProps = {
 };
 
 // GET - load all Profiles on Parent-Dashboard
-export const useProfileGet = (additiveUrl?: number | string) =>
-  useGet<UserProfile>(
-    profileProps.getKey,
+export const useProfileGet = (
+  additiveUrl?: number | string
+): [profile: UserProfile | undefined, invalidateQuery: () => void] => {
+  const query = useGet<UserProfile>(
+    [profileProps.getKey, additiveUrl],
     profileProps.getUrl,
     profileProps.getErrorMessage,
     additiveUrl // absolute userId or familyName witch includes at the end of url for get single data
   );
+  const queryClient = useQueryClient();
+  const invalidateQuery = () => {
+    queryClient.invalidateQueries(profileProps.getKey);
+  };
+
+  return [query.data, invalidateQuery];
+};
