@@ -7,7 +7,7 @@ type Prop = {
   children: ReactNode;
 };
 
-const swipeDetectionMargin = 20;
+const swipeDetectionMargin = 40;
 
 export function SwipeNavigator(props: Prop): JSX.Element {
   const userRole = useRecoilValue(AppState.userRole);
