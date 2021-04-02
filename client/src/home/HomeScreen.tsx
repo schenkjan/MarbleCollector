@@ -114,8 +114,8 @@ export function HomeScreen() {
         </Typography>
         <br />
         <Grid container spacing={5} alignItems="flex-end">
-          {promotions.map((tier) => (
-            <HomeScreenPromotionCard tier={tier} />
+          {promotions.map((tier, index) => (
+            <HomeScreenPromotionCard key={index} tier={tier} />
           ))}
         </Grid>
       </Container>
