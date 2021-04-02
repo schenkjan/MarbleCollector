@@ -62,7 +62,6 @@ export function NavigationBar(props: NavigationBarProps) {
 
   if (!props.showNavigationBar) return <></>;
 
-  // TODO js (27.02.2021): Consider to improve onClick handlers!
   return (
     <>
       <BottomNavigation
