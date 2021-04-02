@@ -38,9 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: "0px",
       paddingBottom: "8px",
     },
-    avatar: {
-      backgroundColor: theme.palette.primary.main,
-    },
     actionNotificationBadge: {
       color: "white",
       backgroundColor: theme.palette.warning.light,
@@ -178,9 +175,7 @@ export function RewardCard(props: Prop): JSX.Element {
             }
             onClick={handleExpandClick}
           >
-            <Avatar className={classes.avatar}>
-              {props.reward.grants.length.toString()}
-            </Avatar>
+            <Avatar>{props.reward.grants.length.toString()}</Avatar>
           </Badge>
         }
         titleComponent={
