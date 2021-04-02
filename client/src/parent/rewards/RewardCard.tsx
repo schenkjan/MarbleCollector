@@ -102,31 +102,24 @@ export function RewardCard(props: Prop): JSX.Element {
   function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
     setShowMoreAnchor(event.currentTarget);
     setShowMoreActions(true);
-
-    console.log("Opening more actions.");
   }
 
   function handleMoreClose() {
     setShowMoreAnchor(null);
     setShowMoreActions(false);
-
-    console.log("Closing more actions.");
   }
 
   function handleCopy() {
-    console.log("Copying...");
     handleMoreClose();
     props.onCopyReward(props.reward);
   }
 
   function handleDelete() {
-    console.log("Deleting...");
     deleteRewardMutation.mutate(mutateReward(props.reward));
     handleMoreClose();
   }
 
   function handleTitleEdit(title: string) {
-    console.log("Editing title...");
     var updatedReward = produce(
       props.reward,
       (draftReward: RewardWithGrants) => {
@@ -137,7 +130,6 @@ export function RewardCard(props: Prop): JSX.Element {
   }
 
   function handleValueEdit(value: number) {
-    console.log("Editing amount of marbles...");
     var updatedReward = produce(
       props.reward,
       (draftReward: RewardWithGrants) => {
@@ -148,7 +140,6 @@ export function RewardCard(props: Prop): JSX.Element {
   }
 
   function handleDescriptionEdit(description: string) {
-    console.log("Editing description...");
     var updatedReward = produce(
       props.reward,
       (draftReward: RewardWithGrants) => {
@@ -185,8 +176,8 @@ export function RewardCard(props: Prop): JSX.Element {
             editLabel="Bezeichnung der Belohnung"
             validationSchema={Yup.object({
               text: Yup.string()
-                .required("Bitte definieren") // TODO js (17.03.2021): Use parameter.
-                .max(50, "Maximum 50 Zeichen"), // TODO js (17.03.2021): Use parameter.
+                .required("Bitte definieren")
+                .max(50, "Maximum 50 Zeichen"),
             })}
             onTextChanged={handleTitleEdit}
             textColor={getTextColor()}

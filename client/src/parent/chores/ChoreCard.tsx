@@ -108,31 +108,24 @@ export function ChoreCard(props: Prop): JSX.Element {
   function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
     setShowMoreAnchor(event.currentTarget);
     setShowMoreActions(true);
-
-    console.log("Opening more actions.");
   }
 
   function handleMoreClose() {
     setShowMoreAnchor(null);
     setShowMoreActions(false);
-
-    console.log("Closing more actions.");
   }
 
   function handleCopy() {
-    console.log("Copying...");
     handleMoreClose();
     props.onCopyChore(props.chore);
   }
 
   function handleDelete() {
-    console.log("Deleting...");
     deleteChoreMutation.mutate(mutateChore(props.chore));
     handleMoreClose();
   }
 
   function handleTitleEdit(title: string) {
-    console.log("Editing title...");
     var updatedChore = produce(
       props.chore,
       (draftChore: ChoreWithAssignments) => {
@@ -143,7 +136,6 @@ export function ChoreCard(props: Prop): JSX.Element {
   }
 
   function handleDueDateEdit(date: Date) {
-    console.log("Editing due date...");
     var updatedChore = produce(
       props.chore,
       (draftChore: ChoreWithAssignments) => {
@@ -154,7 +146,6 @@ export function ChoreCard(props: Prop): JSX.Element {
   }
 
   function handleValueEdit(value: number) {
-    console.log("Editing amount of marbles...");
     var updatedChore = produce(
       props.chore,
       (draftChore: ChoreWithAssignments) => {
@@ -165,7 +156,6 @@ export function ChoreCard(props: Prop): JSX.Element {
   }
 
   function handleDescriptionEdit(description: string) {
-    console.log("Editing description...");
     var updatedChore = produce(
       props.chore,
       (draftChore: ChoreWithAssignments) => {
