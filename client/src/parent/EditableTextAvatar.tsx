@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       backgroundColor: theme.palette.background.paper,
       boxShadow: theme.shadows[5],
+      minWidth: "260px",
     },
     text: {
       textAlign: "left",
