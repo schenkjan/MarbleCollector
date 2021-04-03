@@ -167,7 +167,8 @@ export const useChildRewardPut = () =>
   usePut<RewardWithGrants>(
     rewardProps.getKey,
     rewardProps.putSuccessMessage,
-    rewardProps.putErrorMessage
+    rewardProps.putErrorMessage,
+    ["userBalance"]
   );
 
 export function useUserBalance(userId?: number): UserBalance {
