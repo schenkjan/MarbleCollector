@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {
+  QueryClient,
   useMutation,
   UseMutationResult,
   useQuery,
@@ -150,6 +151,7 @@ export const useChildRewardLoader = (
 
   const invalidateQuery = () => {
     queryClient.invalidateQueries(rewardProps.getKey);
+    queryClient.invalidateQueries("userBalance");
   };
 
   return [query.data ?? [], invalidateQuery];
