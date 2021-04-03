@@ -107,7 +107,7 @@ namespace MarbleCollectorApi.Controllers
 
             var userScore = _userScoreService.GetUserScore(id);
 
-            return Ok(userScore.MarbleBalance); // @Severin switch to returning user score and consume MarblesRequestable
+            return Ok(userScore.MarblesRequestable);
         }
 
         protected IEnumerable<Data.Models.User> GetUsersForFamily(string family)
