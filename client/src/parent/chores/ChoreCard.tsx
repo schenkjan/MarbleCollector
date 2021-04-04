@@ -40,9 +40,6 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: "0px",
       paddingBottom: "8px",
     },
-    avatar: {
-      backgroundColor: theme.palette.primary.main,
-    },
     actionNotificationBadge: {
       color: "white",
       backgroundColor: theme.palette.warning.light,
@@ -111,31 +108,24 @@ export function ChoreCard(props: Prop): JSX.Element {
   function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
     setShowMoreAnchor(event.currentTarget);
     setShowMoreActions(true);
-
-    console.log("Opening more actions.");
   }
 
   function handleMoreClose() {
     setShowMoreAnchor(null);
     setShowMoreActions(false);
-
-    console.log("Closing more actions.");
   }
 
   function handleCopy() {
-    console.log("Copying...");
     handleMoreClose();
     props.onCopyChore(props.chore);
   }
 
   function handleDelete() {
-    console.log("Deleting...");
     deleteChoreMutation.mutate(mutateChore(props.chore));
     handleMoreClose();
   }
 
   function handleTitleEdit(title: string) {
-    console.log("Editing title...");
     var updatedChore = produce(
       props.chore,
       (draftChore: ChoreWithAssignments) => {
@@ -146,7 +136,6 @@ export function ChoreCard(props: Prop): JSX.Element {
   }
 
   function handleDueDateEdit(date: Date) {
-    console.log("Editing due date...");
     var updatedChore = produce(
       props.chore,
       (draftChore: ChoreWithAssignments) => {
@@ -157,7 +146,6 @@ export function ChoreCard(props: Prop): JSX.Element {
   }
 
   function handleValueEdit(value: number) {
-    console.log("Editing amount of marbles...");
     var updatedChore = produce(
       props.chore,
       (draftChore: ChoreWithAssignments) => {
@@ -168,7 +156,6 @@ export function ChoreCard(props: Prop): JSX.Element {
   }
 
   function handleDescriptionEdit(description: string) {
-    console.log("Editing description...");
     var updatedChore = produce(
       props.chore,
       (draftChore: ChoreWithAssignments) => {
@@ -195,9 +182,7 @@ export function ChoreCard(props: Prop): JSX.Element {
             }
             onClick={handleExpandClick}
           >
-            <Avatar className={classes.avatar}>
-              {props.chore.assignments.length.toString()}
-            </Avatar>
+            <Avatar>{props.chore.assignments.length.toString()}</Avatar>
           </Badge>
         }
         titleComponent={
@@ -237,7 +222,8 @@ export function ChoreCard(props: Prop): JSX.Element {
             validationSchema={Yup.object({
               value: Yup.number()
                 .required("Bitte Wert definieren")
-                .min(1, "Wert > 0"),
+                .min(1, "Wert > 0")
+                .max(99, "Wert < 100"),
             })}
             notifications={
               props.chore.assignments.filter((assignment) =>

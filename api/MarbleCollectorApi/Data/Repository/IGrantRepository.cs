@@ -8,6 +8,7 @@ namespace MarbleCollectorApi.Data.Repository
     {
         IEnumerable<Grant> GetCompletedGrants(int userId, IEnumerable<Grant> grants = null);
         IEnumerable<Grant> GetGrants(int userId);
+        int GetMarblesReserved(int userId, IEnumerable<Grant> grants = null);
         int GetMarblesSpent(int userId, IEnumerable<Grant> grants = null);
     }
 }

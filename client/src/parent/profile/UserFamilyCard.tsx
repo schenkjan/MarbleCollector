@@ -11,14 +11,12 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import {
-  useProfileCardStyles,
-  getUsernameUppercase,
-} from "./ProfileCardStyles";
 import { Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { AppState } from "../AppState";
-import { getRoleName, User } from "../parent/models/User";
+import { getRoleName, User } from "../../parent/models/User";
+import {
+  getUsernameUppercase,
+  useProfileCardStyles,
+} from "../../profile/ProfileCardStyles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +39,6 @@ export function UserFamilyCard(props: UserFamilyCardProps) {
   const { family } = props;
   const classes = useStyles();
   const profileCardStyles = useProfileCardStyles();
-  const userId = useRecoilValue(AppState.userInfo);
 
   return (
     <>
@@ -54,7 +51,7 @@ export function UserFamilyCard(props: UserFamilyCardProps) {
                   <ListItem
                     alignItems="flex-start"
                     component={Link}
-                    to={`/app/${userId?.role.toLowerCase()}/profile/${user.id}`}
+                    to={`/app/child/profile/${user.username}`}
                   >
                     <ListItemAvatar>
                       <Avatar alt={user.username} src={user.avatar} />

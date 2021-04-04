@@ -61,12 +61,19 @@ export function ChildRewardList(): JSX.Element {
   return (
     <Container maxWidth="md" className={classes.container}>
       <Box className={classes.box} component={Paper}>
-        <List>
-          {balance &&
-            rewards?.map((reward) => (
-              <RewardItem key={reward.id} reward={reward} balance={balance} />
+        {!rewards || rewards.length === 0 ? (
+          <p>Keine Belohnungen vorhanden.</p>
+        ) : (
+          <List>
+            { balance && rewards?.map((reward) => (
+              <RewardItem
+                key={reward.id}
+                reward={reward}
+                balance={balance}
+              />
             ))}
-        </List>
+          </List>
+        )}
       </Box>
     </Container>
   );

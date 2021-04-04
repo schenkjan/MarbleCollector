@@ -122,6 +122,7 @@ export function AddChoreDialog(props: Prop) {
                       <Typography>Was gibt es zu tun?</Typography>
                       <Box margin={2}>
                         <Field
+                          inputProps={{ maxLength: 50 }}
                           component={ChoreTextField}
                           name="name"
                           type="text"
@@ -130,6 +131,9 @@ export function AddChoreDialog(props: Prop) {
                       </Box>
                       <Box margin={2}>
                         <Field
+                          inputProps={{ maxLength: 250 }}
+                          multiline
+                          rows={3}
                           component={ChoreTextField}
                           name="description"
                           type="text"

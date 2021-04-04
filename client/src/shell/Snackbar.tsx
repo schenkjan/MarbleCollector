@@ -40,7 +40,7 @@ export function ShowSnack() {
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={snack.open}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={handleClose}
       >
         <Alert onClose={handleClose} severity={snack.severity}>

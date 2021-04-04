@@ -1,5 +1,5 @@
-import { atom, selector, useRecoilValue } from "recoil";
-import { persistUserInfoState } from "./AppStatePersistence";
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { darkModeState, persistUserInfoState } from "./AppStatePersistence";
 import { AuthResponse } from "./auth/login/models/AuthResponse";
 import { UserAvatarInfo } from "./shell/models/UserAvatarInfo";
 import { SnackState } from "./shell/models/SnackState";
@@ -128,11 +128,23 @@ export class AppState {
       return userInfo?.family ?? "";
     },
   });
+
+  /**
+   * Holding the current state of the dark mode.
+   */
+  static darkModeState = atom<boolean>({
+    key: "darkModeState",
+    default: false,
+    effects_UNSTABLE: [darkModeState],
+  });
 }
 
-// TODO js (13.03.2021): Should we refactor the AppState to expose hooks instead of the AppState class and its methods?
 export function useFamilyMembership(): string {
   const family = useRecoilValue(AppState.family);
 
   return family;
+}
+
+export function useDarkModeState() {
+  return useRecoilState(AppState.darkModeState);
 }

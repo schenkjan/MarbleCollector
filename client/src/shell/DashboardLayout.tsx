@@ -7,7 +7,8 @@ import { NavigationBar } from "./navigation/NavigationBar";
 import { ShowSnack } from "./Snackbar";
 import { TitleBar } from "./title/TitleBar";
 import BackdropOverlay from "./BackdropOverlay";
-import { DashboardNotificationHandler } from "./DashboardNotificationHandler";
+import { SwipeNavigator } from "./navigation/SwipeNavigator";
+import { DashboardNotificationHandler } from "./notifications/DashboardNotificationHandler";
 
 const useStyles = makeStyles({
   boxRoot: {
@@ -31,23 +32,25 @@ export function DashboardLayout(props: Props) {
   const userIsAuthenticated = useRecoilValue(AppState.userIsAuthenticated);
 
   return (
-    <Box
-      className={classes.boxRoot}
-      display="flex"
-      flexDirection="column"
-      justifyContent="space-between"
-    >
-      <DashboardNotificationHandler />
-      <TitleBar
-        avatarAlt={userAvatarInfo.imgAlt}
-        avatarSrc={userAvatarInfo.imgSrc}
-        userIsAuthenticated={userIsAuthenticated}
-        title={dashboardTitle}
-      />
-      <div className={classes.children}>{props.children}</div>
-      <NavigationBar showNavigationBar={userIsAuthenticated} />
-      <ShowSnack />
-      <BackdropOverlay />
-    </Box>
+    <SwipeNavigator>
+      <Box
+        className={classes.boxRoot}
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+      >
+        <DashboardNotificationHandler username={userAvatarInfo.imgAlt} />
+        <TitleBar
+          avatarAlt={userAvatarInfo.imgAlt}
+          avatarSrc={userAvatarInfo.imgSrc}
+          userIsAuthenticated={userIsAuthenticated}
+          title={dashboardTitle}
+        />
+        <div className={classes.children}>{props.children}</div>
+        <NavigationBar showNavigationBar={userIsAuthenticated} />
+        <ShowSnack />
+        <BackdropOverlay />
+      </Box>
+    </SwipeNavigator>
   );
 }

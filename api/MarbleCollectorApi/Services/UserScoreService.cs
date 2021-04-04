@@ -24,8 +24,9 @@ namespace MarbleCollectorApi.Services
             var marblesEarned = _assignmentRepository.GetMarblesEarned(userId, choreAssignmentsCompleted);
 
             var rewardGrants = _grantRepository.GetGrants(userId);
-            var rewardGrantsCompleted = _grantRepository.GetCompletedGrants(userId, rewardGrants);
-            var marblesSpent = _grantRepository.GetMarblesSpent(userId, rewardGrants);
+            var rewardGrantsCompleted = _grantRepository.GetCompletedGrants(userId, rewardGrants); // saving a trip to the db
+            var marblesReserved = _grantRepository.GetMarblesReserved(userId, rewardGrants);
+            var marblesSpent = _grantRepository.GetMarblesSpent(userId, rewardGrantsCompleted);
 
             return new UserScore
             {
@@ -36,7 +37,9 @@ namespace MarbleCollectorApi.Services
                 RewardGrants = rewardGrants.Count(),
                 RewardsGrantsCompleted = rewardGrantsCompleted.Count(),
                 MarblesEarned = marblesEarned,
+                MarblesReserved = marblesReserved,
                 MarblesSpent = marblesSpent,
+                MarblesRequestable = marblesEarned - marblesSpent - marblesReserved,
                 MarbleBalance = marblesEarned - marblesSpent,
             };
         }

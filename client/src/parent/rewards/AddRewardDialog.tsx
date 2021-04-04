@@ -48,7 +48,7 @@ export function AddRewardDialog(props: Prop) {
               id: props.reward ? props.reward.id : 0,
               name: props.reward ? props.reward.name : "",
               description: props.reward ? props.reward.description : "",
-              value: props.reward ? props.reward.value : 100,
+              value: props.reward ? props.reward.value : 10,
               grants: props.reward ? props.reward.grants : [],
             }}
             // validating for the complete Formik-Component
@@ -60,7 +60,7 @@ export function AddRewardDialog(props: Prop) {
                 errors.value = "Bitte definieren";
               } else if (RewardValidation.value < 1) {
                 errors.value = "Einfach gratis?";
-              } else if (RewardValidation.value > 999) {
+              } else if (RewardValidation.value > 99) {
                 errors.value = "Sei doch gnädig mit den Kindern";
               }
               return errors;
@@ -83,6 +83,7 @@ export function AddRewardDialog(props: Prop) {
                     <Typography>Was gibt es zu kaufen?</Typography>
                     <Box margin={2}>
                       <Field
+                        inputProps={{ maxLength: 50 }}
                         component={RewardTextField}
                         name="name"
                         type="text"
@@ -91,7 +92,10 @@ export function AddRewardDialog(props: Prop) {
                     </Box>
                     <Box margin={2}>
                       <Field
+                        inputProps={{ maxLength: 250 }}
                         component={RewardTextField}
+                        multiline
+                        rows={3}
                         name="description"
                         type="text"
                         label="Belohnungsbeschreibung"

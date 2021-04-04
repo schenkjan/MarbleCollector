@@ -38,9 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: "0px",
       paddingBottom: "8px",
     },
-    avatar: {
-      backgroundColor: theme.palette.primary.main,
-    },
     actionNotificationBadge: {
       color: "white",
       backgroundColor: theme.palette.warning.light,
@@ -105,31 +102,24 @@ export function RewardCard(props: Prop): JSX.Element {
   function handleMoreClick(event: React.MouseEvent<HTMLButtonElement>) {
     setShowMoreAnchor(event.currentTarget);
     setShowMoreActions(true);
-
-    console.log("Opening more actions.");
   }
 
   function handleMoreClose() {
     setShowMoreAnchor(null);
     setShowMoreActions(false);
-
-    console.log("Closing more actions.");
   }
 
   function handleCopy() {
-    console.log("Copying...");
     handleMoreClose();
     props.onCopyReward(props.reward);
   }
 
   function handleDelete() {
-    console.log("Deleting...");
     deleteRewardMutation.mutate(mutateReward(props.reward));
     handleMoreClose();
   }
 
   function handleTitleEdit(title: string) {
-    console.log("Editing title...");
     var updatedReward = produce(
       props.reward,
       (draftReward: RewardWithGrants) => {
@@ -140,7 +130,6 @@ export function RewardCard(props: Prop): JSX.Element {
   }
 
   function handleValueEdit(value: number) {
-    console.log("Editing amount of marbles...");
     var updatedReward = produce(
       props.reward,
       (draftReward: RewardWithGrants) => {
@@ -151,7 +140,6 @@ export function RewardCard(props: Prop): JSX.Element {
   }
 
   function handleDescriptionEdit(description: string) {
-    console.log("Editing description...");
     var updatedReward = produce(
       props.reward,
       (draftReward: RewardWithGrants) => {
@@ -178,9 +166,7 @@ export function RewardCard(props: Prop): JSX.Element {
             }
             onClick={handleExpandClick}
           >
-            <Avatar className={classes.avatar}>
-              {props.reward.grants.length.toString()}
-            </Avatar>
+            <Avatar>{props.reward.grants.length.toString()}</Avatar>
           </Badge>
         }
         titleComponent={
@@ -190,8 +176,8 @@ export function RewardCard(props: Prop): JSX.Element {
             editLabel="Bezeichnung der Belohnung"
             validationSchema={Yup.object({
               text: Yup.string()
-                .required("Bitte definieren") // TODO js (17.03.2021): Use parameter.
-                .max(50, "Maximum 50 Zeichen"), // TODO js (17.03.2021): Use parameter.
+                .required("Bitte definieren")
+                .max(50, "Maximum 50 Zeichen"),
             })}
             onTextChanged={handleTitleEdit}
             textColor={getTextColor()}
@@ -205,7 +191,8 @@ export function RewardCard(props: Prop): JSX.Element {
             validationSchema={Yup.object({
               value: Yup.number()
                 .required("Bitte Wert definieren")
-                .min(1, "Wert > 0"),
+                .min(1, "Wert > 0")
+                .max(99, "Wert < 100"),
             })}
             notifications={
               props.reward.grants.filter((grant) => isDone(grant.state)).length
