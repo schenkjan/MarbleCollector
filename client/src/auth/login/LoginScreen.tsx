@@ -10,7 +10,6 @@ import axios from "axios";
 import { LoginForm } from "./LoginForm";
 import { AuthResponse } from "./models/AuthResponse";
 import { LoginRequest } from "./models/LoginRequest";
-import { Backdrop, CircularProgress } from "@material-ui/core";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../../AppState";
 import { useHistory } from "react-router-dom";
@@ -53,16 +52,18 @@ const useStyles = makeStyles((theme) => ({
 export function LoginScreen() {
   const classes = useStyles();
   const history = useHistory();
-  const [loading, setLoading] = useState(false);
 
   const userInfo = useRecoilValue(AppState.userInfo);
   const setUserInfo = useSetRecoilState(AppState.userInfoState);
+  const setQueryState = useSetRecoilState(AppState.queryStateInfo);
 
   const showError = useErrorNotification();
   const showSuccess = useSuccessNotification();
 
   async function login(username: string, password: string) {
-    setLoading(true);
+    setQueryState({
+      open: true,
+    });
     try {
       const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
       const apiRestTestUrl = `${apiBaseUrl}/api/auth/login`;
@@ -79,12 +80,12 @@ export function LoginScreen() {
       history.push("/");
     } catch (error) {
       showError(
-        `Der Login war nicht erfolgreich: ${JSON.stringify(
-          error.response.data
-        )}`
+        `Der Login war nicht erfolgreich, aufgrund falschem Benutzernamen oder Passwort.`
       );
     } finally {
-      setLoading(false);
+      setQueryState({
+        open: false,
+      });
     }
   }
 
@@ -105,9 +106,6 @@ export function LoginScreen() {
           </div>
         </Grid>
       </Grid>
-      <Backdrop className={classes.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </>
   );
 }
