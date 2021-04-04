@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { AppState } from "../../AppState";
-import { LogoutProgress } from "./LogoutProgress";
 import { LogoutSuccess } from "./LogoutSuccess";
 import {
   useSuccessNotification,
@@ -18,10 +17,10 @@ import { useHistory } from "react-router-dom";
 export function LogoutScreen() {
   const history = useHistory();
   const secondsTillRedirect = 5;
-  const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const userInfo = useRecoilValue(AppState.userInfo);
   const setUserInfo = useSetRecoilState(AppState.userInfoState);
+  const [queryState, setQueryState] = useRecoilState(AppState.queryStateInfo);
   const showSuccess = useSuccessNotification();
   const showError = useErrorNotification();
 
@@ -30,6 +29,9 @@ export function LogoutScreen() {
       const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
       const apiRestTestUrl = `${apiBaseUrl}/api/auth/logout`;
       if (userInfo != null) {
+        setQueryState({
+          open: true,
+        });
         try {
           setUsername(userInfo?.username);
           await axios.post(apiRestTestUrl, null, {
@@ -46,7 +48,9 @@ export function LogoutScreen() {
         } catch (error) {
           showError(`Logout ist fehlgeschlagen: ${JSON.stringify(error)}`);
         } finally {
-          setLoading(false);
+          setQueryState({
+            open: false,
+          });
         }
       }
     }
@@ -56,8 +60,7 @@ export function LogoutScreen() {
 
   return (
     <>
-      {loading && <LogoutProgress open={loading} />}
-      {!loading && (
+      {!queryState && (
         <LogoutSuccess
           username={username}
           secondsTillRedirect={secondsTillRedirect}
