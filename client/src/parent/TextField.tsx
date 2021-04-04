@@ -17,7 +17,5 @@ export function TextField(props: TextFieldProps) {
     [setFieldValue, name]
   );
 
-  return (
-    <MuiTextField multiline {...fieldToTextField(props)} onChange={onChange} />
-  );
+  return <MuiTextField {...fieldToTextField(props)} onChange={onChange} />;
 }

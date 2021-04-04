@@ -2,8 +2,8 @@ import {
   Box,
   Button,
   createStyles,
+  Dialog,
   makeStyles,
-  Popover,
   Theme,
   Typography,
 } from "@material-ui/core";
@@ -38,9 +38,20 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     form: {
       padding: theme.spacing(2),
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      minWidth: "260px",
     },
     text: {
       textAlign: "left",
+    },
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    button: {
+      "margin-top": theme.spacing(1),
     },
   })
 );
@@ -48,18 +59,18 @@ const useStyles = makeStyles((theme: Theme) =>
 export function EditableDate(props: Prop): JSX.Element {
   const classes = useStyles();
   const [date, setDate] = useState(new Date(Date.now()));
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setDate(props.date);
   }, [props.date]);
 
-  function handleOnClick(event: React.MouseEvent<HTMLButtonElement>) {
-    setAnchorEl(event.currentTarget);
+  function handleOnClick() {
+    setOpen(true);
   }
 
   function handleClose() {
-    setAnchorEl(null);
+    setOpen(false);
   }
 
   function handleSubmit(value: Date) {
@@ -85,10 +96,20 @@ export function EditableDate(props: Prop): JSX.Element {
                 label={props.editLabel}
                 format="dd.MMMM yy"
               />
-              <Button type="submit" variant="contained" color="primary">
+              <Button
+                className={classes.button}
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
                 Speichern
               </Button>
-              <Button type="reset" variant="outlined" color="primary">
+              <Button
+                className={classes.button}
+                type="reset"
+                variant="outlined"
+                color="primary"
+              >
                 Abbruch
               </Button>
             </Box>
@@ -99,7 +120,7 @@ export function EditableDate(props: Prop): JSX.Element {
   }
 
   function isOpen(): boolean {
-    return (props.editable ?? false) && Boolean(anchorEl);
+    return (props.editable ?? false) && open;
   }
 
   return (
@@ -111,21 +132,9 @@ export function EditableDate(props: Prop): JSX.Element {
       >
         {toDeLocaleDateString(date)}
       </Typography>
-      <Popover
-        open={isOpen()}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
+      <Dialog className={classes.modal} open={isOpen()} onClose={handleClose}>
         {getForm()}
-      </Popover>
+      </Dialog>
     </Box>
   );
 }

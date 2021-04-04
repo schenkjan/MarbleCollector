@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function RewardsList() {
-  useDashboardTitle("Belohnungspinnwand");
+  useDashboardTitle("Belohnungen");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [rewardToEdit, setRewardToEdit] = useState<RewardWithGrants>();
@@ -92,13 +92,15 @@ export function RewardsList() {
     setShowDialog(true);
   }
 
+  const sortedRewards = rewards?.sort(compareChores).reverse(); // sort descending
+
   return (
     <Box className={classes.container} component={Paper}>
-      <List>
-        {rewards
-          ?.sort(compareChores)
-          .reverse() // sort descending
-          .map((reward) => (
+      {!sortedRewards || sortedRewards.length === 0 ? (
+        <p>Keine Belohnungen vorhanden.</p>
+      ) : (
+        <List>
+          {sortedRewards.map((reward) => (
             <RewardCard
               key={reward.id}
               reward={reward}
@@ -106,7 +108,8 @@ export function RewardsList() {
               onCopyReward={handleCopyReward}
             />
           ))}
-      </List>
+        </List>
+      )}
       <Fab
         className={classes.fab}
         size="small"

@@ -13,9 +13,6 @@ const useStyles = makeStyles((theme: Theme) =>
     header: {
       textAlign: "left",
     },
-    avatar: {
-      backgroundColor: theme.palette.primary.main,
-    },
   })
 );
 

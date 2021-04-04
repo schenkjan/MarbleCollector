@@ -79,11 +79,19 @@ export function ChildChoreList(): JSX.Element {
     <Container maxWidth="md" className={classes.container}>
       <div ref={surroundingElementRef}>
         <Box className={classes.box} component={Paper}>
-          <List>
-            {chores?.map((chore) => (
-              <ChoreItem key={chore.id} chore={chore} size={confettiProps} />
-            ))}
-          </List>
+          {!chores || chores.length === 0 ? (
+            <p>Keine Ämtli vorhanden.</p>
+          ) : (
+            <List>
+              {chores?.map((chore) => (
+                <ChoreItem
+                  key={chore.id}
+                  chore={chore}
+                  size={confettiProps}
+                />
+              ))}
+            </List>
+          )}
         </Box>
       </div>
     </Container>
