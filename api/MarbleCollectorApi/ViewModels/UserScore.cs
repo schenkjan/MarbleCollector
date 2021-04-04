@@ -5,7 +5,9 @@
         public int Id { get; set; }
         public int FamilyRank { get; set; }
         public int MarblesEarned { get; set; }
+        public int MarblesReserved { get; set; }
         public int MarblesSpent { get; set; }
+        public int MarblesRequestable { get; set; }
         public int MarbleBalance { get; set; }
         public int ChoreAssignments { get; set; }
         public int ChoreAssignmentsCompleted { get; set; }
