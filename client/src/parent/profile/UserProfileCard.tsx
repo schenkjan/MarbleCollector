@@ -14,6 +14,7 @@ import {
 } from "./ProfileCardStyles";
 import { DarkModeSwitch } from "../../shell/navigation/DarkModeSwitch";
 import { LikeButton } from "../../shell/navigation/LikeButton";
+import { NotificationApprovalButton } from "../../notifications/NotificationApprovalButton";
 
 const useStyles = makeStyles(({ transitions, spacing, palette }) => ({
   avatar: {
@@ -88,6 +89,7 @@ export function UserProfileCard(props: UserProfileCardProps) {
           <IconButton aria-label="dark mode switch">
             <DarkModeSwitch />
           </IconButton>
+          <NotificationApprovalButton />
           <IconButton
             className={cx(styles.expand, {
               [styles.expandOpen]: expanded,

@@ -31,19 +31,35 @@ export function DashboardNotificationHandler(
     setRewardNotificationsHandled,
   ] = useMyNotificationsByNamePrefixWithHandle(NotificationNames.prefix.grant);
 
-  const showBrowserNotification = useCallback((type: string) => {
-    if (shouldShowBrowserNotification()) {
-      var options: NotificationOptions = {
-        body: `Hey ${props.username}! Du hast eine neue ${type} Benachrichtigung.`,
-        icon: ImgMarbles,
-        dir: "ltr",
-      };
-      var notification = new Notification("MarbleCollector", options);
-      setTimeout(() => {
-        notification?.close();
-      }, 5000); // close after 5 seconds
+  const shouldShowBrowserNotification = useCallback(() => {
+    if (!("Notification" in window)) {
+      console.log(
+        `${logPrefix} This browser does not support desktop notification`
+      );
+      return false;
+    } else if (Notification.permission === "granted") {
+      console.log(`${logPrefix} Notification permission granted`);
+      return true;
     }
-  }, [props.username, shouldShowBrowserNotification]);
+    return false;
+  }, []);
+
+  const showBrowserNotification = useCallback(
+    (type: string) => {
+      if (shouldShowBrowserNotification()) {
+        var options: NotificationOptions = {
+          body: `Hey ${props.username}! Du hast eine neue ${type} Benachrichtigung.`,
+          icon: ImgMarbles,
+          dir: "ltr",
+        };
+        var notification = new Notification("MarbleCollector", options);
+        setTimeout(() => {
+          notification?.close();
+        }, 5000); // close after 5 seconds
+      }
+    },
+    [props.username, shouldShowBrowserNotification]
+  );
 
   /**
    * Increasing the count of chores...
@@ -81,21 +97,5 @@ export function DashboardNotificationHandler(
     showBrowserNotification,
   ]);
 
-  function shouldShowBrowserNotification() {
-    if (!("Notification" in window)) {
-      console.log(
-        `${logPrefix} This browser does not support desktop notification`
-      );
-      return false;
-    } else if (Notification.permission === "granted") {
-      console.log(`${logPrefix} Notification permission granted`);
-      return true;
-    }
-    return false;
-  }
-
-  return (
-    <>
-    </>
-  );
+  return <></>;
 }
