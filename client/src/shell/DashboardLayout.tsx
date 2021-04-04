@@ -7,8 +7,8 @@ import { NavigationBar } from "./navigation/NavigationBar";
 import { ShowSnack } from "./Snackbar";
 import { TitleBar } from "./title/TitleBar";
 import BackdropOverlay from "./BackdropOverlay";
-import { DashboardNotificationHandler } from "./DashboardNotificationHandler";
 import { SwipeNavigator } from "./navigation/SwipeNavigator";
+import { DashboardNotificationHandler } from "./notifications/DashboardNotificationHandler";
 
 const useStyles = makeStyles({
   boxRoot: {
@@ -39,7 +39,7 @@ export function DashboardLayout(props: Props) {
         flexDirection="column"
         justifyContent="space-between"
       >
-        <DashboardNotificationHandler />
+        <DashboardNotificationHandler username={userAvatarInfo.imgAlt} />
         <TitleBar
           avatarAlt={userAvatarInfo.imgAlt}
           avatarSrc={userAvatarInfo.imgSrc}

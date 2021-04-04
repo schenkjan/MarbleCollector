@@ -83,6 +83,7 @@ export function AddRewardDialog(props: Prop) {
                     <Typography>Was gibt es zu kaufen?</Typography>
                     <Box margin={2}>
                       <Field
+                        inputProps={{ maxLength: 50 }}
                         component={RewardTextField}
                         name="name"
                         type="text"
@@ -91,7 +92,10 @@ export function AddRewardDialog(props: Prop) {
                     </Box>
                     <Box margin={2}>
                       <Field
+                        inputProps={{ maxLength: 250 }}
                         component={RewardTextField}
+                        multiline
+                        rows={3}
                         name="description"
                         type="text"
                         label="Belohnungsbeschreibung"
