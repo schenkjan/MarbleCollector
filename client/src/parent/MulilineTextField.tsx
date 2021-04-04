@@ -2,7 +2,7 @@ import { fieldToTextField, TextFieldProps } from "formik-material-ui";
 import { useCallback } from "react";
 import MuiTextField from "@material-ui/core/TextField";
 
-export function TextField(props: TextFieldProps) {
+export function MulilineTextField(props: TextFieldProps) {
   const {
     form: { setFieldValue },
     field: { name },

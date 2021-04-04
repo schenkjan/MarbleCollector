@@ -38,9 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: "0px",
       paddingBottom: "8px",
     },
-    avatar: {
-      backgroundColor: theme.palette.primary.main,
-    },
     actionNotificationBadge: {
       color: "white",
       backgroundColor: theme.palette.warning.light,
@@ -178,9 +175,7 @@ export function RewardCard(props: Prop): JSX.Element {
             }
             onClick={handleExpandClick}
           >
-            <Avatar className={classes.avatar}>
-              {props.reward.grants.length.toString()}
-            </Avatar>
+            <Avatar>{props.reward.grants.length.toString()}</Avatar>
           </Badge>
         }
         titleComponent={
@@ -205,7 +200,8 @@ export function RewardCard(props: Prop): JSX.Element {
             validationSchema={Yup.object({
               value: Yup.number()
                 .required("Bitte Wert definieren")
-                .min(1, "Wert > 0"),
+                .min(1, "Wert > 0")
+                .max(99, "Wert < 100"),
             })}
             notifications={
               props.reward.grants.filter((grant) => isDone(grant.state)).length

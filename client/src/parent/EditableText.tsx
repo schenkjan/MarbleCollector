@@ -2,15 +2,15 @@ import {
   Box,
   Button,
   createStyles,
+  Dialog,
   makeStyles,
-  Popover,
   Theme,
   Typography,
 } from "@material-ui/core";
 import { Variant } from "@material-ui/core/styles/createTypography";
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { TextField } from "./TextField";
+import { MulilineTextField } from "./MulilineTextField";
 
 type Prop = {
   text: string;
@@ -34,9 +34,19 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     form: {
       padding: theme.spacing(2),
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
     },
     text: {
       textAlign: "left",
+    },
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    button: {
+      "margin-top": theme.spacing(1),
     },
   })
 );
@@ -44,18 +54,18 @@ const useStyles = makeStyles((theme: Theme) =>
 export function EditableText(props: Prop): JSX.Element {
   const classes = useStyles();
   const [text, setText] = useState("");
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setText(props.text);
   }, [props.text]);
 
-  function handleOnClick(event: React.MouseEvent<HTMLButtonElement>) {
-    setAnchorEl(event.currentTarget);
+  function handleOnClick() {
+    setOpen(true);
   }
 
   function handleClose() {
-    setAnchorEl(null);
+    setOpen(false);
   }
 
   function handleSubmit(value: string) {
@@ -75,15 +85,25 @@ export function EditableText(props: Prop): JSX.Element {
         <Form className={classes.form}>
           <Box display="flex" flexDirection="column">
             <Field
-              component={TextField}
+              component={MulilineTextField}
               name="text"
               type="text"
               label={props.editLabel}
             />
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              className={classes.button}
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
               Speichern
             </Button>
-            <Button type="reset" variant="outlined" color="primary">
+            <Button
+              className={classes.button}
+              type="reset"
+              variant="outlined"
+              color="primary"
+            >
               Abbruch
             </Button>
           </Box>
@@ -93,7 +113,7 @@ export function EditableText(props: Prop): JSX.Element {
   }
 
   function isOpen(): boolean {
-    return (props.editable ?? false) && Boolean(anchorEl);
+    return (props.editable ?? false) && open;
   }
 
   return (
@@ -109,21 +129,9 @@ export function EditableText(props: Prop): JSX.Element {
           ? "Nicht definiert. Text mit Klick hinzufügen."
           : ""}
       </Typography>
-      <Popover
-        open={isOpen()}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
+      <Dialog className={classes.modal} open={isOpen()} onClose={handleClose}>
         {getForm()}
-      </Popover>
+      </Dialog>
     </Box>
   );
 }

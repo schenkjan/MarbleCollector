@@ -7,21 +7,18 @@ import {
   Redirect,
 } from "react-router-dom";
 import { HomeScreen } from "./home/HomeScreen";
-import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
+import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import { AuthController } from "./auth/AuthController";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { DashboardLayout } from "./shell/DashboardLayout";
 import { HubConnectionHandler } from "./notifications/HubConnectionHandler";
 import { ProtectedArea } from "./auth/ProtectedArea";
+import { useTheme } from "./shell/hooks/DarkThemeHook";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const theme = createMuiTheme({
-    palette: {
-      type: "light",
-    },
-  });
+  const theme = useTheme();
 
   return (
     <Router>

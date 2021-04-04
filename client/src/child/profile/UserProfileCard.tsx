@@ -8,12 +8,12 @@ import Avatar from "@material-ui/core/Avatar";
 import { getRoleName, User } from "../../parent/models/User";
 import { CardActions, Collapse, Grid, IconButton } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import MessageIcon from "@material-ui/icons/Message";
 import {
   useProfileCardStyles,
   getUsernameUppercase,
 } from "./ProfileCardStyles";
+import { DarkModeSwitch } from "../../shell/navigation/DarkModeSwitch";
+import { LikeButton } from "../../shell/navigation/LikeButton";
 
 const useStyles = makeStyles(({ transitions, spacing, palette }) => ({
   avatar: {
@@ -84,11 +84,9 @@ export function UserProfileCard(props: UserProfileCardProps) {
           </Grid>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="share">
-            <MessageIcon />
+          <LikeButton />
+          <IconButton aria-label="dark mode switch">
+            <DarkModeSwitch />
           </IconButton>
           <IconButton
             className={cx(styles.expand, {

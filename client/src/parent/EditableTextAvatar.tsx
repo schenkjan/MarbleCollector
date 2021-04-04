@@ -4,15 +4,15 @@ import {
   Box,
   Button,
   createStyles,
+  Dialog,
   makeStyles,
-  Popover,
   Theme,
 } from "@material-ui/core";
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { TextField } from "./TextField";
 import ImgMarbles from "../images/Marble.png";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { SinglelineTextField } from "./SinglelineTextField";
 
 type Prop = {
   value: number;
@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     form: {
       padding: theme.spacing(2),
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
     },
     text: {
       textAlign: "left",
@@ -59,24 +61,32 @@ const useStyles = makeStyles((theme: Theme) =>
       color: "white",
       backgroundColor: theme.palette.success.light,
     },
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    button: {
+      "margin-top": theme.spacing(1),
+    },
   })
 );
 
 export function EditableTextAvatar(props: Prop): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setValue(props.value);
   }, [props.value]);
 
-  function handleOnClick(event: React.MouseEvent<HTMLDivElement>) {
-    setAnchorEl(event.currentTarget);
+  function handleOnClick() {
+    setOpen(true);
   }
 
   function handleClose() {
-    setAnchorEl(null);
+    setOpen(false);
   }
 
   function handleSubmit(value: number) {
@@ -96,15 +106,25 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
         <Form className={classes.form}>
           <Box display="flex" flexDirection="column">
             <Field
-              component={TextField}
+              component={SinglelineTextField}
               name="value"
               type="number"
               label={props.editLabel}
             />
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              className={classes.button}
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
               Speichern
             </Button>
-            <Button type="reset" variant="outlined" color="primary">
+            <Button
+              className={classes.button}
+              type="reset"
+              variant="outlined"
+              color="primary"
+            >
               Abbruch
             </Button>
           </Box>
@@ -114,7 +134,7 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
   }
 
   function isOpen(): boolean {
-    return (props.editable ?? false) && Boolean(anchorEl);
+    return (props.editable ?? false) && open;
   }
 
   return (
@@ -141,21 +161,9 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
         </Badge>
       </ThemeProvider>
 
-      <Popover
-        open={isOpen()}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
+      <Dialog className={classes.modal} open={isOpen()} onClose={handleClose}>
         {getForm()}
-      </Popover>
+      </Dialog>
     </Badge>
   );
 }
