@@ -45,7 +45,7 @@ export function useGet<T>(
         open: true,
       });
     } else if (isError) {
-      setqueryState({
+      setQueryState({
         open: false,
       });
       showError(errorMessage);
