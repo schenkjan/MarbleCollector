@@ -1,10 +1,42 @@
 ﻿using MarbleCollectorApi.Data.Models;
+using System.Collections.Generic;
 
 namespace MarbleCollectorApi.Data.Init
 {
-    public static class DefaultGrants
+    public class DefaultGrants : IDataSeeder<Grant>
     {
-        public static Grant[] GetGrants()
+        public IEnumerable<Grant> GetDemoData()
+        {
+            return new[]
+            {
+                new Grant
+                {
+                    UserId = 3,
+                    RewardId = 1,
+                    State = GrantState.Assigned
+                },
+                new Grant
+                {
+                    UserId = 3,
+                    RewardId = 2,
+                    State = GrantState.Assigned
+                },
+                new Grant
+                {
+                    UserId = 4,
+                    RewardId = 1,
+                    State = GrantState.Archived
+                },
+                new Grant
+                {
+                    UserId = 4,
+                    RewardId = 2,
+                    State = GrantState.Assigned
+                },
+            };
+        }
+
+        public IEnumerable<Grant> GetDevelopmentData()
         {
             return new[]
             {

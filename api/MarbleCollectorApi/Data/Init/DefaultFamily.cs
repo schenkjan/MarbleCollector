@@ -1,13 +1,24 @@
 ﻿using MarbleCollectorApi.Data.Models;
+using System.Collections.Generic;
 
 namespace MarbleCollectorApi.Data.Init
 {
-    public static class DefaultFamily
+    public class DefaultFamily : IDataSeeder<User>
     {
         private const string Family = "Muster";
         private const string Password = "123456";
 
-        public static User[] GetUsers()
+        public IEnumerable<User> GetDemoData()
+        {
+            return GetUsers();
+        }
+
+        public IEnumerable<User> GetDevelopmentData()
+        {
+            return GetUsers();
+        }
+
+        private User[] GetUsers()
         {
             return new[]
             {
@@ -31,7 +42,7 @@ namespace MarbleCollectorApi.Data.Init
                 },
                 new User
                 {
-                    Username = "lars-frederik",
+                    Username = "lars",
                     Email = "lars.muster@gmail.com",
                     Password = Password,
                     Avatar = "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/68.png",

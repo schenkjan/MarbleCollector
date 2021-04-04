@@ -2,7 +2,7 @@ import { RewardWithGrants } from "../models/RewardWithGrants";
 import { Avatar, Badge, Card } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
-import { GrantState } from "../models/GrantState";
+import { GrantState, isDone, isParentActionNeeded } from "../models/GrantState";
 import { GrantList } from "./GrantList";
 import { MoreOptionsMenu } from "../MoreOptionsMenu";
 import { AddOptionsExpandCardActions } from "../AddOptionsExpandCardActions";
@@ -172,8 +172,8 @@ export function RewardCard(props: Prop): JSX.Element {
           <Badge
             classes={{ badge: classes.actionNotificationBadge }}
             badgeContent={
-              props.reward.grants.filter(
-                (grant) => grant.state === GrantState.Requested
+              props.reward.grants.filter((grant) =>
+                isParentActionNeeded(grant.state)
               ).length
             }
             onClick={handleExpandClick}
@@ -208,11 +208,7 @@ export function RewardCard(props: Prop): JSX.Element {
                 .min(1, "Wert > 0"),
             })}
             notifications={
-              props.reward.grants.filter(
-                (grant) =>
-                  grant.state === GrantState.RequestConfirmed ||
-                  grant.state === GrantState.Archived
-              ).length
+              props.reward.grants.filter((grant) => isDone(grant.state)).length
             }
             onValueChanged={handleValueEdit}
           />

@@ -1,11 +1,27 @@
 ﻿using MarbleCollectorApi.Data.Models;
 using System;
+using System.Collections.Generic;
 
 namespace MarbleCollectorApi.Data.Init
 {
-    public static class DefaultChores
+    public class DefaultChores : IDataSeeder<Chore>
     {
-        public static Chore[] GetChores()
+
+        public IEnumerable<Chore> GetDemoData()
+        {
+            return new[]
+            {
+                new Chore
+                {
+                    Name = "Frühlingsputz",
+                    Value = 10,
+                    DueDate = DateTime.UtcNow.AddDays(-5),
+                    Description = "Wir putzen als Familie die ganze Wohnung, ausser Lena!",
+                },
+            };
+        }
+
+        public IEnumerable<Chore> GetDevelopmentData()
         {
             return new[]
             {

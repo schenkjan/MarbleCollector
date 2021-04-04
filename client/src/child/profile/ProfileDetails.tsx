@@ -3,7 +3,6 @@ import { Route } from "react-router";
 import { Redirect, Switch, useRouteMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
-import { useProfileGet } from "../../profile/ProfileBackendAccess";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ProfileDetailsForUser } from "./ProfileDetailsForUser";
 
@@ -12,9 +11,7 @@ export function ProfileDetails() {
 
   const { path } = useRouteMatch();
 
-  // const { data } = useProfileGet();
   const userId = useRecoilValue(AppState.userInfo);
-  // const presentedUserId = data ? data?.user.id : userId?.id;
 
   return (
     <>
