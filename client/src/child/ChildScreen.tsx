@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { ChildChoreList } from "./chores/ChildChoreList";
 import { ChildRewardList } from "./rewards/ChildRewardList";
@@ -19,6 +19,9 @@ export function ChildScreen() {
         </Route>
         <Route path={[`${path}/chores`, path]} exact>
           <ChildChoreList></ChildChoreList>
+        </Route>
+        <Route path="*">
+          <Redirect to={`${path}`} />
         </Route>
       </Switch>
     </>
