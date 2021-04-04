@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function ChoreList(): JSX.Element {
-  useDashboardTitle("Ämtli Pinnwand");
+  useDashboardTitle("Ämtli");
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [choreToEdit, setChoreToEdit] = useState<ChoreWithAssignments>();
@@ -94,13 +94,15 @@ export function ChoreList(): JSX.Element {
     setShowDialog(true);
   }
 
+  const sortedChores = chores?.sort(compareChores).reverse(); // sort descending
+
   return (
     <Box className={classes.container} component={Paper}>
-      <List>
-        {chores
-          ?.sort(compareChores)
-          .reverse() // sort descending
-          .map((chore) => (
+      {!sortedChores || sortedChores.length === 0 ? (
+        <p>Keine Ämtli vorhanden.</p>
+      ) : (
+        <List>
+          {sortedChores.map((chore) => (
             <ChoreCard
               key={chore.id}
               chore={chore}
@@ -108,7 +110,8 @@ export function ChoreList(): JSX.Element {
               onCopyChore={handleCopyChore}
             />
           ))}
-      </List>
+        </List>
+      )}
       <Fab
         className={classes.fab}
         size="small"
