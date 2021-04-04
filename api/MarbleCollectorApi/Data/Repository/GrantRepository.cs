@@ -33,6 +33,20 @@ namespace MarbleCollectorApi.Data.Repository
             return grants.Where(grant => grant.State == GrantState.Archived);
         }
 
+        public int GetMarblesReserved(int userId, IEnumerable<Grant> grants = null)
+        {
+            if (grants == null)
+            {
+                grants = GetGrants(userId);
+            }
+
+            var marbleCount = grants.Where(x =>
+                x.State == GrantState.Requested ||
+                x.State == GrantState.RequestConfirmed
+            ).Sum(a => a.Reward.Value);
+            return marbleCount;
+        }
+
         public int GetMarblesSpent(int userId, IEnumerable<Grant> grants = null)
         {
             if (grants == null)
