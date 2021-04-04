@@ -139,7 +139,6 @@ export class AppState {
   });
 }
 
-// TODO js (13.03.2021): Should we refactor the AppState to expose hooks instead of the AppState class and its methods?
 export function useFamilyMembership(): string {
   const family = useRecoilValue(AppState.family);
 

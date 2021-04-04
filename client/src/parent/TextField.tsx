@@ -2,7 +2,7 @@ import { fieldToTextField, TextFieldProps } from "formik-material-ui";
 import { useCallback } from "react";
 import MuiTextField from "@material-ui/core/TextField";
 
-export function MulilineTextField(props: TextFieldProps) {
+export function TextField(props: TextFieldProps) {
   const {
     form: { setFieldValue },
     field: { name },
@@ -17,7 +17,5 @@ export function MulilineTextField(props: TextFieldProps) {
     [setFieldValue, name]
   );
 
-  return (
-    <MuiTextField multiline {...fieldToTextField(props)} onChange={onChange} />
-  );
+  return <MuiTextField {...fieldToTextField(props)} onChange={onChange} />;
 }

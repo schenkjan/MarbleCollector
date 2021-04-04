@@ -12,7 +12,7 @@ import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import ImgMarbles from "../images/Marble.png";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { SinglelineTextField } from "./SinglelineTextField";
+import { TextField } from "./TextField";
 
 type Prop = {
   value: number;
@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       backgroundColor: theme.palette.background.paper,
       boxShadow: theme.shadows[5],
+      minWidth: "260px",
     },
     text: {
       textAlign: "left",
@@ -106,7 +107,8 @@ export function EditableTextAvatar(props: Prop): JSX.Element {
         <Form className={classes.form}>
           <Box display="flex" flexDirection="column">
             <Field
-              component={SinglelineTextField}
+              component={TextField}
+              multiline={false}
               name="value"
               type="number"
               label={props.editLabel}
