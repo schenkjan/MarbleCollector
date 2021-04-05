@@ -11,10 +11,10 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { RewardItem } from "./RewardItem";
-import { useChildRewardLoader, useUserBalance } from "../BackendAccess";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
 import { useEffect } from "react";
+import { useChildRewardLoader, useUserBalance } from "../ChildBackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

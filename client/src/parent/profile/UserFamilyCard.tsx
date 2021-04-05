@@ -11,12 +11,12 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import {
-  useProfileCardStyles,
-  getUsernameUppercase,
-} from "./ProfileCardStyles";
 import { Link } from "react-router-dom";
 import { getRoleName, User } from "../../parent/models/User";
+import {
+  getUsernameUppercase,
+  useProfileCardStyles,
+} from "../../profile/ProfileCardStyles";
 
 const useStyles = makeStyles((theme) => ({
   root: {

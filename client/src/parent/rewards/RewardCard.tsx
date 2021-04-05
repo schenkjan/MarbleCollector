@@ -20,7 +20,7 @@ import {
   useParentGrantPost,
   useParentRewardDelete,
   useParentRewardPut,
-} from "../../api/BackendAccess";
+} from "../ParentBackendAccess";
 import produce from "immer";
 
 type Prop = {

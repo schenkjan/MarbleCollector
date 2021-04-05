@@ -16,7 +16,7 @@ import {
   mutateGrant,
   useParentGrantDelete,
   useParentGrantPut,
-} from "../../api/BackendAccess";
+} from "../ParentBackendAccess";
 
 type Prop = {
   grant: Grant;

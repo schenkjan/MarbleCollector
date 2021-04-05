@@ -13,18 +13,18 @@ import { useEffect, useState } from "react";
 import { ChoreCard } from "./ChoreCard";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import {
-  mutateChore,
-  useChildrenForUser,
-  useParentChoreLoader,
-  useParentChorePost,
-} from "../../api/BackendAccess";
-import {
   ChoreWithAssignments,
   compareChores,
 } from "../models/ChoreWithAssignments";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
 import produce from "immer";
+import {
+  mutateChore,
+  useChildrenForUser,
+  useParentChoreLoader,
+  useParentChorePost,
+} from "../ParentBackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

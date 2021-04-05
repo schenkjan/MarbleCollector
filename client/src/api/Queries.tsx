@@ -7,7 +7,7 @@ import {
   useErrorNotification,
   useSuccessNotification,
 } from "../shell/hooks/SnackbarHooks";
-import { getApiBaseUrl } from "./BackendAccess";
+import { getApiBaseUrl } from "../parent/ParentBackendAccess";
 import { QueryObject } from "./models/QueryObject";
 import { QueryObjectUrl } from "./models/QueryObjectUrl";
 
@@ -15,7 +15,7 @@ const apiBaseUrl = getApiBaseUrl();
 
 // GET
 export function useGet<T>(
-  key: string,
+  key: string | [string, string | number | undefined],
   url: QueryObjectUrl,
   errorMessage: string,
   additiveUrl?: number | string
@@ -45,6 +45,9 @@ export function useGet<T>(
         open: true,
       });
     } else if (isError) {
+      setQueryState({
+        open: false,
+      });
       showError(errorMessage);
     } else if (
       !isLoading &&
@@ -56,7 +59,7 @@ export function useGet<T>(
         open: false,
       });
     }
-  });
+  }, [isLoading, isFetching, isError, data]);
   return {
     data: data,
   };

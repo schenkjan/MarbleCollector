@@ -5,15 +5,15 @@ import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
-import { getRoleName, User } from "../../parent/models/User";
+import { getRoleName, User } from "../parent/models/User";
 import { CardActions, Collapse, Grid, IconButton } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
   useProfileCardStyles,
   getUsernameUppercase,
 } from "./ProfileCardStyles";
-import { DarkModeSwitch } from "../../shell/navigation/DarkModeSwitch";
-import { LikeButton } from "../../shell/navigation/LikeButton";
+import { DarkModeSwitch } from "../shell/navigation/DarkModeSwitch";
+import { LikeButton } from "../shell/navigation/LikeButton";
 
 const useStyles = makeStyles(({ transitions, spacing, palette }) => ({
   avatar: {
@@ -118,10 +118,6 @@ export function UserProfileCard(props: UserProfileCardProps) {
               <Box p={2} flex={"auto"}>
                 <p className={styles.statLabel}>User-Id</p>
                 <p className={styles.statValue}>{user?.id}</p>
-              </Box>
-              <Box p={2} flex={"auto"}>
-                <p className={styles.statLabel}>Profile Prop 2</p>
-                <p className={styles.statValue}>abc</p>
               </Box>
             </Grid>
           </CardContent>

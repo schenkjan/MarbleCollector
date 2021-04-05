@@ -2,7 +2,7 @@ import { ListItemComponent } from "../ListItemComponent";
 import { ChildListItem } from "../types/ChildListItem";
 import { StepperControl } from "../types/StepperControl";
 import { RewardWithGrants } from "../../model/RewardWithGrants";
-import { mutateReward, useChildRewardPut } from "../BackendAccess";
+import { mutateReward, useChildRewardPut } from "../ChildBackendAccess";
 import produce from "immer";
 import { GrantState } from "../../model/GrantState";
 import { useInfoNotification } from "../../shell/hooks/SnackbarHooks";

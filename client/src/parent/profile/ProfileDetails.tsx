@@ -1,21 +1,28 @@
 import React from "react";
+import { Route } from "react-router";
+import { Redirect, Switch, useRouteMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useProfileGet } from "../../api/BackendAccess";
 import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
-import { UserFamilyCard } from "./UserFamilyCard";
-import { UserProfileCard } from "./UserProfileCard";
+import { ProfileDetailsForUser } from "./ProfileDetailsForUser";
 
 export function ProfileDetails() {
   useDashboardTitle("Profil");
 
+  const { path } = useRouteMatch();
+
   const userId = useRecoilValue(AppState.userInfo);
-  const { data } = useProfileGet(userId?.id);
 
   return (
     <>
-      <UserProfileCard user={data?.user} />
-      <UserFamilyCard family={data?.family ?? []} />
+      <Switch>
+        <Route path={`${path}/:id`}>
+          <ProfileDetailsForUser />
+        </Route>
+        <Route path={`${path}`}>
+          <Redirect to={`${path}/${userId?.id}`} />
+        </Route>
+      </Switch>
     </>
   );
 }

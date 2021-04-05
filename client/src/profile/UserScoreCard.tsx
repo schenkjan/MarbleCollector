@@ -1,13 +1,12 @@
 import React from "react";
 import { Card, CardContent, Grid } from "@material-ui/core";
 import { useProfileCardStyles } from "./ProfileCardStyles";
-import ImgMarbles from "../../images/Marble.png";
-
+import ImgMarbles from "./../images/Marble.png";
 import { UserScoreCardItem } from "./UserScoreCardItem";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import RedeemIcon from "@material-ui/icons/Redeem";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import { UserScore } from "../models/UserScore";
+import { UserScore } from "./models/UserScore";
 
 type UserScoreCardProps = {
   userScore: UserScore | undefined;
@@ -47,7 +46,7 @@ export function UserScoreCard(props: UserScoreCardProps) {
               <UserScoreCardItem
                 ammount={userScore?.rewardsGrantsCompleted ?? 0}
                 icon={<RedeemIcon fontSize="large" />}
-                text="Verdiente Belohnungen"
+                text="Eingelöste Belohnungen"
               />
             </Grid>
           </Grid>

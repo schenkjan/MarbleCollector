@@ -11,11 +11,11 @@ import { useRecoilValue } from "recoil";
 import { AppState } from "../../AppState";
 import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
 import { ChoreItem } from "./ChoreItem";
-import { useChildChoreLoader } from "../BackendAccess";
 import React, { useEffect } from "react";
 import { ConfettiProps } from "../types/ConfettiProps";
 import { useMyNotificationsByNamePrefixWithHandle } from "../../notifications/NotificationHooks";
 import { NotificationNames } from "../../notifications/NotificationNames";
+import { useChildChoreLoader } from "../ChildBackendAccess";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

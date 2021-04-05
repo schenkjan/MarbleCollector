@@ -9,9 +9,9 @@ import { getRoleName, User } from "../../parent/models/User";
 import { CardActions, Collapse, Grid, IconButton } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
-  useProfileCardStyles,
   getUsernameUppercase,
-} from "./ProfileCardStyles";
+  useProfileCardStyles,
+} from "../../profile/ProfileCardStyles";
 import { DarkModeSwitch } from "../../shell/navigation/DarkModeSwitch";
 import { LikeButton } from "../../shell/navigation/LikeButton";
 import { NotificationApprovalButton } from "../../notifications/NotificationApprovalButton";
