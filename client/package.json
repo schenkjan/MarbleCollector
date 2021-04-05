@@ -33,7 +33,6 @@
     "recoil-persist": "^2.3.0",
     "typescript": "^4.1.5",
     "web-vitals": "^1.1.0",
-    "xlsx": "^0.16.9",
     "yup": "^0.32.9"
   },
   "devDependencies": {
