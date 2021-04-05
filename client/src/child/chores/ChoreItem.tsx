@@ -77,6 +77,12 @@ export function ChoreItem(props: Props): JSX.Element {
 
   function itemStepperControl(chore: ChoreWithAssignments): StepperControl {
     let activeStep = 0;
+
+    let seceondStepText =
+      chore.assignments[0].state === AssignmentState.CheckRefused
+        ? "Abgelehnt"
+        : "Aktiv";
+
     if (chore.assignments[0].state === AssignmentState.CheckRefused) {
       activeStep = 1;
     } else if (chore.assignments[0].state === AssignmentState.Archived) {
@@ -87,8 +93,15 @@ export function ChoreItem(props: Props): JSX.Element {
 
     return {
       activeStep: activeStep,
-      stepsText: ["Neu", "Aktiv", "Prüfen", "Erledigt"],
-      buttonText: ["Start", "Prüfen", "Warten", "Murmel", "Prüfen", "Fertig"],
+      stepsText: ["Neu", seceondStepText, "Prüfen", "Erledigt"],
+      buttonText: [
+        "Start",
+        "Prüfen lassen",
+        "Warten",
+        "Kassieren",
+        "Prüfen lassen",
+        "Fertig",
+      ],
       disableButtonState: [
         AssignmentState.RequestedToCheck,
         AssignmentState.Archived,
