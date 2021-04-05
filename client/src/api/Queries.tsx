@@ -101,7 +101,8 @@ export function usePost<T>(
 export function usePut<T>(
   invalidateKey: string,
   successMessage: string,
-  errorMessage: string
+  errorMessage: string,
+  optInvalidations?: string[]
 ) {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryClient = useQueryClient();
@@ -121,6 +122,9 @@ export function usePut<T>(
     {
       onSuccess: () => {
         queryClient.invalidateQueries(invalidateKey);
+        if (optInvalidations) {
+          optInvalidations.map((query) => queryClient.invalidateQueries(query));
+        }
         showSuccess(successMessage);
       },
       onError: () => {
