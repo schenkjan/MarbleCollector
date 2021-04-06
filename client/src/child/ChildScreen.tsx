@@ -3,7 +3,7 @@ import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { ChildChoreList } from "./chores/ChildChoreList";
 import { ChildRewardList } from "./rewards/ChildRewardList";
-import { ProfileDetails } from "./profile/ProfileDetails";
+import { ProfileDetails } from "../profile/ProfileDetails";
 import { Container } from "@material-ui/core";
 
 export function ChildScreen() {
