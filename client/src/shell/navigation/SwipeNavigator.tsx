@@ -19,7 +19,7 @@ export function SwipeNavigator(props: Prop): JSX.Element {
   useEffect(() => {
     if (path.match(/(.*)rewards$/)) {
       setCurrentPage("rewards");
-    } else if (path.match(/(.*)profile$/)) {
+    } else if (path.match(/(.*)profile(.*)$/)) {
       setCurrentPage("profile");
     } else if (path.match(/(.*)chores$/)) {
       setCurrentPage("chores");
