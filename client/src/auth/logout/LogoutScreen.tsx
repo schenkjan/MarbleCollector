@@ -60,7 +60,7 @@ export function LogoutScreen() {
 
   return (
     <>
-      {!queryState && (
+      {!queryState.open && (
         <LogoutSuccess
           username={username}
           secondsTillRedirect={secondsTillRedirect}
