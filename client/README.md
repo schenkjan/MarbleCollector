@@ -44,17 +44,16 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 - `npm install axios`
 - `npm install @material-ui/core`
 - `npm install react-router-dom`
-- `npm i --save-dev @types/react-router-dom`
+- `npm install @types/react-router-dom`
 - `npm install @microsoft/signalr`
 - `npm install recoil`
+- `npm install recoil-persist`
 - `npm install @material-ui/icons`
 - `npm install @material-ui/lab` for snackbars
 - `npm install @material-ui/pickers`
-- `npm add formik formik-material-ui @material-ui/core`
-- `npm add formik-material-ui-lab @material-ui/lab`
-- `npm add formik-material-ui-pickers @date-io/date-fns@1.x date-fns`
+- `npm install formik formik-material-ui`
+- `npm install formik-material-ui-pickers @date-io/date-fns@1.x date-fns`
 - `npm install react-query`
-- `npm install xlsx`
 - `npm install immer`
 - `npm install yup`
 - `npm install react-confetti`

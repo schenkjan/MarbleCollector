@@ -20,7 +20,6 @@
     "date-fns": "^2.18.0",
     "formik": "^2.2.6",
     "formik-material-ui": "^3.0.1",
-    "formik-material-ui-lab": "0.0.8",
     "formik-material-ui-pickers": "0.0.12",
     "immer": "^8.0.2",
     "react": "^17.0.1",
@@ -33,7 +32,6 @@
     "recoil-persist": "^2.3.0",
     "typescript": "^4.1.5",
     "web-vitals": "^1.1.0",
-    "xlsx": "^0.16.9",
     "yup": "^0.32.9"
   },
   "devDependencies": {
