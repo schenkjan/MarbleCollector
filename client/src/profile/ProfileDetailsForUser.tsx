@@ -1,10 +1,10 @@
 import { Box } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useProfileGet } from "../../profile/ProfileBackendAccess";
-import { UserFamilyCard } from "../../profile/UserFamilyCard";
-import { UserProfileCard } from "../../profile/UserProfileCard";
-import { UserScoreDetailsForUser } from "../../profile/UserScoreDetailsForUser";
+import { useProfileGet } from "./ProfileBackendAccess";
+import { UserFamilyCard } from "./UserFamilyCard";
+import { UserProfileCard } from "./UserProfileCard";
+import { UserScoreDetailsForUser } from "./UserScoreDetailsForUser";
 
 type ProfileDetailsParams = {
   id: string;
@@ -14,8 +14,6 @@ export function ProfileDetailsForUser() {
   let { id } = useParams<ProfileDetailsParams>();
 
   let [data, invalidateQuery] = useProfileGet(id);
-
-  // const [actData, setActData] = useState(data);
 
   useEffect(() => {
     invalidateQuery();

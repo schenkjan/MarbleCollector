@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route, useRouteMatch, Redirect } from "react-router-dom";
-import { ProfileDetails } from "./profile/ProfileDetails";
+import { ProfileDetails } from "../profile/ProfileDetails";
 import { ChoreList } from "./chores/ChoreList";
 import { ProtectedRouteForRole } from "../auth/ProtectedRouteForRole";
 import { RewardsList } from "./rewards/RewardsList";

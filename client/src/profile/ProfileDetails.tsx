@@ -2,8 +2,8 @@ import React from "react";
 import { Route } from "react-router";
 import { Redirect, Switch, useRouteMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { AppState } from "../../AppState";
-import { useDashboardTitle } from "../../shell/hooks/DashboardTitleHook";
+import { AppState } from "../AppState";
+import { useDashboardTitle } from "../shell/hooks/DashboardTitleHook";
 import { ProfileDetailsForUser } from "./ProfileDetailsForUser";
 
 export function ProfileDetails() {
