@@ -37,7 +37,7 @@ This test scenario can be used to see most features of MarbleCollector in action
 
 ## Run it locally
 
-To run it locally you must first get the code
+To run it locally you must first get the code 
 
 `git checkout https://github.com/TashunkoWitko/MarbleCollector.git`
 
