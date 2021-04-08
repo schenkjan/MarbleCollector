@@ -33,7 +33,7 @@ This test scenario can be used to see most features of MarbleCollector in action
 
 1. Open three independent browser instances (e.g. profiles)
 2. Login with one parent account and two children
-3. Follow the steps in the [OneNote](https://bernerfachhochschule-my.sharepoint.com/personal/schej3_bfh_ch/_layouts/15/Doc.aspx?sourcedoc={5bc7717f-aff4-4353-b511-8e8ad95dfed0}&action=edit&wd=target%28Untitled%20Section.one%7Ccecf8b86-d33f-4d4c-bf0d-87bab836b0fd%2FDemo%20f%C3%BCr%20Pr%C3%A4si%7Cd44a5142-8dab-45bf-8332-fa05bc7a288d%2F%29&wdorigin=703)
+3. Follow the steps in the [OneNote](https://bernerfachhochschule-my.sharepoint.com/personal/schej3_bfh_ch/_layouts/15/Doc.aspx?sourcedoc={5bc7717f-aff4-4353-b511-8e8ad95dfed0}&action=edit&wd=target%28Untitled%20Section.one%7Ccecf8b86-d33f-4d4c-bf0d-87bab836b0fd%2FDemo%20f%C3%BCr%20Pr%C3%A4si%7Cd44a5142-8dab-45bf-8332-fa05bc7a288d%2F%29&wdorigin=703) or in [PDF](doc/Demo.pdf)
 
 ## Run it locally
 
@@ -42,6 +42,8 @@ To run it locally you must first get the code
 `git checkout https://github.com/TashunkoWitko/MarbleCollector.git`
 
 ### Run api (backend)
+
+> Mind that if you use an OS other than Windows, you have to change the db connection string in the `api/MarbleCollectorApi/appsettings.Development.json` file to a path that your OS understands.
 
 Option 1 (simple)
 Open visual studio solution and hit F5.
