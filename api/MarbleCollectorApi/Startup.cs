@@ -142,7 +142,7 @@ namespace MarbleCollectorApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "MarbleCollector API");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors(MarbleCollectorCorsPolicy);
