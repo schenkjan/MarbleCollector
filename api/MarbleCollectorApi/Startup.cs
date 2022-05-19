@@ -86,7 +86,7 @@ namespace MarbleCollectorApi
 
             // Database Context
             services.AddDbContext<MarbleCollectorDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("MarbleCollectorSQLite")));
+                options.UseMySql(Configuration.GetConnectionString("MarbleCollectorMySQL"), new MariaDbServerVersion("10.6.7")));
 
             services.AddControllers();
             services.AddSignalR();
@@ -167,9 +167,12 @@ namespace MarbleCollectorApi
                 using (var context = serviceScope.ServiceProvider.GetService<MarbleCollectorDbContext>())
                 {
                     context.Database.Migrate();
-                    context.EnsureSeedData(env.IsDevelopment()); // should create demo data when deploying to azure
                     // context.EnsureSeedData(false); // use this if you want demo data in local dev
                 }
+                //using (var context = serviceScope.ServiceProvider.GetService<MarbleCollectorDbContext>())
+                //{
+                //    context.EnsureSeedData(env.IsDevelopment()); // should create demo data when deploying to azure
+                //}
             }
         }
     }
