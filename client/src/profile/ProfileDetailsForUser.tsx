@@ -17,6 +17,7 @@ export function ProfileDetailsForUser() {
 
   useEffect(() => {
     invalidateQuery();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
