@@ -7,7 +7,6 @@ import { AssignmentForCreate } from "./models/AssignmentForCreate";
 import { GrantForCreate } from "./models/GrantForCreate";
 import { RewardWithGrants } from "./models/RewardWithGrants";
 import { User } from "./models/User";
-import { UserProfile } from "./models/UserProfile";
 import { QueryObject } from "../api/models/QueryObject";
 import { QueryProps } from "../api/models/QueryProps";
 import { useGet, usePost, usePut, useDelete } from "../api/Queries";

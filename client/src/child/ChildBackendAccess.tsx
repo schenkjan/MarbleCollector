@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 import {
-  QueryClient,
   useMutation,
   UseMutationResult,
   useQuery,
@@ -14,7 +13,7 @@ import { AppState } from "../AppState";
 import { ChoreWithAssignments } from "../model/ChoreWithAssignments";
 import { Grant } from "../model/Grant";
 import { RewardWithGrants } from "../model/RewardWithGrants";
-import { UserProfile } from "./models/UserProfile";
+//import { UserProfile } from "./models/UserProfile";
 
 const apiBaseUrl = process.env.REACT_APP_APIBASEURL as string;
 
@@ -176,7 +175,11 @@ export function useUserBalance(userId?: number): UserBalance {
   const bearerToken = useRecoilValue(AppState.userBearerToken);
   const queryProfileUserId = userId ? userId : userInfo?.id;
 
-  const { isLoading, error, data: balance } = useQuery("userBalance", () =>
+  const {
+    isLoading,
+    error,
+    data: balance,
+  } = useQuery("userBalance", () =>
     axios
       .get<number>(`${apiBaseUrl}/api/Users/${queryProfileUserId}/balance`, {
         headers: {
