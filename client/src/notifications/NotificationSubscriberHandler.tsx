@@ -129,6 +129,7 @@ export function NotificationSubscriberHandler(
         ),
       ]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hubConnectionEstablished, userRole]);
 
   return <></>;
