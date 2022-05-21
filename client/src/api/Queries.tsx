@@ -59,6 +59,7 @@ export function useGet<T>(
         open: false,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isFetching, isError, data]);
   return {
     data: data,
@@ -77,7 +78,7 @@ export function usePost<T>(
   const showError = useErrorNotification();
   const mutate = useMutation(
     (object: QueryObject) =>
-      axios.post(`${apiBaseUrl}${object.url}`, object.object, {
+      axios.post<T>(`${apiBaseUrl}${object.url}`, object.object, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },

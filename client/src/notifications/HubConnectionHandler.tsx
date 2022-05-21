@@ -100,6 +100,7 @@ export function HubConnectionHandler() {
         );
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
 
   useEffect(() => {
@@ -114,6 +115,7 @@ export function HubConnectionHandler() {
         );
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notificationSubscribers]);
 
   return (

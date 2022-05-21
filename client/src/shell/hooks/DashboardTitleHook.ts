@@ -11,6 +11,7 @@ export function useDashboardTitle(title: string) {
 
   useEffect(() => {
     setDashboardTitle(title);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return title;
