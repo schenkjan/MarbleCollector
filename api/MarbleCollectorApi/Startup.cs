@@ -27,7 +27,8 @@ namespace MarbleCollectorApi
         readonly string MarbleCollectorCorsPolicy = nameof(MarbleCollectorCorsPolicy);
         readonly string[] MarbleCollectorCorsOrigins = new[] {
             "http://localhost:3000",
-            "https://marblecollector.z1.web.core.windows.net"
+            "https://marblecollector.z1.web.core.windows.net",
+            "https://orange-ocean-01c675603.1.azurestaticapps.net"
         };
 
         public Startup(IConfiguration configuration)

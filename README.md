@@ -6,10 +6,10 @@ This repository is hosting the source code for the MarbleCollector project.
 
 The MarbleCollector web app is hosted in Azure and can be tried out by using the following urls.
 
-| Component | Url                                             | Description               |
-| --------- | ----------------------------------------------- | ------------------------- |
-| Frontend  | https://marblecollector.z1.web.core.windows.net | Will show react frontend  |
-| Backend   | https://marblecollector-api.azurewebsites.net   | Will show swagger API doc |
+| Component | Url                                                  | Description               |
+| --------- | ---------------------------------------------------- | ------------------------- |
+| Frontend  | https://orange-ocean-01c675603.1.azurestaticapps.net | Will show react frontend  |
+| Backend   | https://marblecollectorapi.azurewebsites.net         | Will show swagger API doc |
 
 Mind that this is a shared instance which is publicly available.
 
@@ -39,7 +39,7 @@ This test scenario can be used to see most features of MarbleCollector in action
 
 To run it locally you must first get the code 
 
-`git checkout https://github.com/TashunkoWitko/MarbleCollector.git`
+`git checkout https://github.com/schenkjan/MarbleCollector.git`
 
 ### Run api (backend)
 
@@ -70,23 +70,21 @@ Navigate to the client folder and run `npm start`.
 
 ### Azure Setup
 
-For students the student promotion may be used: https://azure.microsoft.com/en-us/free/students
-The following resources were created within the Subscription and they can be accessed if your BFH account is granted permissions.
-
-| Resource Type    |         Name         |                                                                                                                                                                                                          Url |
-| ---------------- | :------------------: | -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| Resource Group   |   marblecollector    |                                                                [Link](https://portal.azure.com/#@bfh.ch/resource/subscriptions/a2bcdf72-b2d2-4aff-a317-85e0bb318f1a/resourceGroups/marblecollector/overview) |
-| App Service Plan | marblecollector-plan | [Link](https://portal.azure.com/#@bfh.ch/resource/subscriptions/a2bcdf72-b2d2-4aff-a317-85e0bb318f1a/resourceGroups/marblecollector/providers/Microsoft.Web/serverFarms/marblecollector-plan/webHostingPlan) |
-| App Service      | marblecollector-api  |           [Link](https://portal.azure.com/#@bfh.ch/resource/subscriptions/a2bcdf72-b2d2-4aff-a317-85e0bb318f1a/resourceGroups/marblecollector/providers/Microsoft.Web/sites/marblecollector-api/appServices) |
-| Storage Account  |   marblecollector    |    [Link](https://portal.azure.com/#@bfh.ch/resource/subscriptions/a2bcdf72-b2d2-4aff-a317-85e0bb318f1a/resourceGroups/marblecollector/providers/Microsoft.Storage/storageAccounts/marblecollector/overview) |
+| Resource Type    |         Name         |                                                                                                                                                                                                                                    Url |
+| ---------------- | :------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Resource Group   |   marblecollector    |                                                               [Link](https://portal.azure.com/#@janschenkswisscom.onmicrosoft.com/resource/subscriptions/e2bb3e80-254b-4380-9a67-9fa854c55174/resourceGroups/MarbleCollector/overview) |
+| App Service Plan | marblecollector-plan | [Link](https://portal.azure.com/#@janschenkswisscom.onmicrosoft.com/resource/subscriptions/e2bb3e80-254b-4380-9a67-9fa854c55174/resourcegroups/MarbleCollector/providers/Microsoft.Web/serverFarms/marblecollectorplan/webHostingPlan) |
+| App Service      | marblecollectorapi   |           [Link](https://portal.azure.com/#@janschenkswisscom.onmicrosoft.com/resource/subscriptions/e2bb3e80-254b-4380-9a67-9fa854c55174/resourcegroups/MarbleCollector/providers/Microsoft.Web/sites/MarbleCollectorApi/appServices) |
+| Static Web App   |   marblecollector    |         [Link](https://portal.azure.com/#@janschenkswisscom.onmicrosoft.com/resource/subscriptions/e2bb3e80-254b-4380-9a67-9fa854c55174/resourcegroups/MarbleCollector/providers/Microsoft.Web/staticSites/MarbleCollector/staticsite) |
 
 ### Azure DevOps Setup
 
-[![Build Status](https://dev.azure.com/aescd5/MarbleCollector/_apis/build/status/TashunkoWitko.MarbleCollector?branchName=main)](https://dev.azure.com/aescd5/MarbleCollector/_build/latest?definitionId=1&branchName=main)
+[![Azure Static Web Apps CI/CD](https://github.com/schenkjan/MarbleCollector/actions/workflows/azure-static-web-apps-orange-ocean-01c675603.yml/badge.svg)](https://github.com/schenkjan/MarbleCollector/actions/workflows/azure-static-web-apps-orange-ocean-01c675603.yml)
+[![Build and deploy ASP.Net Core app to Azure Web App - MarbleCollectorApi](https://github.com/schenkjan/MarbleCollector/actions/workflows/main_marblecollectorapi.yml/badge.svg)](https://github.com/schenkjan/MarbleCollector/actions/workflows/main_marblecollectorapi.yml)
 
 According to the documentation https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline the following steps were executed:
 
-1. Login to Azure DevOps https://dev.azure.com with BFH Account
+1. Login to Azure DevOps https://dev.azure.com
 2. Create a new private project `MarbleCollector`
 3. Navigate to pipeline and create new
 4. Setup pipeline for .NET
@@ -98,6 +96,4 @@ According to the documentation https://docs.microsoft.com/en-us/azure/devops/pip
 
 ### Allow contributions/contributors
 
-1. Grant permissions in [Github Repo](https://github.com/TashunkoWitko/MarbleCollector)
-2. Grant permissions in [Azure Portal](https://portal.azure.com/#@bfh.ch/resource/subscriptions/a2bcdf72-b2d2-4aff-a317-85e0bb318f1a/users)
-3. Grant permissions in [Azure DevOps](https://dev.azure.com/aescd5/MarbleCollector/_settings/projectOverview)
+1. Grant permissions in [Github Repo](https://github.com/schenkjan/MarbleCollector)
